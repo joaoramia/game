@@ -32,6 +32,11 @@ function removeMan (manToRemove) {
 	tree.remove(manToRemove);
 }
 
+function addPlayer(playerData, socketId) {
+	playerData.id = socketId
+	players.push(playerData);
+}
+
 function moveLoop () {
 	for (var i = 0; i < men.length; i++) {
 		trackMan(men[i]);
@@ -56,7 +61,7 @@ function sendUpdates () {
 }
 
 app.get('/*', function (req, res) {
-    res.sendFile('/index.html');
+    res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
 var server = app.listen(3030, function () {
@@ -66,24 +71,28 @@ var server = app.listen(3030, function () {
 io = io.listen(server);
 
 io.on('connection', function (socket) {
-	var currentPlayer;
-	socket.broadcast.emit('otherPlayer', socket.id);
-	sockets[socket.id] = socket;
+    var currentPlayer;
+    socket.broadcast.emit('otherPlayerJoin', socket.id);
+    sockets[socket.id] = socket;
 
-	socket.on('respawn', function (newManData) {
-		console.log(newManData);
-		currentPlayer = {
-			id: socket.id
-		};
-		players.push(currentPlayer);
-		addMan(newManData, socket.id);
-		socket.emit('gameReady', newManData);
-	});
+    socket.on('respawn', function (newPlayerData) {
+        console.log(newPlayerData);
+        socket.emit('playersArray', players);
+        addPlayer(newPlayerData, socket.id);
+        currentPlayer = newPlayerData;
+        currentPlayer.pos = [400, 400];
+        socket.emit('gameReady', currentPlayer);
+    });
 
-	socket.on('forceDisconnect', function () {
-		socket.broadcast.emit('otherPlayerDC', socket.id + ' has been disconnected');
-		socket.disconnect();
-	});
+    socket.on('forceDisconnect', function () {
+        socket.broadcast.emit('otherPlayerDC', socket.id + ' has been disconnected');
+        socket.disconnect();
+    });
+
+    socket.on('playerMoves', function(playerData) {
+    	socket.broadcast.emit('otherPlayerMoves', playerData);
+    })
 });
+
 
 setInterval(sendUpdates, 1000);
