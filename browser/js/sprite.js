@@ -11,7 +11,7 @@
         this.once = once;
     };
 
-    Sprite.prototype = {}
+    Sprite.prototype = {
 
         update: function(direction) {
             // this._index += this.;
