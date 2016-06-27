@@ -46,7 +46,8 @@ function init() {
 }
 
 resources.load([
-    'img/sprites.png',
+    'img/sprites2.png',
+    'img/capguy-walk.png',
     'img/terrain.png'
 ]);
 resources.onReady(init);
@@ -54,7 +55,7 @@ resources.onReady(init);
 // Game state
 var player = {
     pos: [0, 0],
-    sprite: new Sprite('img/sprites.png', [0, 0], [39, 39], 16, [0, 1])
+    sprite: new Sprite('img/capguy-walk.png', [0, 0], [184, 325], 16, [0, 1, 2, 3, 4, 5, 6, 7])
 };
 
 var bullets = [];
@@ -81,17 +82,6 @@ function update(dt) {
     handleInput(dt);
     updateEntities(dt);
 
-    // It gets harder over time by adding enemies using this
-    // equation: 1-.993^gameTime
-    if(Math.random() < 1 - Math.pow(.993, gameTime)) {
-        enemies.push({
-            pos: [canvas.width,
-                  Math.random() * (canvas.height - 39)],
-            sprite: new Sprite('img/sprites.png', [0, 78], [80, 39],
-                               6, [0, 1, 2, 3, 2, 1])
-        });
-    }
-
     checkCollisions();
 
     scoreEl.innerHTML = score;
@@ -100,37 +90,23 @@ function update(dt) {
 function handleInput(dt) {
     if(input.isDown('DOWN') || input.isDown('s')) {
         player.pos[1] += playerSpeed * dt;
+        player.sprite.update('down');
     }
 
     if(input.isDown('UP') || input.isDown('w')) {
         player.pos[1] -= playerSpeed * dt;
+        player.sprite.update('up');
     }
 
     if(input.isDown('LEFT') || input.isDown('a')) {
+        ctx.scale(-1,1);
         player.pos[0] -= playerSpeed * dt;
+        player.sprite.update('left');
     }
 
     if(input.isDown('RIGHT') || input.isDown('d')) {
         player.pos[0] += playerSpeed * dt;
-    }
-
-    if(input.isDown('SPACE') &&
-       !isGameOver &&
-       Date.now() - lastFire > 100) {
-        var x = player.pos[0] + player.sprite.size[0] / 2;
-        var y = player.pos[1] + player.sprite.size[1] / 2;
-
-        bullets.push({ pos: [x, y],
-                       dir: 'forward',
-                       sprite: new Sprite('img/sprites.png', [0, 39], [18, 8]) });
-        bullets.push({ pos: [x, y],
-                       dir: 'up',
-                       sprite: new Sprite('img/sprites.png', [0, 50], [9, 5]) });
-        bullets.push({ pos: [x, y],
-                       dir: 'down',
-                       sprite: new Sprite('img/sprites.png', [0, 60], [9, 5]) });
-
-        lastFire = Date.now();
+        player.sprite.update('right');
     }
 }
 
@@ -153,18 +129,6 @@ function updateEntities(dt) {
         if(bullet.pos[1] < 0 || bullet.pos[1] > canvas.height ||
            bullet.pos[0] > canvas.width) {
             bullets.splice(i, 1);
-            i--;
-        }
-    }
-
-    // Update all the enemies
-    for(var i=0; i<enemies.length; i++) {
-        enemies[i].pos[0] -= enemySpeed * dt;
-        enemies[i].sprite.update(dt);
-
-        // Remove if offscreen
-        if(enemies[i].pos[0] + enemies[i].sprite.size[0] < 0) {
-            enemies.splice(i, 1);
             i--;
         }
     }
@@ -199,44 +163,44 @@ function checkCollisions() {
     checkPlayerBounds();
     
     // Run collision detection for all enemies and bullets
-    for(var i=0; i<enemies.length; i++) {
-        var pos = enemies[i].pos;
-        var size = enemies[i].sprite.size;
+    // for(var i=0; i<enemies.length; i++) {
+    //     var pos = enemies[i].pos;
+    //     var size = enemies[i].sprite.size;
 
-        for(var j=0; j<bullets.length; j++) {
-            var pos2 = bullets[j].pos;
-            var size2 = bullets[j].sprite.size;
+    //     for(var j=0; j<bullets.length; j++) {
+    //         var pos2 = bullets[j].pos;
+    //         var size2 = bullets[j].sprite.size;
 
-            if(boxCollides(pos, size, pos2, size2)) {
-                // Remove the enemy
-                enemies.splice(i, 1);
-                i--;
+    //         if(boxCollides(pos, size, pos2, size2)) {
+    //             // Remove the enemy
+    //             enemies.splice(i, 1);
+    //             i--;
 
-                // Add score
-                score += 100;
+    //             // Add score
+    //             score += 100;
 
-                // Add an explosion
-                explosions.push({
-                    pos: pos,
-                    sprite: new Sprite('img/sprites.png',
-                                       [0, 117],
-                                       [39, 39],
-                                       16,
-                                       [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-                                       null,
-                                       true)
-                });
+    //             // Add an explosion
+    //             explosions.push({
+    //                 pos: pos,
+    //                 sprite: new Sprite('img/sprites.png',
+    //                                    [0, 117],
+    //                                    [39, 39],
+    //                                    16,
+    //                                    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+    //                                    null,
+    //                                    true)
+    //             });
 
-                // Remove the bullet and stop this iteration
-                bullets.splice(j, 1);
-                break;
-            }
-        }
+    //             // Remove the bullet and stop this iteration
+    //             bullets.splice(j, 1);
+    //             break;
+    //         }
+    //     }
 
-        if(boxCollides(pos, size, player.pos, player.sprite.size)) {
-            gameOver();
-        }
-    }
+    //     if(boxCollides(pos, size, player.pos, player.sprite.size)) {
+    //         gameOver();
+    //     }
+    // }
 }
 
 function checkPlayerBounds() {
@@ -244,15 +208,15 @@ function checkPlayerBounds() {
     if(player.pos[0] < 0) {
         player.pos[0] = 0;
     }
-    else if(player.pos[0] > canvas.width - player.sprite.size[0]) {
-        player.pos[0] = canvas.width - player.sprite.size[0];
+    else if(player.pos[0] > canvas.width - player.sprite.size[0]/4) {
+        player.pos[0] = canvas.width - player.sprite.size[0]/4;
     }
 
     if(player.pos[1] < 0) {
         player.pos[1] = 0;
     }
-    else if(player.pos[1] > canvas.height - player.sprite.size[1]) {
-        player.pos[1] = canvas.height - player.sprite.size[1];
+    else if(player.pos[1] > canvas.height - player.sprite.size[1]/4) {
+        player.pos[1] = canvas.height - player.sprite.size[1]/4;
     }
 }
 
@@ -267,7 +231,7 @@ function render() {
     }
 
     renderEntities(bullets);
-    renderEntities(enemies);
+    // renderEntities(enemies);
     renderEntities(explosions);
 };
 

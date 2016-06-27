@@ -11,9 +11,17 @@
         this.once = once;
     };
 
-    Sprite.prototype = {
-        update: function(dt) {
-            this._index += this.speed*dt;
+    Sprite.prototype = {}
+
+        update: function(direction) {
+            // this._index += this.;
+            if (direction === 'right'){
+                this._index += 0.5;
+            }
+            if (direction === 'left'){
+                ctx.scale(-1, 1);
+                this._index += 0.5;
+            }
         },
 
         render: function(ctx) {
@@ -48,7 +56,7 @@
                           x, y,
                           this.size[0], this.size[1],
                           0, 0,
-                          this.size[0], this.size[1]);
+                          this.size[0]/4, this.size[1]/4);
         }
     };
 
