@@ -46,6 +46,7 @@ function init() {
     main();
 
     socket.emit('respawn', {});
+    socket.emit('moneyBagsCoordsOnUserLogin', {});
 
 }
 
@@ -57,7 +58,7 @@ resources.load([
 resources.onReady(init);
 
 // Game state
-
+var moneyBags = {};
 
 var player = {
     pos: [0, 0],
@@ -71,6 +72,19 @@ socket.on('otherPlayerJoin', function (otherPlayerData) {
     otherPlayerData.sprite = new Sprite('img/capguy-walk.png', [0, 0], [184, 325], 16, [0, 1, 2, 3, 4, 5, 6, 7]);
     otherPlayers.push(otherPlayerData);
 });
+
+socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
+    moneyBags = moneyBagsFromServer;
+    for (var moneyBag in moneyBags) {
+        if (moneyBags.hasOwnProperty(moneyBag) && moneyBag !== "count") {
+            var coords = moneyBag.split(",");
+            coords[0] = parseInt(coords[0]);
+            coords[1] = parseInt(coords[1]);
+            moneyBags[moneyBag].pos = coords;
+            moneyBags[moneyBag].sprite = new Sprite('img/moneybag.png', coords, 1, 1, [1]);
+        }
+    }
+})
 
 socket.on("gameReady", function(playerData) {
     player.id = playerData.id;
@@ -226,15 +240,23 @@ function render() {
     }
     // console.log(otherPlayers);
     renderEntities(otherPlayers);
+    renderEntities(moneyBags);
     // renderEntities(bullets);
     // renderEntities(enemies);
     // renderEntities(explosions);
 };
 
 function renderEntities(list) {
-    for(var i=0; i<list.length; i++) {
-        renderEntity(list[i]);
-    }    
+    if (Array.isArray(list)){
+        for(var i=0; i<list.length; i++) {
+            renderEntity(list[i]);
+        }   
+    } else if (typeof list === "object") {
+        for (var item in list) {
+            console.log(list[item]);
+            renderEntity(list[item]);
+        }
+    }
 }
 
 function renderEntity(entity) {
