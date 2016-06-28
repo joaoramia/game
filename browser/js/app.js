@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost:3030');
+var socket = io.connect('http://' + ip + ':3030');
 
 // A cross-browser requestAnimationFrame
 // See https://hacks.mozilla.org/2011/08/animating-with-javascript-from-setinterval-to-requestanimationframe/
