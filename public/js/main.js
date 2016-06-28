@@ -1,10 +1,4 @@
-
-
 var socket = io.connect('http://localhost:3030');
-
-socket.on("otherPlayerJoin", function(data){
-    console.log("There is another player");
-})
 
 // A cross-browser requestAnimationFrame
 // See https://hacks.mozilla.org/2011/08/animating-with-javascript-from-setinterval-to-requestanimationframe/
@@ -51,8 +45,8 @@ function init() {
     birthTime = Date.now();
     main();
 
-
     socket.emit('respawn', {});
+    socket.emit('moneyBagsCoordsOnUserLogin', {});
 
 }
 
@@ -64,7 +58,7 @@ resources.load([
 resources.onReady(init);
 
 // Game state
-
+var moneyBags = {};
 
 var player = {
     pos: [0, 0],
@@ -73,19 +67,47 @@ var player = {
 
 var otherPlayers = [];
 
+socket.on('otherPlayerJoin', function (otherPlayerData) {
+    console.log(otherPlayerData.id + ' has joined!');
+    otherPlayerData.sprite = new Sprite('img/capguy-walk.png', [0, 0], [184, 325], 16, [0, 1, 2, 3, 4, 5, 6, 7]);
+    otherPlayers.push(otherPlayerData);
+});
+
+socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
+    moneyBags = moneyBagsFromServer;
+    for (var moneyBag in moneyBags) {
+        if (moneyBags.hasOwnProperty(moneyBag) && moneyBag !== "count") {
+            var coords = moneyBag.split(",");
+            coords[0] = parseInt(coords[0]);
+            coords[1] = parseInt(coords[1]);
+            moneyBags[moneyBag].pos = coords;
+            moneyBags[moneyBag].sprite = new Sprite('img/moneybag.png', coords, 1, 1, [1]);
+        }
+    }
+})
+
 socket.on("gameReady", function(playerData) {
-    console.log(playerData);
     player.id = playerData.id;
     player.pos = playerData.pos;
-    console.log("player position: ", [playerData.x, playerData.y]);
-    player.pos
+    console.log(playerData, player.pos);
 })
 
 socket.on("playersArray", function(playersArray){
     otherPlayers = playersArray;
     otherPlayers.forEach(function(player){
         player.sprite = new Sprite('img/capguy-walk.png', [0, 0], [184, 325], 16, [0, 1, 2, 3, 4, 5, 6, 7]);
-    })
+    });
+    console.log(otherPlayers);
+});
+
+socket.on('otherPlayerDC', function (socketId) {
+    var deletion = [];
+    otherPlayers.forEach(function (player, index) {
+        if (player.id === socketId) deletion.push(index);
+    });
+    deletion.forEach(function (index) {
+        otherPlayers.splice(index, 1);
+    });
 })
 
 
@@ -188,8 +210,84 @@ function updateEntities(dt) {
             i--;
         }
     }
-
 }
+
+function checkPlayerBounds() {
+    // Check bounds
+    if(player.pos[0] < 0) {
+        player.pos[0] = 0;
+    }
+    else if(player.pos[0] > canvas.width - player.sprite.size[0]/4) {
+        player.pos[0] = canvas.width - player.sprite.size[0]/4;
+    }
+
+    if(player.pos[1] < 0) {
+        player.pos[1] = 0;
+    }
+    else if(player.pos[1] > canvas.height - player.sprite.size[1]/4) {
+        player.pos[1] = canvas.height - player.sprite.size[1]/4;
+    }
+}
+
+// Draw everything
+function render() {
+    ctx.fillStyle = terrainPattern;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Render the player if the game isn't over
+    if(!isGameOver) {
+        renderEntity(player);
+    }
+    // console.log(otherPlayers);
+    renderEntities(otherPlayers);
+    renderEntities(moneyBags);
+    // renderEntities(bullets);
+    // renderEntities(enemies);
+    // renderEntities(explosions);
+};
+
+function renderEntities(list) {
+    if (Array.isArray(list)){
+        for(var i=0; i<list.length; i++) {
+            renderEntity(list[i]);
+        }   
+    } else if (typeof list === "object") {
+        for (var item in list) {
+            console.log(list[item]);
+            renderEntity(list[item]);
+        }
+    }
+}
+
+function renderEntity(entity) {
+    ctx.save();
+    ctx.translate(entity.pos[0], entity.pos[1]);
+    entity.sprite.render(ctx);
+    ctx.restore();
+}
+
+// Game over
+function gameOver() {
+    document.getElementById('game-over').style.display = 'block';
+    document.getElementById('game-over-overlay').style.display = 'block';
+    isGameOver = true;
+}
+
+// Reset game to original state
+function reset() {
+    document.getElementById('game-over').style.display = 'none';
+    document.getElementById('game-over-overlay').style.display = 'none';
+    isGameOver = false;
+    gameTime = 0;
+    score = 0;
+
+    enemies = [];
+    bullets = [];
+
+    player.pos = [50, canvas.height / 2];
+};
+
+
 
 // Collisions
 
@@ -248,76 +346,6 @@ function checkCollisions() {
     //     }
     // }
 }
-
-function checkPlayerBounds() {
-    // Check bounds
-    if(player.pos[0] < 0) {
-        player.pos[0] = 0;
-    }
-    else if(player.pos[0] > canvas.width - player.sprite.size[0]/4) {
-        player.pos[0] = canvas.width - player.sprite.size[0]/4;
-    }
-
-    if(player.pos[1] < 0) {
-        player.pos[1] = 0;
-    }
-    else if(player.pos[1] > canvas.height - player.sprite.size[1]/4) {
-        player.pos[1] = canvas.height - player.sprite.size[1]/4;
-    }
-}
-
-// Draw everything
-function render() {
-    ctx.fillStyle = terrainPattern;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Render the player if the game isn't over
-    if(!isGameOver) {
-        renderEntity(player);
-    }
-    console.log(otherPlayers);
-    renderEntities(otherPlayers);
-    renderEntities(bullets);
-    // renderEntities(enemies);
-    renderEntities(explosions);
-};
-
-function renderEntities(list) {
-    for(var i=0; i<list.length; i++) {
-        renderEntity(list[i]);
-    }    
-}
-
-function renderEntity(entity) {
-    ctx.save();
-    ctx.translate(entity.pos[0], entity.pos[1]);
-    entity.sprite.render(ctx);
-    ctx.restore();
-}
-
-// Game over
-function gameOver() {
-    document.getElementById('game-over').style.display = 'block';
-    document.getElementById('game-over-overlay').style.display = 'block';
-    isGameOver = true;
-}
-
-// Reset game to original state
-function reset() {
-    document.getElementById('game-over').style.display = 'none';
-    document.getElementById('game-over-overlay').style.display = 'none';
-    isGameOver = false;
-    gameTime = 0;
-    score = 0;
-
-    enemies = [];
-    bullets = [];
-
-    player.pos = [50, canvas.height / 2];
-};
-
-
-
 
 (function() {
     var pressedKeys = {};
