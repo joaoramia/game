@@ -1,10 +1,4 @@
-
-
 var socket = io.connect('http://localhost:3030');
-
-socket.on("otherPlayerJoin", function(data){
-    console.log("There is another player");
-})
 
 // A cross-browser requestAnimationFrame
 // See https://hacks.mozilla.org/2011/08/animating-with-javascript-from-setinterval-to-requestanimationframe/
@@ -51,7 +45,6 @@ function init() {
     birthTime = Date.now();
     main();
 
-
     socket.emit('respawn', {});
 
 }
@@ -73,19 +66,34 @@ var player = {
 
 var otherPlayers = [];
 
+socket.on('otherPlayerJoin', function (otherPlayerData) {
+    console.log(otherPlayerData.id + ' has joined!');
+    otherPlayerData.sprite = new Sprite('img/capguy-walk.png', [0, 0], [184, 325], 16, [0, 1, 2, 3, 4, 5, 6, 7]);
+    otherPlayers.push(otherPlayerData);
+});
+
 socket.on("gameReady", function(playerData) {
-    console.log(playerData);
     player.id = playerData.id;
     player.pos = playerData.pos;
-    console.log("player position: ", [playerData.x, playerData.y]);
-    player.pos
+    console.log(playerData, player.pos);
 })
 
 socket.on("playersArray", function(playersArray){
     otherPlayers = playersArray;
     otherPlayers.forEach(function(player){
         player.sprite = new Sprite('img/capguy-walk.png', [0, 0], [184, 325], 16, [0, 1, 2, 3, 4, 5, 6, 7]);
-    })
+    });
+    console.log(otherPlayers);
+});
+
+socket.on('otherPlayerDC', function (socketId) {
+    var deletion = [];
+    otherPlayers.forEach(function (player, index) {
+        if (player.id === socketId) deletion.push(index);
+    });
+    deletion.forEach(function (index) {
+        otherPlayers.splice(index, 1);
+    });
 })
 
 
@@ -188,65 +196,6 @@ function updateEntities(dt) {
             i--;
         }
     }
-
-}
-
-// Collisions
-
-function collides(x, y, r, b, x2, y2, r2, b2) {
-    return !(r <= x2 || x > r2 ||
-             b <= y2 || y > b2);
-}
-
-function boxCollides(pos, size, pos2, size2) {
-    return collides(pos[0], pos[1],
-                    pos[0] + size[0], pos[1] + size[1],
-                    pos2[0], pos2[1],
-                    pos2[0] + size2[0], pos2[1] + size2[1]);
-}
-
-function checkCollisions() {
-    checkPlayerBounds();
-    
-    // Run collision detection for all enemies and bullets
-    // for(var i=0; i<enemies.length; i++) {
-    //     var pos = enemies[i].pos;
-    //     var size = enemies[i].sprite.size;
-
-    //     for(var j=0; j<bullets.length; j++) {
-    //         var pos2 = bullets[j].pos;
-    //         var size2 = bullets[j].sprite.size;
-
-    //         if(boxCollides(pos, size, pos2, size2)) {
-    //             // Remove the enemy
-    //             enemies.splice(i, 1);
-    //             i--;
-
-    //             // Add score
-    //             score += 100;
-
-    //             // Add an explosion
-    //             explosions.push({
-    //                 pos: pos,
-    //                 sprite: new Sprite('img/sprites.png',
-    //                                    [0, 117],
-    //                                    [39, 39],
-    //                                    16,
-    //                                    [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
-    //                                    null,
-    //                                    true)
-    //             });
-
-    //             // Remove the bullet and stop this iteration
-    //             bullets.splice(j, 1);
-    //             break;
-    //         }
-    //     }
-
-    //     if(boxCollides(pos, size, player.pos, player.sprite.size)) {
-    //         gameOver();
-    //     }
-    // }
 }
 
 function checkPlayerBounds() {
@@ -275,11 +224,11 @@ function render() {
     if(!isGameOver) {
         renderEntity(player);
     }
-    console.log(otherPlayers);
+    // console.log(otherPlayers);
     renderEntities(otherPlayers);
-    renderEntities(bullets);
+    // renderEntities(bullets);
     // renderEntities(enemies);
-    renderEntities(explosions);
+    // renderEntities(explosions);
 };
 
 function renderEntities(list) {

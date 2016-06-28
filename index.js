@@ -8,7 +8,6 @@ app.use(express.static(__dirname + '/public/'));
 app.use(express.static(__dirname + '/browser/'));
 app.use(express.static(__dirname + '/node_modules/'));
 
-
 var gameConfig = require('./config.json');
 
 var quadtree = require('simple-quadtree');
@@ -17,46 +16,60 @@ var tree = quadtree(0, 0, gameConfig.width, gameConfig.height);
 var players = [];
 var men = [];
 var sockets = {};
+var removedPlayers = 0; // once it reaches 100 garbage COLLECTION!
 
-function addMan (manToAdd, socketId) {
-	manToAdd.id = socketId;
-	manToAdd.x = utils.getRandomNum();
-	manToAdd.y = utils.getRandomNum();
-	men.push(manToAdd);
-	tree.put(manToAdd);
-}
+// function addMan (manToAdd, socketId) {
+// 	manToAdd.id = socketId;
+// 	manToAdd.x = utils.getRandomNum();
+// 	manToAdd.y = utils.getRandomNum();
+// 	men.push(manToAdd);
+// 	tree.put(manToAdd);
+// }
 
-function removeMan (manToRemove) {
-	var removeIndex = men.indexOf(manToRemove);
-	men.splice(removeIndex, 1);
-	tree.remove(manToRemove);
-}
+// function removeMan (manToRemove) {
+// 	var removeIndex = men.indexOf(manToRemove);
+// 	men.splice(removeIndex, 1);
+// 	tree.remove(manToRemove);
+// }
 
 function addPlayer(playerData, socketId) {
-	playerData.id = socketId
+	playerData.id = socketId;
 	players.push(playerData);
 }
 
-function moveLoop () {
-	for (var i = 0; i < men.length; i++) {
-		trackMan(men[i]);
-	}
+function removePlayer (socket) {
+    removedPlayers += 1;
+    if (removedPlayers > 100) {
+    	players = utils.garbageCollection(players);
+    	removedPlayers = 0;
+    }
+   
+    delete sockets[socket.id];
+    players.forEach(function (player) {
+        if (player.id === socket.id) player = null;
+    });
 }
 
-function trackMan (man) {
-	moveMan(man);
+// function moveLoop () {
+// 	for (var i = 0; i < men.length; i++) {
+// 		trackMan(men[i]);
+// 	}
+// }
 
-	tree.clear();
-	men.forEach(tree.put);
-}
+// function trackMan (man) {
+// 	moveMan(man);
 
-function moveMan (man) {
+// 	tree.clear();
+// 	men.forEach(tree.put);
+// }
 
-}
+// function moveMan (man) {
+
+// }
 
 function sendUpdates () {
 	players.forEach(function (player) {
-		sockets[player.id].emit('gameUpdate', 'asdf');
+        if (sockets[player.id]) sockets[player.id].emit('gameUpdate', 'asdf'); 
 	});
 }
 
@@ -65,27 +78,29 @@ app.get('/*', function (req, res) {
 });
 
 var server = app.listen(3030, function () {
-  console.log('Example app listening on port 3030!');
+  console.log('App listening on port 3030!');
 });
 
 io = io.listen(server);
 
 io.on('connection', function (socket) {
     var currentPlayer;
-    socket.broadcast.emit('otherPlayerJoin', socket.id);
     sockets[socket.id] = socket;
 
     socket.on('respawn', function (newPlayerData) {
-        console.log(newPlayerData);
         socket.emit('playersArray', players);
+
+        newPlayerData.pos = [400, 400];
         addPlayer(newPlayerData, socket.id);
         currentPlayer = newPlayerData;
-        currentPlayer.pos = [400, 400];
         socket.emit('gameReady', currentPlayer);
+        socket.broadcast.emit('otherPlayerJoin', currentPlayer);
     });
 
-    socket.on('forceDisconnect', function () {
-        socket.broadcast.emit('otherPlayerDC', socket.id + ' has been disconnected');
+    socket.on('disconnect', function () {
+        removePlayer(socket); // removes them from players array AND sockets obj
+
+        socket.broadcast.emit('otherPlayerDC', socket.id);
         socket.disconnect();
     });
 
