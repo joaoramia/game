@@ -74,7 +74,7 @@ var player = {
 var otherPlayers = [];
 
 socket.on("gameReady", function(playerData) {
-    console.log(playerData);
+    // console.log(playerData);
     player.id = playerData.id;
     player.pos = playerData.pos;
     console.log("player position: ", [playerData.x, playerData.y]);

@@ -47,6 +47,10 @@ function init() {
 
     socket.emit('respawn', {});
 
+    canvas.addEventListener('mousedown', mouseDown, false);
+    canvas.addEventListener('mouseup', mouseUp, false);
+    canvas.addEventListener('mousemove', mouseMove, false);
+
 }
 
 resources.load([
@@ -66,6 +70,8 @@ var player = {
 
 var otherPlayers = [];
 
+var currentSelection = [];
+
 socket.on('otherPlayerJoin', function (otherPlayerData) {
     console.log(otherPlayerData.id + ' has joined!');
     otherPlayerData.sprite = new Sprite('img/capguy-walk.png', [0, 0], [184, 325], 16, [0, 1, 2, 3, 4, 5, 6, 7]);
@@ -75,7 +81,7 @@ socket.on('otherPlayerJoin', function (otherPlayerData) {
 socket.on("gameReady", function(playerData) {
     player.id = playerData.id;
     player.pos = playerData.pos;
-    console.log(playerData, player.pos);
+    // console.log(playerData, player.pos);
 })
 
 socket.on("playersArray", function(playersArray){
@@ -220,12 +226,16 @@ function render() {
     ctx.fillStyle = terrainPattern;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+
     // Render the player if the game isn't over
     if(!isGameOver) {
         renderEntity(player);
     }
     // console.log(otherPlayers);
     renderEntities(otherPlayers);
+
+    renderSelectionBox();
+
     // renderEntities(bullets);
     // renderEntities(enemies);
     // renderEntities(explosions);
@@ -242,6 +252,23 @@ function renderEntity(entity) {
     ctx.translate(entity.pos[0], entity.pos[1]);
     entity.sprite.render(ctx);
     ctx.restore();
+}
+
+function renderSelectionBox(){
+    ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
+    ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
+
+    // FOR TESTING:
+    // var playerEndX = player.pos[0] + player.sprite.size[0]/4;
+    // // var playerBegX = player.pos[0] - player.sprite.size[0]/8;
+    // var playerEndY = player.pos[1] + player.sprite.size[1]/4;
+    // // var playerBegY = player.pos[1] - player.sprite.size[1]/8;
+      
+    // var rectEndX = rect.startX + rect.w;
+    // var rectEndY = rect.startY + rect.h;
+
+    // ctx.fillRect(player.pos[0], player.pos[1], player.sprite.size[0]/4, player.sprite.size[1]/4);
+    // ctx.fillStyle = "blue";
 }
 
 // Game over
