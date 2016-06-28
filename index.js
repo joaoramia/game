@@ -39,8 +39,11 @@ function addPlayer(playerData, socketId) {
 
 function removePlayer (socket) {
     removedPlayers += 1;
-    if (removedPlayers > 100) players = utils.garbageCollection(players);
-
+    if (removedPlayers > 100) {
+    	players = utils.garbageCollection(players);
+    	removedPlayers = 0;
+    }
+   
     delete sockets[socket.id];
     players.forEach(function (player) {
         if (player.id === socket.id) player = null;
