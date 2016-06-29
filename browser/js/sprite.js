@@ -9,18 +9,14 @@
         this.url = url;
         this.dir = dir || 'horizontal';
         this.once = once;
+        this.selected = false;
     };
 
     Sprite.prototype = {
 
-        update: function(direction) {
-            // this._index += this.;
-            if (direction === 'right'){
-                this._index += 0.5;
-            }
-            if (direction === 'left'){
-                ctx.scale(-1, 1);
-                this._index += 0.5;
+        update: function() {
+            if (rightClick.x && rightClick.y && this.selected){
+                this._index += 0.25;
             }
         },
 

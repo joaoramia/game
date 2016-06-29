@@ -67,7 +67,8 @@ var moneyBags = {};
 
 var player = {
     pos: [0, 0],
-    sprite: new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7])
+    sprite: new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7]),
+    selected: false
 }; 
 
 var otherPlayers = [];
@@ -138,7 +139,12 @@ var enemySpeed = 100;
 function update(dt) {
     gameTime += dt;
 
-    handleInput(dt);
+    if (rightClick.x && rightClick.y){
+        walk(rightClick.x, rightClick.y, dt);
+    }
+
+    // handleInput(dt);
+
     updateEntities(dt);
 
     checkCollisions();
@@ -156,28 +162,28 @@ function update(dt) {
     })
 };
 
-function handleInput(dt) {
-    if(input.isDown('DOWN') || input.isDown('s')) {
-        player.pos[1] += playerSpeed * dt;
-        player.sprite.update('down');
-    }
+// function handleInput(dt) {
+//     if(input.isDown('DOWN') || input.isDown('s')) {
+//         player.pos[1] += playerSpeed * dt;
+//         player.sprite.update();
+//     }
 
-    if(input.isDown('UP') || input.isDown('w')) {
-        player.pos[1] -= playerSpeed * dt;
-        player.sprite.update('up');
-    }
+//     if(input.isDown('UP') || input.isDown('w')) {
+//         player.pos[1] -= playerSpeed * dt;
+//         player.sprite.update();
+//     }
 
-    if(input.isDown('LEFT') || input.isDown('a')) {
-        ctx.scale(-1,1);
-        player.pos[0] -= playerSpeed * dt;
-        player.sprite.update('left');
-    }
+//     if(input.isDown('LEFT') || input.isDown('a')) {
+//         ctx.scale(-1,1);
+//         player.pos[0] -= playerSpeed * dt;
+//         player.sprite.update();
+//     }
 
-    if(input.isDown('RIGHT') || input.isDown('d')) {
-        player.pos[0] += playerSpeed * dt;
-        player.sprite.update('right');
-    }
-}
+//     if(input.isDown('RIGHT') || input.isDown('d')) {
+//         player.pos[0] += playerSpeed * dt;
+//         player.sprite.update();
+//     }
+// }
 
 function updateEntities(dt) {
     // Update the player sprite animation
