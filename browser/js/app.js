@@ -1,25 +1,5 @@
 var socket = io.connect('http://' + ip + ':3030');
 
-// A cross-browser requestAnimationFrame
-// See https://hacks.mozilla.org/2011/08/animating-with-javascript-from-setinterval-to-requestanimationframe/
-var requestAnimFrame = (function(){
-    return window.requestAnimationFrame       ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame    ||
-        window.oRequestAnimationFrame      ||
-        window.msRequestAnimationFrame     ||
-        function(callback){
-            window.setTimeout(callback, 1000 / 60);
-        };
-})();
-
-// Create the canvas
-var canvas = document.createElement("canvas");
-var ctx = canvas.getContext("2d");
-canvas.width = 512;
-canvas.height = 480;
-document.body.appendChild(canvas);
-
 // The main game loop
 var lastTime,
     birthTime;
@@ -52,10 +32,9 @@ function init() {
     socket.emit('respawn', {});
     socket.emit('moneyBagsCoordsOnUserLogin', {});
 
-    canvas.addEventListener('mousedown', mouseDown, false);
-    canvas.addEventListener('mouseup', mouseUp, false);
-    canvas.addEventListener('mousemove', mouseMove, false);
-
+    viewCanvas.addEventListener('mousedown', mouseDown, false);
+    viewCanvas.addEventListener('mouseup', mouseUp, false);
+    viewCanvas.addEventListener('mousemove', mouseMove, false);
 }
 
 resources.load([
@@ -104,6 +83,11 @@ socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
 socket.on("gameReady", function(playerData) {
     player.id = playerData.id;
     player.pos = playerData.pos;
+
+    // viewport.pos = player.pos;
+    // console.log(playerData, player.pos);
+    vp.pos = player.pos;
+    drawViewport();
 })
 
 socket.on("playersArray", function(playersArray){
@@ -145,7 +129,11 @@ var enemySpeed = 100;
 function update(dt) {
     gameTime += dt;
 
-    // handleInput(dt);
+    if (rightClick.x && rightClick.y){
+        walk(rightClick.x, rightClick.y, dt);
+    }
+
+    handleInput(dt);
 
     updateEntities(dt);
 
@@ -164,30 +152,10 @@ function update(dt) {
             }
         })
     })
+
+    drawViewport();
+
 };
-
-// function handleInput(dt) {
-//     if(input.isDown('DOWN') || input.isDown('s')) {
-//         player.pos[1] += playerSpeed * dt;
-//         player.sprite.update();
-//     }
-
-//     if(input.isDown('UP') || input.isDown('w')) {
-//         player.pos[1] -= playerSpeed * dt;
-//         player.sprite.update();
-//     }
-
-//     if(input.isDown('LEFT') || input.isDown('a')) {
-//         ctx.scale(-1,1);
-//         player.pos[0] -= playerSpeed * dt;
-//         player.sprite.update();
-//     }
-
-//     if(input.isDown('RIGHT') || input.isDown('d')) {
-//         player.pos[0] += playerSpeed * dt;
-//         player.sprite.update();
-//     }
-// }
 
 function updateEntities(dt) {
     // Update the player sprite animation
@@ -279,9 +247,6 @@ function render() {
     renderSelectionBox();
 
     renderEntities(moneyBags);
-
-    
-
 };
 
 function renderEntities(list) {
