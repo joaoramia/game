@@ -32,6 +32,18 @@ function mouseMove(e) {
     ctx.clearRect(0,0,canvas.width,canvas.height);
     draw();
   }
+  // for scrolling without clicking
+  console.log(vp.pos);
+  if (e.layerX < 10) {
+    vp.pos[0] -= 10;
+  } else if (e.layerX >= viewCanvas.width - 10) {
+    vp.pos[0] += 10;
+  } else if (e.layerY < 10) {
+    vp.pos[1] -= 10;
+  } else if (e.layerY >= viewCanvas.height - 10) {
+    vp.pos[1] += 10;
+  }
+
 }
 
 function draw() {
