@@ -27,6 +27,10 @@ function main() {
     var now = Date.now();
     var dt = (now - lastTime) / 1000.0;
 
+    if (rightClick.x && rightClick.y){
+        walk(rightClick.x, rightClick.y, dt);
+    }
+
     update(dt);
     render();
 
@@ -67,17 +71,19 @@ var moneyBags = {};
 
 var player = {
     pos: [0, 0],
-    sprite: new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7]),
+    sprite: new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', false),
     selected: false
-}; 
+};
 
 var otherPlayers = [];
 
 var currentSelection = [];
 
+var otherPlayerSelection = [];
+
 socket.on('otherPlayerJoin', function (otherPlayerData) {
     console.log(otherPlayerData.id + ' has joined!');
-    otherPlayerData.sprite = new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7]);
+    otherPlayerData.sprite = new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', true);
     otherPlayers.push(otherPlayerData);
 });
 
@@ -103,7 +109,7 @@ socket.on("gameReady", function(playerData) {
 socket.on("playersArray", function(playersArray){
     otherPlayers = playersArray;
     otherPlayers.forEach(function(player){
-        player.sprite = new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7]);
+        player.sprite = new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', true);
     });
 });
 
@@ -139,10 +145,6 @@ var enemySpeed = 100;
 function update(dt) {
     gameTime += dt;
 
-    if (rightClick.x && rightClick.y){
-        walk(rightClick.x, rightClick.y, dt);
-    }
-
     // handleInput(dt);
 
     updateEntities(dt);
@@ -157,6 +159,7 @@ function update(dt) {
         otherPlayers.forEach(function(player){
             if (player.id === playerData.id) {
                 player.pos = playerData.pos;
+                player.sprite._index = playerData.sprite._index;
             }
         })
     })
@@ -265,7 +268,6 @@ function checkCollisionWithMoneyBag() {
 function render() {
     ctx.fillStyle = terrainPattern;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
 
     // Render the player if the game isn't over
     if(!isGameOver) {
