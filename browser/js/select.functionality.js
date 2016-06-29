@@ -4,21 +4,22 @@ var rightClick = {};
 
 function mouseDown(e) {
   console.log(e.which);
-  if (e.which === 1){
+  console.log("CTRL", e.ctrlKey);
+  if (e.which === 1 && !e.ctrlKey){
     rect.startX = e.pageX - this.offsetLeft;
     rect.startY = e.pageY - this.offsetTop;
     rect.w = 5;
     rect.h = 5;
     drag = true;
   }
-  else if(e.which === 3 && currentSelection.length){
+  else if ( (e.ctrlKey && currentSelection.length) || (e.which === 3 && currentSelection.length) ) {
     rightClick.x = e.layerX;
     rightClick.y = e.layerY;
   }
 }
 
 function mouseUp(e) {
-  if (e.which === 1){
+  if (e.which === 1 && !e.ctrlKey){
     select();
   }
   drag = false;
