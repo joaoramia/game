@@ -55,5 +55,4 @@ function select(){
       player.sprite.selected = true;
       console.log("SELECTED: ", currentSelection);
     }
-
 }
