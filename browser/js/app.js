@@ -247,6 +247,8 @@ function checkCollisionWithMoneyBag() {
         if (boxCollides(player.pos, player.sprite.size, moneyBags[moneyBag].pos, moneyBags[moneyBag].sprite.size)) {
             var temp = moneyBag;
             delete moneyBags[moneyBag];
+            /////
+            playSoundOnEvent(moneyFoundSound);
             socket.emit('moneyDiscovered', moneyBag); 
             score += 100;
         }
@@ -268,6 +270,8 @@ function render() {
     renderSelectionBox();
 
     renderEntities(moneyBags);
+
+    
 
 };
 
