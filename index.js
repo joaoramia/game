@@ -19,7 +19,7 @@ var removedPlayers = 0; // once it reaches 100 garbage COLLECTION!
 var moneyBags = {};
 
 //initially generate money bags for the moneyBags object
-for (var i = 0; i < 100; i++) {
+for (var i = 0; i < 10; i++) {
 	//values of array represent x and y. later, change this so that x = max x of canvas and y is max y of canvas
 	moneyBags[[utils.getRandomNum(512), utils.getRandomNum(480)]] = {value : utils.getRandomNum(75, 150)};
 }
@@ -119,7 +119,7 @@ io.on('connection', function (socket) {
     socket.on('respawn', function (newPlayerData) {
         socket.emit('playersArray', players);
 
-        newPlayerData.pos = [20, 20];
+        newPlayerData.pos = [0, 0];
         addPlayer(newPlayerData, socket.id);
         currentPlayer = newPlayerData;
         socket.emit('gameReady', currentPlayer);

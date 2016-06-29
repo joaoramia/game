@@ -89,7 +89,7 @@ socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
             coords[0] = parseInt(coords[0]);
             coords[1] = parseInt(coords[1]);
             moneyBags[moneyBag].pos = coords;
-            moneyBags[moneyBag].sprite = new Sprite('img/money-bag-asset.png', [0,0], [33,35], 10, [-1]);
+            moneyBags[moneyBag].sprite = new Sprite('img/money-bag-asset.png', [0,0], [10,25], 1, [-1]); 
         }
     }
 })
@@ -244,7 +244,7 @@ function checkCollisionWithMoneyBag() {
         var moneyPos = moneyBags[moneyBag].pos;
         var moneySize = moneyBags[moneyBag].sprite.size;
 
-        if (boxCollides(moneyBags[moneyBag].pos, moneyBags[moneyBag].sprite.size, player.pos, player.sprite.size)) {
+        if (boxCollides(player.pos, player.sprite.size, moneyBags[moneyBag].pos, moneyBags[moneyBag].sprite.size)) {
             var temp = moneyBag;
             delete moneyBags[moneyBag];
             socket.emit('moneyDiscovered', moneyBag); 
