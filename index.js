@@ -2,7 +2,10 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var io = require('socket.io');
-var utils = require('./utils');
+var utils = require('./server/utils');
+var player = require('./server/player.constructor');
+var unit = require('./server/unit.constructor').Unit;
+var hero = require('./server/unit.constructor').Hero;
 
 app.use(express.static(__dirname + '/public/'));
 app.use(express.static(__dirname + '/browser/'));
