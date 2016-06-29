@@ -160,6 +160,7 @@ function update(dt) {
             if (player.id === playerData.id) {
                 player.pos = playerData.pos;
                 player.sprite._index = playerData.sprite._index;
+                //MAYBE FIX BAG PROBLEM HERE
             }
         })
     })
