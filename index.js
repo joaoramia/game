@@ -143,10 +143,11 @@ io.on('connection', function (socket) {
 
     socket.on('moneyDiscovered', function (moneyData) {
     	//increase the wealth of the player
-    	player[moneyData.playerId][money] += moneyData.value;
+    	//player[moneyData.playerId][money] += moneyData.value;
     	delete moneyBags[moneyData];
     	//replenish the moneyBags object
     	moneyBags[[utils.getRandomNum(512), utils.getRandomNum(480)]] = {value : utils.getRandomNum(75, 175)};
+        socket.emit('moneyBagsUpdate', moneyBags);
 
     })
 });

@@ -12,9 +12,12 @@ function boxCollides(pos, size, pos2, size2) {
                     pos2[0] + size2[0], pos2[1] + size2[1]);
 }
 
+
+
 function checkCollisions() {
     checkPlayerBounds();
-    
+    checkCollisionWithMoneyBag();
+
     // Run collision detection for all enemies and bullets
     // for(var i=0; i<enemies.length; i++) {
     //     var pos = enemies[i].pos;
