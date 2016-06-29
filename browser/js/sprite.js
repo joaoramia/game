@@ -48,11 +48,19 @@
                 x += frame * this.size[0];
             }
 
-            ctx.drawImage(resources.get(this.url),
-                          x, y,
-                          this.size[0], this.size[1],
-                          0, 0,
-                          this.size[0]/4, this.size[1]/4);
+            if (frame === -1) {
+                ctx.drawImage(resources.get(this.url),
+                         x, y);
+            } else {
+                ctx.drawImage(resources.get(this.url),
+                         x, y,
+                         this.size[0], this.size[1],
+                         0, 0,
+                         this.size[0], this.size[1]);
+            }
+
+          
+
         }
     };
 
