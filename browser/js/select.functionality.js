@@ -44,8 +44,8 @@ function select(){
     currentSelection = [];
     player.sprite.selected = false;
 
-    var playerEndX = player.pos[0] + player.sprite.size[0]/4;
-    var playerEndY = player.pos[1] + player.sprite.size[1]/4;
+    var playerEndX = player.pos[0] + player.sprite.size[0];
+    var playerEndY = player.pos[1] + player.sprite.size[1];
       
     var rectEndX = rect.startX + rect.w;
     var rectEndY = rect.startY + rect.h;

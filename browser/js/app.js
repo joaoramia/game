@@ -60,8 +60,9 @@ function init() {
 
 resources.load([
     'img/sprites2.png',
-    'img/capguy-walk.png',
-    'img/terrain.png'
+    'img/capguy-walk-asset.png',
+    'img/terrain.png',
+    'img/money-bag-asset.png'
 ]);
 resources.onReady(init);
 
@@ -69,10 +70,10 @@ resources.onReady(init);
 var moneyBags = {};
 
 var player = {
-    pos: [400, 400],
-    sprite: new Sprite('img/capguy-walk.png', [0, 0], [184, 325], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', false),
+    pos: [0, 0],
+    sprite: new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', false),
     selected: false
-}; 
+};
 
 var otherPlayers = [];
 
@@ -82,19 +83,20 @@ var otherPlayerSelection = [];
 
 socket.on('otherPlayerJoin', function (otherPlayerData) {
     console.log(otherPlayerData.id + ' has joined!');
-    otherPlayerData.sprite = new Sprite('img/capguy-walk.png', [0, 0], [184, 325], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', true);
+    otherPlayerData.sprite = new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', true);
     otherPlayers.push(otherPlayerData);
 });
 
 socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
     moneyBags = moneyBagsFromServer;
+    delete moneyBags.count;
     for (var moneyBag in moneyBags) {
-        if (moneyBags.hasOwnProperty(moneyBag) && moneyBag !== "count") {
+        if (moneyBags.hasOwnProperty(moneyBag)) {
             var coords = moneyBag.split(",");
             coords[0] = parseInt(coords[0]);
             coords[1] = parseInt(coords[1]);
             moneyBags[moneyBag].pos = coords;
-            moneyBags[moneyBag].sprite = new Sprite('img/moneybag.png', coords, 1, 1, [1]);
+            moneyBags[moneyBag].sprite = new Sprite('img/money-bag-asset.png', [0,0], [10,25], 1, [-1]); 
         }
     }
 })
@@ -102,15 +104,13 @@ socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
 socket.on("gameReady", function(playerData) {
     player.id = playerData.id;
     player.pos = playerData.pos;
-    // console.log(playerData, player.pos);
 })
 
 socket.on("playersArray", function(playersArray){
     otherPlayers = playersArray;
     otherPlayers.forEach(function(player){
-        player.sprite = new Sprite('img/capguy-walk.png', [0, 0], [184, 325], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', true);
+        player.sprite = new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', true);
     });
-    console.log(otherPlayers);
 });
 
 socket.on('otherPlayerDC', function (socketId) {
@@ -163,7 +163,6 @@ function update(dt) {
             }
         })
     })
-
 };
 
 // function handleInput(dt) {
@@ -195,6 +194,11 @@ function updateEntities(dt) {
     otherPlayers.forEach(function(player){
         player.sprite.update(dt);
     })
+
+    for (var moneyBag in moneyBags) {
+        moneyBags[moneyBag].sprite.update(dt);
+    }
+
 
     // Update all the bullets
     for(var i=0; i<bullets.length; i++) {
@@ -232,15 +236,31 @@ function checkPlayerBounds() {
     if(player.pos[0] < 0) {
         player.pos[0] = 0;
     }
-    else if(player.pos[0] > canvas.width - player.sprite.size[0]/4) {
-        player.pos[0] = canvas.width - player.sprite.size[0]/4;
+    else if(player.pos[0] > canvas.width - player.sprite.size[0]) {
+        player.pos[0] = canvas.width - player.sprite.size[0];
     }
 
     if(player.pos[1] < 0) {
         player.pos[1] = 0;
     }
-    else if(player.pos[1] > canvas.height - player.sprite.size[1]/4) {
-        player.pos[1] = canvas.height - player.sprite.size[1]/4;
+    else if(player.pos[1] > canvas.height - player.sprite.size[1]) {
+        player.pos[1] = canvas.height - player.sprite.size[1];
+    }
+}
+
+function checkCollisionWithMoneyBag() {
+    for (var moneyBag in moneyBags) {
+        var moneyPos = moneyBags[moneyBag].pos;
+        var moneySize = moneyBags[moneyBag].sprite.size;
+
+        if (boxCollides(player.pos, player.sprite.size, moneyBags[moneyBag].pos, moneyBags[moneyBag].sprite.size)) {
+            var temp = moneyBag;
+            delete moneyBags[moneyBag];
+            /////
+            playSoundOnEvent(moneyFoundSound);
+            socket.emit('moneyDiscovered', moneyBag); 
+            score += 100;
+        }
     }
 }
 
@@ -253,15 +273,14 @@ function render() {
     if(!isGameOver) {
         renderEntity(player);
     }
-    // console.log(otherPlayers);
     renderEntities(otherPlayers);
 
     renderSelectionBox();
 
-    // renderEntities(moneyBags);
-    // renderEntities(bullets);
-    // renderEntities(enemies);
-    // renderEntities(explosions);
+    renderEntities(moneyBags);
+
+    
+
 };
 
 function renderEntities(list) {
@@ -271,7 +290,6 @@ function renderEntities(list) {
         }   
     } else if (typeof list === "object") {
         for (var item in list) {
-            console.log(list[item]);
             renderEntity(list[item]);
         }
     }

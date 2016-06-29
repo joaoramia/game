@@ -58,15 +58,16 @@
 
             if(!this.otherplayersunit) this.renderEllipse();
 
-            ctx.drawImage(resources.get(this.url),
-                          x, y,
-                          this.size[0], this.size[1],
-                          0, 0,
-                          this.size[0]/4, this.size[1]/4);
-
-            // ctx.arc(x + this.size[0]/8, y + this.size[1]/8, this.size[1]/8, 0, Math.PI*2);
-            // ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
-            // ctx.fill();
+            if (frame === -1) {
+                ctx.drawImage(resources.get(this.url),
+                         x, y);
+            } else {
+                ctx.drawImage(resources.get(this.url),
+                         x, y,
+                         this.size[0], this.size[1],
+                         0, 0,
+                         this.size[0], this.size[1]);
+            }
         }
     };
 
