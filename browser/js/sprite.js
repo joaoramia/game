@@ -1,6 +1,6 @@
 
 (function() {
-    function Sprite(url, pos, size, speed, frames, dir, once) {
+    function Sprite(url, pos, size, speed, frames, dir, otherplayersunit) {
         this.pos = pos;
         this.size = size;
         this.speed = typeof speed === 'number' ? speed : 0;
@@ -8,7 +8,7 @@
         this._index = 0;
         this.url = url;
         this.dir = dir || 'horizontal';
-        this.once = once;
+        this.otherplayersunit = otherplayersunit;
         this.selected = false;
     };
 
@@ -16,8 +16,16 @@
 
         update: function() {
             if (rightClick.x && rightClick.y && this.selected){
-                this._index += 0.25;
+                // this._index += 0.25;
             }
+        },
+
+        renderEllipse: function(){
+            ctx.beginPath();
+            ctx.ellipse(this.pos[0] + this.size[0]/2, this.pos[1] + this.size[1], this.size[1]/3, this.size[1]/5, 0, 0, Math.PI*2);
+            ctx.fillStyle = this.selected ? "rgba(0, 0, 255, 0.3)" : "rgba(0, 0, 0, 0.3)";
+            ctx.fill();
+            ctx.closePath();
         },
 
         render: function(ctx) {
@@ -48,11 +56,18 @@
                 x += frame * this.size[0];
             }
 
-            ctx.drawImage(resources.get(this.url),
-                          x, y,
-                          this.size[0], this.size[1],
-                          0, 0,
-                          this.size[0]/4, this.size[1]/4);
+            if(!this.otherplayersunit) this.renderEllipse();
+
+            if (frame === -1) {
+                ctx.drawImage(resources.get(this.url),
+                         x, y);
+            } else {
+                ctx.drawImage(resources.get(this.url),
+                         x, y,
+                         this.size[0], this.size[1],
+                         0, 0,
+                         this.size[0], this.size[1]);
+            }
         }
     };
 
