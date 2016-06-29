@@ -243,7 +243,7 @@ function checkPlayerBounds() {
 function checkCollisionWithMoneyBag() {
     for (var moneyBag in moneyBags) {
         var moneyPos = moneyBags[moneyBag].pos;
-        var moneySize = moneyBags[moneyBag].sprite;
+        var moneySize = moneyBags[moneyBag].sprite.size;
 
         if (boxCollides(moneyPos, moneySize, player.pos, player.sprite.size)) {
             var temp = moneyBag;

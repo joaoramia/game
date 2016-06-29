@@ -146,11 +146,10 @@ io.on('connection', function (socket) {
     	//player[moneyData.playerId][money] += moneyData.value;
     	delete moneyBags[moneyData];
     	//replenish the moneyBags object
-        console.log(moneyBags.count);
-        while (moneyBags.count < 100) {
+        //while (moneyBags.count < 100) {
     	moneyBags[[utils.getRandomNum(512), utils.getRandomNum(480)]] = {value : utils.getRandomNum(75, 175)};
         socket.emit('moneyBagsUpdate', moneyBags);
-        }
+        //}
 
     })
 });
