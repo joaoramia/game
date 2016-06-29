@@ -44,7 +44,7 @@ function handleInput(dt) {
         vp.pos[0] += 10;
     }
 }
-var image = document.getElementsByTagName('img')[0];
+
 function drawViewport () {
 	ctxV.drawImage(canvas, vp.pos[0], vp.pos[1], viewCanvas.width, viewCanvas.height, 0, 0, viewCanvas.width, viewCanvas.height);
 }
