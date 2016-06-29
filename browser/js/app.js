@@ -58,7 +58,6 @@ resources.load([
     'img/sprites2.png',
     'img/capguy-walk-asset.png',
     'img/terrain.png',
-    'img/commander.png',
     'img/money-bag-asset.png'
 ]);
 resources.onReady(init);
@@ -91,7 +90,7 @@ socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
             coords[1] = parseInt(coords[1]);
             moneyBags[moneyBag].pos = coords;
             //console.log(moneyBags[moneyBag].pos);
-            moneyBags[moneyBag].sprite = new Sprite('img/money-bag-asset.png', coords, [219,236], 10, [-1]);
+            moneyBags[moneyBag].sprite = new Sprite('img/money-bag-asset.png', coords, [33,35], 10, [-1]);
         }
     }
 })
@@ -99,7 +98,6 @@ socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
 socket.on("gameReady", function(playerData) {
     player.id = playerData.id;
     player.pos = playerData.pos;
-    // console.log(playerData, player.pos);
 })
 
 socket.on("playersArray", function(playersArray){
@@ -189,6 +187,10 @@ function updateEntities(dt) {
         player.sprite.update(dt);
     })
 
+    for (var moneyBag in moneyBags) {
+        moneyBags[moneyBag].sprite.update(dt);
+    }
+
 
     // Update all the bullets
     for(var i=0; i<bullets.length; i++) {
@@ -226,15 +228,15 @@ function checkPlayerBounds() {
     if(player.pos[0] < 0) {
         player.pos[0] = 0;
     }
-    else if(player.pos[0] > canvas.width - player.sprite.size[0]/4) {
-        player.pos[0] = canvas.width - player.sprite.size[0]/4;
+    else if(player.pos[0] > canvas.width - player.sprite.size[0]) {
+        player.pos[0] = canvas.width - player.sprite.size[0];
     }
 
     if(player.pos[1] < 0) {
         player.pos[1] = 0;
     }
-    else if(player.pos[1] > canvas.height - player.sprite.size[1]/4) {
-        player.pos[1] = canvas.height - player.sprite.size[1]/4;
+    else if(player.pos[1] > canvas.height - player.sprite.size[1]) {
+        player.pos[1] = canvas.height - player.sprite.size[1];
     }
 }
 
@@ -262,15 +264,12 @@ function render() {
     if(!isGameOver) {
         renderEntity(player);
     }
-    // console.log(otherPlayers);
     renderEntities(otherPlayers);
 
     renderSelectionBox();
 
     renderEntities(moneyBags);
-    // renderEntities(bullets);
-    // renderEntities(enemies);
-    // renderEntities(explosions);
+
 };
 
 function renderEntities(list) {

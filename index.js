@@ -119,7 +119,7 @@ io.on('connection', function (socket) {
     socket.on('respawn', function (newPlayerData) {
         socket.emit('playersArray', players);
 
-        newPlayerData.pos = [400, 400];
+        newPlayerData.pos = [20, 20];
         addPlayer(newPlayerData, socket.id);
         currentPlayer = newPlayerData;
         socket.emit('gameReady', currentPlayer);
@@ -146,8 +146,11 @@ io.on('connection', function (socket) {
     	//player[moneyData.playerId][money] += moneyData.value;
     	delete moneyBags[moneyData];
     	//replenish the moneyBags object
+        console.log(moneyBags.count);
+        while (moneyBags.count < 100) {
     	moneyBags[[utils.getRandomNum(512), utils.getRandomNum(480)]] = {value : utils.getRandomNum(75, 175)};
         socket.emit('moneyBagsUpdate', moneyBags);
+        }
 
     })
 });
