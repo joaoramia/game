@@ -1,14 +1,26 @@
 var rect = {};
 var drag = false;
+var rightClick = {};
 
 function mouseDown(e) {
-  rect.startX = e.pageX - this.offsetLeft;
-  rect.startY = e.pageY - this.offsetTop;
-  drag = true;
+  console.log(e.which);
+  if (e.which === 1){
+    rect.startX = e.pageX - this.offsetLeft;
+    rect.startY = e.pageY - this.offsetTop;
+    rect.w = 5;
+    rect.h = 5;
+    drag = true;
+  }
+  else if(e.which === 3 && currentSelection.length){
+    rightClick.x = e.layerX;
+    rightClick.y = e.layerY;
+  }
 }
 
-function mouseUp() {
-  select();
+function mouseUp(e) {
+  if (e.which === 1){
+    select();
+  }
   drag = false;
   rect = {};
 }
@@ -30,6 +42,7 @@ function draw() {
 //TO BE REFORMATTED ONCE BUILDING AND OTHER UNITS ARE MADE
 function select(){
     currentSelection = [];
+    player.sprite.selected = false;
 
     var playerEndX = player.pos[0] + player.sprite.size[0]/4;
     var playerEndY = player.pos[1] + player.sprite.size[1]/4;
@@ -39,6 +52,7 @@ function select(){
 
     if (inRange(player.pos[0], playerEndX, rect.startX, rectEndX) && inRange(player.pos[1], playerEndY, rect.startY, rectEndY)){
       currentSelection.push(player);
+      player.sprite.selected = true;
       console.log("SELECTED: ", currentSelection);
     }
 
