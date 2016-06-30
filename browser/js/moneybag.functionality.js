@@ -4,14 +4,14 @@ function checkCollisionWithMoneyBag() {
     var moneySize = moneyBags[moneyBag].sprite.size;
 
     player.units.forEach(function(unit){
-        //console.log(unit.sprite.pos);
-        if (boxCollides(unit.pos, unit.sprite.size, moneyBags[moneyBag].pos, moneyBags[moneyBag].sprite.size)) {
-        var temp = moneyBag;
-        delete moneyBags[moneyBag];
-        /////
-        playSoundOnEvent(moneyFoundSound);
-        socket.emit('moneyDiscovered', moneyBag);
-        score += 100;
+        if (moneyBags[moneyBag]){
+            if (boxCollides(unit.pos, unit.sprite.size, moneyBags[moneyBag].pos, moneyBags[moneyBag].sprite.size)) {
+            var temp = moneyBag;
+            delete moneyBags[moneyBag];
+            playSoundOnEvent(moneyFoundSound);
+            socket.emit('moneyDiscovered', moneyBag);
+            score += 100;
+        }
       }  
     })
   }

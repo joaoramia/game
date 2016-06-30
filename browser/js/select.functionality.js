@@ -3,11 +3,13 @@ var drag = false;
 var rightClick = {};
 
 function mouseDown(e) {
-  console.log(e.which);
+  console.log("pageX: ", e.pageX, "pageY: ", e.pageY);
+  console.log("layerX: ", e.layerX, "layerY: ", e.layerY);
+
   console.log("CTRL", e.ctrlKey);
   if (e.which === 1 && !e.ctrlKey){
-    rect.startX = e.pageX - this.offsetLeft;
-    rect.startY = e.pageY - this.offsetTop;
+    rect.startX = e.layerX;// - this.offsetLeft;
+    rect.startY = e.layerY;// - this.offsetTop;
     rect.w = 5;
     rect.h = 5;
     drag = true;
@@ -28,8 +30,8 @@ function mouseUp(e) {
 
 function mouseMove(e) {
   if (drag) {
-    rect.w = (e.pageX - this.offsetLeft) - rect.startX;
-    rect.h = (e.pageY - this.offsetTop) - rect.startY ;
+    rect.w = (e.layerX) - rect.startX;
+    rect.h = (e.layerY) - rect.startY ;
     ctx.clearRect(0,0,canvas.width,canvas.height);
     draw();
   }
