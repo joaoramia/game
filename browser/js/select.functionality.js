@@ -34,7 +34,6 @@ function mouseMove(e) {
     draw();
   }
   // for scrolling without clicking
-  console.log(vp.pos);
   if (e.layerX < 10) {
     vp.pos[0] -= 10;
   } else if (e.layerX >= viewCanvas.width - 10) {
@@ -55,17 +54,22 @@ function draw() {
 //TO BE REFORMATTED ONCE BUILDING AND OTHER UNITS ARE MADE
 function select(){
     currentSelection = [];
-    player.sprite.selected = false;
 
-    var playerEndX = player.pos[0] + player.sprite.size[0];
-    var playerEndY = player.pos[1] + player.sprite.size[1];
-      
     var rectEndX = rect.startX + rect.w;
     var rectEndY = rect.startY + rect.h;
 
-    if (inRange(player.pos[0], playerEndX, rect.startX, rectEndX) && inRange(player.pos[1], playerEndY, rect.startY, rectEndY)){
-      currentSelection.push(player);
-      player.sprite.selected = true;
-      console.log("SELECTED: ", currentSelection);
-    }
+    player.units.forEach(function(unit) {
+      var playerEndX = unit.pos[0] + unit.sprite.size[0];
+      var playerEndY = unit.pos[1] + unit.sprite.size[1];
+
+      if (inRange(unit.pos[0], playerEndX, rect.startX, rectEndX) && inRange(unit.pos[1], playerEndY, rect.startY, rectEndY)){
+        currentSelection.push(unit);
+        unit.sprite.selected = true;
+        console.log("SELECTED: ", currentSelection);
+      }
+    })
+
+    ////  
+
+
 }

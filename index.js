@@ -67,7 +67,7 @@ io.on('connection', function (socket) {
 
         socket.emit('playersArray', players); //to see everyone else
 
-        currentPlayer.units[0] = new Hero([0,0]);
+        currentPlayer.units[0] = new Hero([200,200]);
 
         addPlayer(currentPlayer, socket.id);
         socket.emit('gameReady', currentPlayer);

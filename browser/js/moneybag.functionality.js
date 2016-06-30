@@ -3,13 +3,15 @@ function checkCollisionWithMoneyBag() {
     var moneyPos = moneyBags[moneyBag].pos;
     var moneySize = moneyBags[moneyBag].sprite.size;
 
-    if (boxCollides(player.pos, player.sprite.size, moneyBags[moneyBag].pos, moneyBags[moneyBag].sprite.size)) {
-      var temp = moneyBag;
-      delete moneyBags[moneyBag];
-      /////
-      playSoundOnEvent(moneyFoundSound);
-      socket.emit('moneyDiscovered', moneyBag);
-      score += 100;
-    }
+    player.units.forEach(function(unit){
+        if (boxCollides(unit.pos, unit.sprite.size, moneyBags[moneyBag].pos, moneyBags[moneyBag].sprite.size)) {
+        var temp = moneyBag;
+        delete moneyBags[moneyBag];
+        /////
+        playSoundOnEvent(moneyFoundSound);
+        socket.emit('moneyDiscovered', moneyBag);
+        score += 100;
+      }  
+    })
   }
 }

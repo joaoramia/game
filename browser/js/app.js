@@ -53,7 +53,8 @@ var player = {
     pos: [0,0],
 };
 
-var otherPlayers = {};
+var otherPlayers = {
+};
 
 var currentSelection = [];
 
@@ -91,19 +92,17 @@ socket.on("gameReady", function(playerData) {
 })
 
 socket.on("playersArray", function(playersCollection){
+    console.log("PLAYERS COLLECTION", playersCollection);
     otherPlayers = playersCollection;
-
-    for (var player in otherPlayers){
-        //assign each unit for each player its appropriate sprite
-        player.units.forEach(function (unit) {
+    console.log(otherPlayers);
+    for (var otherPlayer in otherPlayers){
+        //for each player assign each unit its appropriate sprite
+        otherPlayers[otherPlayer].units.forEach(function (unit) {
             unit.sprite = generateSprite(unit.type);
         })
 
     }
 });
-
-
-
 
 socket.on('otherPlayerDC', function (socketId) {
     delete otherPlayers[socketId];
@@ -166,10 +165,11 @@ function render() {
     ctx.fillStyle = terrainPattern;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    for (var player in otherPlayers){
-        renderEntities(player.units);
-    }
+    renderEntities(player.units);
 
+    for (var otherPlayer in otherPlayers){
+        renderEntities(otherPlayers[otherPlayer].units);
+    }
 
     renderSelectionBox();
 
