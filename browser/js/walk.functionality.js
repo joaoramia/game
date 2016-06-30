@@ -10,7 +10,7 @@ function walk(dt){
                     unit.sprite._index += 0.25;
                 }
                 if (unit.type === 'soldier'){
-                    unit.sprite._index += 0.25;
+                    unit.sprite._index += 0.2;
                 }
             }
             else {

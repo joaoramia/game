@@ -4,7 +4,7 @@ function setupSocket (socket) {
     socket.on('otherPlayerJoin', function (otherPlayerData) {
         console.log(otherPlayerData.id + ' has joined!');
         otherPlayerData.units.forEach(function(unit){
-            unit.sprite = generateSprite(unit.type);
+            unit.sprite = generateSprite(unit.type, false);
         });
         otherPlayers[otherPlayerData.id] = otherPlayerData;
     });
@@ -80,13 +80,9 @@ function init() {
 // Defines some initial global variables that're overwritten when game loads
 var moneyBags = {};
 
-var player = {
-    units: [],
-    pos: [0,0],
-};
+var player = {};
 
-var otherPlayers = {
-};
+var otherPlayers = {};
 
 var currentSelection = [];
 
@@ -174,9 +170,13 @@ function renderEntities(list) {
 function renderEntity(entity) {
     ctx.save();
     ctx.translate(entity.pos[0], entity.pos[1]);
-    if (entity.sprite){
-        console.log(entity.sprite);
-        entity.sprite.render(ctx);
+    if (!(entity.sprite instanceof Sprite) && entity.sprite){
+        entity.sprite.selectable = false;
+        Sprite.prototype.render.apply(entity.sprite, [ctx]);
+        // entity.sprite.render(ctx);
+    }
+    else if (entity.sprite){
+        entity.sprite.render(ctx);   
     }
     ctx.restore();
 }

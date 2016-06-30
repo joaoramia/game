@@ -64,6 +64,6 @@ function select(){
     }
   })
 
-  rigtClick = {};
+  rightClick = {};
   drag = false;
 }
