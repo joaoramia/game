@@ -60,9 +60,9 @@ function init() {
 
 resources.load([
     'img/sprites2.png',
-    'img/capguy-walk-asset.png',
+    'img/hero.png',
     'img/terrain.png',
-    'img/money-bag-asset.png'
+    'img/moneybag.png'
 ]);
 resources.onReady(init);
 
@@ -99,7 +99,7 @@ socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
             coords[0] = parseInt(coords[0]);
             coords[1] = parseInt(coords[1]);
             moneyBags[moneyBag].pos = coords;
-            moneyBags[moneyBag].sprite = new Sprite('img/money-bag-asset.png', [0,0], [10,25], 1, [-1]); 
+            moneyBags[moneyBag].sprite = generateSprite("moneybag");
         }
     }
 })
