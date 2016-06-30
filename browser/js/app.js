@@ -110,22 +110,11 @@ socket.on('otherPlayerDC', function (socketId) {
 })
 
 
-var bullets = [];
-var enemies = [];
-var explosions = [];
-
-var lastFire = Date.now();
 var gameTime = 0;
-var isGameOver;
 var terrainPattern;
 
 var score = 0;
 var scoreEl = document.getElementById('score');
-
-// Speed in pixels per second
-var playerSpeed = 200;
-var bulletSpeed = 500;
-var enemySpeed = 100;
 
 // Update game objects
 function update(dt) {
@@ -176,11 +165,6 @@ function checkPlayerBounds() {
 function render() {
     ctx.fillStyle = terrainPattern;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    // Render the player if the game isn't over
-    if(!isGameOver) {
-        renderEntity(player);
-    }
 
     for (var player in otherPlayers){
         renderEntities(player.units);
