@@ -29,19 +29,52 @@ document.body.appendChild(viewCanvas);
 
 function handleInput(dt) {
     if(input.isDown('DOWN') || input.isDown('s')) {
-        vp.pos[1] += 10;
+        if (vp.pos[1] < canvas.height - viewCanvas.height - 10) {
+            vp.pos[1] += 10;
+        }
     }
 
     if(input.isDown('UP') || input.isDown('w')) {
-        vp.pos[1] -= 10;
+        if (vp.pos[1] > 10) {
+            vp.pos[1] -= 10;
+        }
     }
 
     if(input.isDown('LEFT') || input.isDown('a')) {
-        vp.pos[0] -= 10;
+        if (vp.pos[0] > 10) {
+            vp.pos[0] -= 10;
+        }
     }
 
     if(input.isDown('RIGHT') || input.isDown('d')) {
-        vp.pos[0] += 10;
+        if (vp.pos[0] < canvas.width - viewCanvas.width - 10) {
+            vp.pos[0] += 10;
+        }
+    }
+}
+
+function cameraPan (e) {
+    if (!e) return;
+    if (xMinLimit(e) && yMinLimit(e)) {
+      vp.pos[0] -= 10;
+      vp.pos[1] -= 10;
+    } else if (xMaxLimit(e) && yMinLimit(e)) {
+      vp.pos[0] += 10;
+      vp.pos[1] -= 10;
+    } else if (xMinLimit(e) && yMaxLimit(e)) {
+      vp.pos[0] -= 10;
+      vp.pos[1] += 10;
+    } else if (xMaxLimit(e) && yMaxLimit(e)) {
+      vp.pos[0] += 10;
+      vp.pos[1] += 10;
+    } else if (xMinLimit(e)) {
+      vp.pos[0] -= 15;
+    } else if (xMaxLimit(e)) {
+      vp.pos[0] += 15;
+    } else if (yMinLimit(e)) {
+      vp.pos[1] -= 15;
+    } else if (yMaxLimit(e)) {
+      vp.pos[1] += 15;
     }
 }
 

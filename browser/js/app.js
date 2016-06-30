@@ -152,6 +152,7 @@ function render() {
     renderSelectionBox();
 
     renderEntities(moneyBags);
+    cameraPan(currentMousePosition);
 };
 
 function renderEntities(list) {
