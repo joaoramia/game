@@ -65,6 +65,7 @@ function select(){
       if (inRange(unit.pos[0], playerEndX, rect.startX, rectEndX) && inRange(unit.pos[1], playerEndY, rect.startY, rectEndY)){
         currentSelection.push(unit);
         unit.sprite.selected = true;
+        console.log("SPRITE PROPERTY SELECTED: ", unit.sprite.selected)
         console.log("SELECTED: ", currentSelection);
       }
     })

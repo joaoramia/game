@@ -3,6 +3,7 @@ var socket = io.connect('http://' + ip + ':3030');
 // The main game loop
 var lastTime,
     birthTime;
+
 function main() {
     var now = Date.now();
     var dt = (now - lastTime) / 1000.0;
@@ -27,10 +28,30 @@ function init() {
     //reset();
     lastTime = Date.now();
     birthTime = Date.now();
-    main();
-
     socket.emit('respawn', {});
     socket.emit('moneyBagsCoordsOnUserLogin', {});
+    
+    socket.on("playersArray", function(playersCollection){
+        otherPlayers = playersCollection;
+        console.log(otherPlayers);
+        for (var otherPlayer in otherPlayers){
+            //for each player assign each unit its appropriate sprite
+            otherPlayers[otherPlayer].units.forEach(function (unit) {
+                unit.sprite = generateSprite(unit.type, false);
+
+            })
+
+        }
+    });
+
+    socket.on("gameReady", function(playerData) {
+        player = playerData;
+        player.units.forEach(function (unit) {
+            unit.sprite = generateSprite(unit.type, true);
+        })
+        drawViewport();
+        main();
+    })
 
     viewCanvas.addEventListener('mousedown', mouseDown, false);
     viewCanvas.addEventListener('mouseup', mouseUp, false);
@@ -82,27 +103,6 @@ socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
         }
     }
 })
-
-socket.on("gameReady", function(playerData) {
-    player = playerData;
-    player.units.forEach(function (unit) {
-        unit.sprite = generateSprite(unit.type);
-    })
-    drawViewport();
-})
-
-socket.on("playersArray", function(playersCollection){
-    console.log("PLAYERS COLLECTION", playersCollection);
-    otherPlayers = playersCollection;
-    console.log(otherPlayers);
-    for (var otherPlayer in otherPlayers){
-        //for each player assign each unit its appropriate sprite
-        otherPlayers[otherPlayer].units.forEach(function (unit) {
-            unit.sprite = generateSprite(unit.type);
-        })
-
-    }
-});
 
 socket.on('otherPlayerDC', function (socketId) {
     delete otherPlayers[socketId];

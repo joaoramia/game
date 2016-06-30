@@ -1,6 +1,6 @@
 
 (function() {
-    function Sprite(url, pos, size, speed, frames, dir, otherplayersunit) {
+    function Sprite(url, pos, size, speed, frames, dir, selectable) {
         this.pos = pos;
         this.size = size;
         this.speed = typeof speed === 'number' ? speed : 0;
@@ -8,7 +8,7 @@
         this._index = 0;
         this.url = url;
         this.dir = dir || 'horizontal';
-        this.otherplayersunit = otherplayersunit;
+        this.selectable = selectable; //selectable if not other players' unit
         this.selected = false;
     };
 
@@ -50,7 +50,7 @@
                 x += frame * this.size[0];
             }
 
-            if(!this.otherplayersunit) this.renderEllipse();
+            if(this.selectable) this.renderEllipse();
 
             if (frame === -1) {
                 ctx.drawImage(resources.get(this.url),
@@ -68,9 +68,8 @@
     window.Sprite = Sprite;
 })()
 
-function generateSprite(type){
+function generateSprite(type, selectable){
     if (type === 'hero') {
-        return new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', true);
-
+        return new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
     }
 }
