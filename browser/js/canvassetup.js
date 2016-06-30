@@ -16,16 +16,17 @@ var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
 canvas.width = 2500;
 canvas.height = 1000;
-// document.body.appendChild(canvas);
 
 var viewCanvas = document.createElement('canvas');
 var ctxV = viewCanvas.getContext('2d');
-viewCanvas.width = 600;
-viewCanvas.height = 500;
+  viewCanvas.width = window.innerWidth;
+  viewCanvas.height = window.innerHeight * .70;
 var vp = {
 	pos: [0,0]
 };
-document.body.appendChild(viewCanvas);
+
+//append canvas to the DOM
+$("#game-view").append(viewCanvas);
 
 function handleInput(dt) {
     if(input.isDown('DOWN') || input.isDown('s')) {
