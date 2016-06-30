@@ -6,11 +6,15 @@ function checkCollisionWithMoneyBag() {
     player.units.forEach(function(unit){
         if (moneyBags[moneyBag]){
             if (boxCollides(unit.pos, unit.sprite.size, moneyBags[moneyBag].pos, moneyBags[moneyBag].sprite.size)) {
-            var temp = moneyBag;
+            var moneyBagData = {
+            playerId: player.id,
+            name: moneyBag,
+            value: moneyBags[moneyBag].value
+            }
             delete moneyBags[moneyBag];
             playSoundOnEvent(moneyFoundSound);
-            socket.emit('moneyDiscovered', moneyBag);
-            score += 100;
+            socket.emit('moneyDiscovered', moneyBagData);
+            score += moneyBagData.value;
         }
       }  
     })

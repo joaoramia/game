@@ -109,7 +109,7 @@ var currentSelection = [];
 var gameTime = 0;
 var terrainPattern;
 
-var score = 0;
+var score = 200;
 var scoreEl = document.getElementById('score');
 
 // Update game objects
