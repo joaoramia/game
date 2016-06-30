@@ -20,8 +20,8 @@ var tree = quadtree(0, 0, gameConfig.width, gameConfig.height);
 // all the objects on the canvas
 var players = {};
 var sockets = {};
-var moneyBags = {};
-initialMoneyBags();
+var moneyBags = {count: 0};
+generateMoneyBags(100);
 
 
 
@@ -43,29 +43,32 @@ var server = app.listen(3030, function () {
 io = io.listen(server);
 
 io.on('connection', function (socket) {
+    console.log("hey user has joined ", socket.id)
     var currentPlayer = new Player(socket.id);
 
     sockets[socket.id] = socket;
 
+    // when the new user joins!
     socket.on('respawn', function (newPlayerData) {
 
         //currentPlayer.userName = newPlayerData.username // TODO
 
         currentPlayer.units[0] = new Hero([200,200]);
         currentPlayer.id = socket.id;
+
+        // emit the current array of players then add your player
+        socket.emit('playersArray', players); //to see everyone else
+
         addPlayer(currentPlayer, socket.id);
 
-
-        socket.emit('playersArray', players); //to see everyone else
-        socket.broadcast.emit('otherPlayerJoin', currentPlayer);
-
-
         socket.emit('gameReady', {playerData: currentPlayer, moneyBags: moneyBags});
+        socket.broadcast.emit('otherPlayerJoin', currentPlayer);
         
     });
 
     socket.on('disconnect', function () {
-        removePlayer(socket); // removes them from players array AND sockets obj
+        console.log("hey user has left ", socket.id)
+        removePlayer(socket); // removes them from players AND sockets collections
 
         socket.broadcast.emit('otherPlayerDC', socket.id);
         socket.disconnect();
@@ -76,28 +79,29 @@ io.on('connection', function (socket) {
     })
 
     socket.on('moneyDiscovered', function (moneyData) {
-    	//increase the wealth of the player
-    	//player[moneyData.playerId][money] += moneyData.value;
     	delete moneyBags[moneyData];
-    	//replenish the moneyBags object
-    	moneyBags[[utils.getRandomNum(512), utils.getRandomNum(480)]] = {value : utils.getRandomNum(75, 175)};
+        generateMoneyBags(1);
         socket.emit('moneyBagsUpdate', moneyBags);
-
     })
+
+
+    socket.on("ttest", function (res){
+        console.log("hererere", res.test);
+    })
+
 });
 
 
 // setInterval(sendUpdates, 1000);
 
 //initially generate money bags for the moneyBags object
-function initialMoneyBags(){
-    for (var i = 0; i < 200; i++) {
+function generateMoneyBags(count){
+    moneyBags.count = Object.keys(moneyBags).length - 1 + count;
+    for (var i = 0; i < count; i++) {
         //values of array represent x and y. later, change this so that x = max x of canvas and y is max y of canvas
         moneyBags[[utils.getRandomNum(2000), utils.getRandomNum(1000)]] = {value : utils.getRandomNum(75, 150)};
     }
 }
-
-moneyBags.count = Object.keys(moneyBags).length - 1;
 
 
 function addPlayer (playerData) {
@@ -108,3 +112,5 @@ function removePlayer (socket) {
     delete sockets[socket.id];
     delete players[socket.id];
 }
+
+

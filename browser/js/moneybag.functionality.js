@@ -30,3 +30,5 @@ function setupMoneyBags (moneyBagsFromServer) {
         }
     }
 }
+
+

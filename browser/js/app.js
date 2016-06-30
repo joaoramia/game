@@ -1,17 +1,22 @@
 var socket = io.connect('http://' + ip + ':3030');
 
 function setupSocket (socket) {
+
     socket.on('otherPlayerJoin', function (otherPlayerData) {
         console.log(otherPlayerData.id + ' has joined!');
+        // generate the new players sprites
         otherPlayerData.units.forEach(function(unit){
-            unit.sprite = generateSprite(unit.type);
+            unit.sprite = generateSprite(unit.type, true);
+            console.log("unite log", unit.sprite);
         });
         otherPlayers[otherPlayerData.id] = otherPlayerData;
+
     });
 
     socket.on('otherPlayerDC', function (socketId) {
+        console.log(socketId + ' left!!!!!');
         delete otherPlayers[socketId];
-    })
+    });
 }
 
 socket.emit('respawn', {});
@@ -22,6 +27,8 @@ resources.load([
     'img/terrain.png',
     'img/moneybag.png'
 ]);
+
+
 resources.onReady(init);
 
 // The main game loop
@@ -44,13 +51,27 @@ function init() {
     lastTime = Date.now();
     
     socket.on("playersArray", function(playersCollection){
+        console.log("all the players", playersCollection)
         otherPlayers = playersCollection;
-        for (var otherPlayer in otherPlayers){
-            //for each player assign each unit its appropriate sprite
-            otherPlayers[otherPlayer].units.forEach(function (unit) {
-                unit.sprite = generateSprite(unit.type, false);
 
-            })
+
+
+        for (var otherPlayer in otherPlayers){
+
+            if (otherPlayers.hasOwnProperty(otherPlayer)){
+                //for each player assign each unit its appropriate sprint
+                otherPlayers[otherPlayer].units.forEach(function (unit) {
+                    unit.sprite = generateSprite(unit.type, true);
+                    console.log("current unit", unit.sprite);
+                });
+            }
+            //
+            //
+            ////for each player assign each unit its appropriate sprite
+            //otherPlayers[otherPlayer].units.forEach(function (unit) {
+            //    unit.sprite = generateSprite(unit.type, false);
+            //
+            //})
         }
     });
 
@@ -68,6 +89,14 @@ function init() {
     viewCanvas.addEventListener('mousedown', mouseDown, false);
     viewCanvas.addEventListener('mouseup', mouseUp, false);
     viewCanvas.addEventListener('mousemove', mouseMove, false);
+
+
+    socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
+        setupMoneyBags(moneyBagsFromServer);
+    })
+
+
+
 }
 
 
@@ -80,12 +109,9 @@ var player = {
     pos: [0,0],
 };
 
-var otherPlayers = {
-};
-
+var otherPlayers = {};
 var currentSelection = [];
 
-var otherPlayerSelection = [];
 
 var gameTime = 0;
 var terrainPattern;
@@ -111,6 +137,7 @@ function update(dt) {
 
     socket.on("otherPlayerMoves", function(playerData) {
         otherPlayers[playerData.id]=playerData;
+
     });
 
     drawViewport();
@@ -143,10 +170,13 @@ function render() {
     ctx.fillStyle = terrainPattern;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    //console.log("player units ", player.units)
     renderEntities(player.units);
 
-    for (var otherPlayer in otherPlayers){
-        renderEntities(otherPlayers[otherPlayer].units);
+    for (var key in otherPlayers){
+        console.log("object of toher playees", otherPlayers[key])
+        if (otherPlayers.hasOwnProperty(key))
+            renderEntities(otherPlayers[key].units);
     }
 
     renderSelectionBox();
@@ -170,6 +200,7 @@ function renderEntities(list) {
 function renderEntity(entity) {
     ctx.save();
     ctx.translate(entity.pos[0], entity.pos[1]);
+    console.log("gotcha!!!!", entity);
     entity.sprite.render(ctx);
     ctx.restore();
 }
