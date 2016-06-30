@@ -6,7 +6,6 @@ function setupSocket (socket) {
         otherPlayerData.units.forEach(function(unit){
             unit.sprite = generateSprite(unit.type);
         });
-          //new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', true);
         otherPlayers[otherPlayerData.id] = otherPlayerData;
     });
 

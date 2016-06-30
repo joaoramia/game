@@ -13,31 +13,17 @@ app.use(express.static(__dirname + '/node_modules/'));
 
 var gameConfig = require('./config.json');
 
+// currently not used
 var quadtree = require('simple-quadtree');
 var tree = quadtree(0, 0, gameConfig.width, gameConfig.height);
 
+// all the objects on the canvas
 var players = {};
 var sockets = {};
-var removedPlayers = 0; // once it reaches 100 garbage COLLECTION!
 var moneyBags = {};
-
-//initially generate money bags for the moneyBags object
-for (var i = 0; i < 200; i++) {
-	//values of array represent x and y. later, change this so that x = max x of canvas and y is max y of canvas
-	moneyBags[[utils.getRandomNum(2000), utils.getRandomNum(1000)]] = {value : utils.getRandomNum(75, 150)};
-}
-
-moneyBags.count = Object.keys(moneyBags).length - 1;
+initialMoneyBags();
 
 
-function addPlayer (playerData, socketId) {
-	players[socketId] = playerData;
-}
-
-function removePlayer (socket) {
-    delete sockets[socket.id];
-    delete players[socket.id];
-}
 
 
 // function sendUpdates () {
@@ -65,12 +51,15 @@ io.on('connection', function (socket) {
 
         //currentPlayer.userName = newPlayerData.username // TODO
 
+        currentPlayer.units[0] = new Hero([200,200]);
+        currentPlayer.id = socket.id;
+        addPlayer(currentPlayer, socket.id);
+
+
         socket.emit('playersArray', players); //to see everyone else
         socket.broadcast.emit('otherPlayerJoin', currentPlayer);
 
-        currentPlayer.units[0] = new Hero([200,200]);
 
-        addPlayer(currentPlayer, socket.id);
         socket.emit('gameReady', {playerData: currentPlayer, moneyBags: moneyBags});
         
     });
@@ -99,3 +88,23 @@ io.on('connection', function (socket) {
 
 
 // setInterval(sendUpdates, 1000);
+
+//initially generate money bags for the moneyBags object
+function initialMoneyBags(){
+    for (var i = 0; i < 200; i++) {
+        //values of array represent x and y. later, change this so that x = max x of canvas and y is max y of canvas
+        moneyBags[[utils.getRandomNum(2000), utils.getRandomNum(1000)]] = {value : utils.getRandomNum(75, 150)};
+    }
+}
+
+moneyBags.count = Object.keys(moneyBags).length - 1;
+
+
+function addPlayer (playerData) {
+    players[playerData.id] = playerData;
+}
+
+function removePlayer (socket) {
+    delete sockets[socket.id];
+    delete players[socket.id];
+}
