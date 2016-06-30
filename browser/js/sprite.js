@@ -50,7 +50,7 @@
                 x += frame * this.size[0];
             }
 
-            if(this.selectable) this.renderEllipse();
+            if (this.selectable) this.renderEllipse();
 
             if (frame === -1) {
                 ctx.drawImage(resources.get(this.url),

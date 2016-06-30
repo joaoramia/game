@@ -3,7 +3,8 @@ function Player(id, userName) {
   this.userName = userName || "";
   this.numberOfSessions = 0;
   this.units = []; // array of Unit objects
-  this.buildings =[]; // array of building objects
+  this.buildings = []; // array of building objects
+  this.isKing = false;
 }
 
 module.exports = Player;

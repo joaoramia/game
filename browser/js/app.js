@@ -6,8 +6,8 @@ function setupSocket (socket) {
         console.log(otherPlayerData.id + ' has joined!');
         // generate the new players sprites
         otherPlayerData.units.forEach(function(unit){
-            unit.sprite = generateSprite(unit.type, true);
-            console.log("unite log", unit.sprite);
+            unit.sprite = generateSprite(unit.type, false);
+
         });
         otherPlayers[otherPlayerData.id] = otherPlayerData;
 
@@ -99,12 +99,10 @@ function init() {
 // Defines some initial global variables that're overwritten when game loads
 var moneyBags = {};
 
-var player = {
-    units: [],
-    pos: [0,0],
-};
+var player = {};
 
 var otherPlayers = {};
+
 var currentSelection = [];
 
 
@@ -118,9 +116,7 @@ var scoreEl = document.getElementById('score');
 function update(dt) {
     gameTime += dt;
 
-    if (rightClick.x && rightClick.y){
-        walk(rightClick.x, rightClick.y, dt);
-    }
+    walk(dt);
 
     handleInput(dt);
 
@@ -165,7 +161,6 @@ function render() {
     ctx.fillStyle = terrainPattern;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    //console.log("player units ", player.units)
     renderEntities(player.units);
 
     for (var key in otherPlayers){
@@ -195,8 +190,14 @@ function renderEntities(list) {
 function renderEntity(entity) {
     ctx.save();
     ctx.translate(entity.pos[0], entity.pos[1]);
-    console.log("gotcha!!!!", entity);
-    entity.sprite.render(ctx);
+    if (!(entity.sprite instanceof Sprite) && entity.sprite){
+        entity.sprite.selectable = false;
+        Sprite.prototype.render.apply(entity.sprite, [ctx]);
+        // entity.sprite.render(ctx);
+    }
+    else if (entity.sprite){
+        entity.sprite.render(ctx);   
+    }
     ctx.restore();
 }
 
