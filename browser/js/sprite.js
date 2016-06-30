@@ -69,7 +69,11 @@
 })()
 
 function generateSprite(type, selectable){
+    selectable = selectable || false;
     if (type === 'hero') {
-        return new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
+        return new Sprite('img/' + type + '.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
+    }else if(type === 'moneybag'){
+        console.log()
+        return new Sprite('img/'+ type +'.png', [0,0], [10,25], 1, [-1], selectable);
     }
 }
