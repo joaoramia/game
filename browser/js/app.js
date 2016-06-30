@@ -25,7 +25,8 @@ resources.load([
     'img/sprites2.png',
     'img/hero.png',
     'img/terrain.png',
-    'img/moneybag.png'
+    'img/moneybag.png',
+    'img/soldier-asset.png'
 ]);
 
 
@@ -55,9 +56,12 @@ function init() {
         otherPlayers = playersCollection;
 
 
+        /*
+        for each of the other players, assign each unit,
+        its appropriate sprite
+        */
 
         for (var otherPlayer in otherPlayers){
-
             if (otherPlayers.hasOwnProperty(otherPlayer)){
                 //for each player assign each unit its appropriate sprint
                 otherPlayers[otherPlayer].units.forEach(function (unit) {
@@ -65,13 +69,6 @@ function init() {
                     console.log("current unit", unit.sprite);
                 });
             }
-            //
-            //
-            ////for each player assign each unit its appropriate sprite
-            //otherPlayers[otherPlayer].units.forEach(function (unit) {
-            //    unit.sprite = generateSprite(unit.type, false);
-            //
-            //})
         }
     });
 
@@ -99,9 +96,7 @@ function init() {
 
 }
 
-
-
-// Game state
+// Defines some initial global variables that're overwritten when game loads
 var moneyBags = {};
 
 var player = {

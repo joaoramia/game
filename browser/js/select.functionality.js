@@ -5,7 +5,9 @@ var rightClick = {};
 var currentMousePosition;
 
 function mouseDown(e) {
-  console.log(e.which);
+  console.log("pageX: ", e.pageX, "pageY: ", e.pageY);
+  console.log("layerX: ", e.layerX, "layerY: ", e.layerY);
+
   console.log("CTRL", e.ctrlKey);
   if (e.which === 1 && !e.ctrlKey){
     rect.startX = e.pageX - this.offsetLeft;
@@ -30,8 +32,8 @@ function mouseUp(e) {
 
 function mouseMove(e) {
   if (drag) {
-    rect.w = (e.pageX - this.offsetLeft) - rect.startX;
-    rect.h = (e.pageY - this.offsetTop) - rect.startY ;
+    rect.w = (e.layerX) - rect.startX;
+    rect.h = (e.layerY) - rect.startY ;
     ctx.clearRect(0,0,canvas.width,canvas.height);
     draw();
   }
@@ -46,7 +48,7 @@ function draw() {
   ctx.fillStyle = "red";
 }
 
-//TO BE REFORMATTED ONCE BUILDING AND OTHER UNITS ARE MADE
+//May still require adjustments, but seems to be able to accomodate multi-unit selection
 function select(){
     currentSelection = [];
 
@@ -60,8 +62,6 @@ function select(){
       if (inRange(unit.pos[0], playerEndX, rect.startX, rectEndX) && inRange(unit.pos[1], playerEndY, rect.startY, rectEndY)){
         currentSelection.push(unit);
         unit.sprite.selected = true;
-        console.log("SPRITE PROPERTY SELECTED: ", unit.sprite.selected)
-        console.log("SELECTED: ", currentSelection);
       }
     })
 
