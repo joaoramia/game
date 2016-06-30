@@ -72,6 +72,6 @@ function generateSprite(type, selectable){
     if (type === 'hero' && selectable) {
        return new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
     } else if (type === 'soldier' && selectable) {
-        return new Sprite('img/soldier-asset.png', [0, 0], [64, 64], 8, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
+        return new Sprite('img/soldier-asset.png', [0, 0], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
     }
 }
