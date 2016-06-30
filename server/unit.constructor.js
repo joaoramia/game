@@ -7,6 +7,7 @@ function Unit (pos, type, health, attack, defense, speed) {
   this.attack = attack; // integer
   this.defense = defense; // integer
   this.sprite = null; // should be set on front-end
+  this.targetpos = undefined;
 }
 
 function Hero (pos){
