@@ -23,9 +23,9 @@ var removedPlayers = 0; // once it reaches 100 garbage COLLECTION!
 var moneyBags = {};
 
 //initially generate money bags for the moneyBags object
-for (var i = 0; i < 200; i++) {
+for (var i = 0; i < 50; i++) {
 	//values of array represent x and y. later, change this so that x = max x of canvas and y is max y of canvas
-	moneyBags[[utils.getRandomNum(2000), utils.getRandomNum(1000)]] = {value : utils.getRandomNum(75, 150)};
+	moneyBags[[utils.getRandomNum(2000), utils.getRandomNum(1000)]] = {value : utils.getRandomNum(25, 75)};
 }
 
 moneyBags.count = Object.keys(moneyBags).length - 1;
@@ -88,10 +88,11 @@ io.on('connection', function (socket) {
     	socket.broadcast.emit('otherPlayerMoves', playerData);
     })
 
-    socket.on('moneyDiscovered', function (moneyData) {
+    socket.on('moneyDiscovered', function (moneyBagData) {
     	//increase the wealth of the player
-    	//player[moneyData.playerId][money] += moneyData.value;
-    	delete moneyBags[moneyData];
+    	players[moneyBagData.playerId].wealth += moneyBagData.value;
+        console.log("MORE MONEY MORE PROBLEMS", players[moneyBagData.playerId].wealth)
+    	delete moneyBags[moneyBagData.name];
     	//replenish the moneyBags object
     	moneyBags[[utils.getRandomNum(512), utils.getRandomNum(480)]] = {value : utils.getRandomNum(75, 175)};
         socket.emit('moneyBagsUpdate', moneyBags);
