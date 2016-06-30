@@ -15,3 +15,18 @@ function checkCollisionWithMoneyBag() {
     })
   }
 }
+
+
+function setupMoneyBags (moneyBagsFromServer) {
+    moneyBags = moneyBagsFromServer;
+    delete moneyBags.count;
+    for (var moneyBag in moneyBags) {
+        if (moneyBags.hasOwnProperty(moneyBag)) {
+            var coords = moneyBag.split(",");
+            coords[0] = parseInt(coords[0]);
+            coords[1] = parseInt(coords[1]);
+            moneyBags[moneyBag].pos = coords;
+            moneyBags[moneyBag].sprite = generateSprite("moneybag");
+        }
+    }
+}

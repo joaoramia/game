@@ -34,9 +34,9 @@ function mouseMove(e) {
     draw();
   }
   // for scrolling without clicking
-  if (e.layerX < 10) {
+  if (e.layerX < 10 && vp.pos[0] > 10) {
     vp.pos[0] -= 10;
-  } else if (e.layerX >= viewCanvas.width - 10) {
+  } else if (e.layerX >= viewCanvas.width - 10 && vp.pos[0] < canvas.width - 10) {
     vp.pos[0] += 10;
   } else if (e.layerY < 10) {
     vp.pos[1] -= 10;
