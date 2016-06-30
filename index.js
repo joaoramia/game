@@ -6,6 +6,7 @@ var utils = require('./server/utils');
 var Player = require('./server/player.constructor');
 var Unit = require('./server/unit.constructor').Unit;
 var Hero = require('./server/unit.constructor').Hero;
+var Soldier = require('./server/unit.constructor').Soldier;
 
 app.use(express.static(__dirname + '/public/'));
 app.use(express.static(__dirname + '/browser/'));
@@ -68,6 +69,7 @@ io.on('connection', function (socket) {
         socket.emit('playersArray', players); //to see everyone else
 
         currentPlayer.units[0] = new Hero([200,200]);
+        currentPlayer.units[1] = new Soldier([300, 300]);
 
         addPlayer(currentPlayer, socket.id);
         socket.emit('gameReady', currentPlayer);

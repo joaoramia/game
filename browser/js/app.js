@@ -22,10 +22,6 @@ function main() {
 function init() {
     terrainPattern = ctx.createPattern(resources.get('img/terrain.png'), 'repeat');
 
-    //document.getElementById('play-again').addEventListener('click', function() {
-    //    reset();
-    //});
-    //reset();
     lastTime = Date.now();
     birthTime = Date.now();
     socket.emit('respawn', {});
@@ -33,9 +29,13 @@ function init() {
     
     socket.on("playersArray", function(playersCollection){
         otherPlayers = playersCollection;
-        console.log(otherPlayers);
+
+        /*
+        for each of the other players, assign each unit,
+        its appropriate sprite
+        */
+
         for (var otherPlayer in otherPlayers){
-            //for each player assign each unit its appropriate sprite
             otherPlayers[otherPlayer].units.forEach(function (unit) {
                 unit.sprite = generateSprite(unit.type, false);
 
@@ -62,11 +62,12 @@ resources.load([
     'img/sprites2.png',
     'img/capguy-walk-asset.png',
     'img/terrain.png',
-    'img/money-bag-asset.png'
+    'img/money-bag-asset.png',
+    'img/soldier-asset.png'
 ]);
 resources.onReady(init);
 
-// Game state
+// Defines some initial global variables that're overwritten when game loads
 var moneyBags = {};
 
 var player = {
@@ -82,11 +83,14 @@ var currentSelection = [];
 var otherPlayerSelection = [];
 
 socket.on('otherPlayerJoin', function (otherPlayerData) {
+    /*
+    when new player joins, iterates through otherPlayer object 
+    and adds sprites to player's units
+    */
     console.log(otherPlayerData.id + ' has joined!');
     otherPlayerData.units.forEach(function(unit){
         unit.sprite = generateSprite(unit.type);
     });
-      //new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', true);
     otherPlayers[otherPlayerData.id] = otherPlayerData;
 });
 

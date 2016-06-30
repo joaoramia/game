@@ -51,7 +51,7 @@ function draw() {
   ctx.fillStyle = "red";
 }
 
-//TO BE REFORMATTED ONCE BUILDING AND OTHER UNITS ARE MADE
+//May still require adjustments, but seems to be able to accomodate multi-unit selection
 function select(){
     currentSelection = [];
 
@@ -65,8 +65,6 @@ function select(){
       if (inRange(unit.pos[0], playerEndX, rect.startX, rectEndX) && inRange(unit.pos[1], playerEndY, rect.startY, rectEndY)){
         currentSelection.push(unit);
         unit.sprite.selected = true;
-        console.log("SPRITE PROPERTY SELECTED: ", unit.sprite.selected)
-        console.log("SELECTED: ", currentSelection);
       }
     })
 

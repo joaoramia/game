@@ -1,4 +1,4 @@
-function Unit(pos, type, health, attack, defense) {
+function Unit (pos, type, health, attack, defense) {
   this.pos = pos; // array of [x, y]
   this.type = type; //string
   this.selected = false;
@@ -8,12 +8,18 @@ function Unit(pos, type, health, attack, defense) {
   this.sprite = null; // should be set on front-end
 }
 
-function Hero(pos){
+function Hero (pos){
   Unit.call(this, pos, 'hero', 100, 5, 1);
   this.rateOfAttack = 1;
 }
 
+function Soldier (pos){
+  Unit.call(this, pos, 'soldier', 60, 15, 0);
+  this.rateOfAttack = 5;
+}
+
 module.exports = {
   Unit : Unit,
-  Hero: Hero
+  Hero: Hero,
+  Soldier: Soldier
 };
