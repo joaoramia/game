@@ -6,6 +6,7 @@ var utils = require('./server/utils');
 var Player = require('./server/player.constructor');
 var Unit = require('./server/unit.constructor').Unit;
 var Hero = require('./server/unit.constructor').Hero;
+var Soldier = require('./server/unit.constructor').Soldier;
 
 app.use(express.static(__dirname + '/public/'));
 app.use(express.static(__dirname + '/browser/'));
@@ -40,11 +41,11 @@ function removePlayer (socket) {
 }
 
 
-function sendUpdates () {
-    for (var player in players){
-        if (sockets[player.id]) sockets[player.id].emit('gameUpdate', 'asdf');
-    }
-}
+// function sendUpdates () {
+//     for (var player in players){
+//         if (sockets[player.id]) sockets[player.id].emit('gameUpdate', 'asdf');
+//     }
+// }
 
 app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));
@@ -66,16 +67,14 @@ io.on('connection', function (socket) {
         //currentPlayer.userName = newPlayerData.username // TODO
 
         socket.emit('playersArray', players); //to see everyone else
+        socket.broadcast.emit('otherPlayerJoin', currentPlayer);
 
         currentPlayer.units[0] = new Hero([200,200]);
+        currentPlayer.units[1] = new Soldier([300, 300]);
 
         addPlayer(currentPlayer, socket.id);
-        socket.emit('gameReady', currentPlayer);
-        socket.broadcast.emit('otherPlayerJoin', currentPlayer);
-    });
-
-    socket.on('moneyBagsCoordsOnUserLogin', function(){
-    	socket.emit('moneyBagsUpdate', moneyBags);
+        socket.emit('gameReady', {playerData: currentPlayer, moneyBags: moneyBags});
+        
     });
 
     socket.on('disconnect', function () {
@@ -101,4 +100,4 @@ io.on('connection', function (socket) {
 });
 
 
-setInterval(sendUpdates, 1000);
+// setInterval(sendUpdates, 1000);

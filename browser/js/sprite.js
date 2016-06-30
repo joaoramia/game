@@ -8,7 +8,7 @@
         this._index = 0;
         this.url = url;
         this.dir = dir || 'horizontal';
-        this.selectable = selectable; //selectable if not other players' unit
+        this.selectable = selectable; //selectable if not another player's unit
         this.selected = false;
     };
 
@@ -70,10 +70,12 @@
 
 function generateSprite(type, selectable){
     selectable = selectable || false;
-    if (type === 'hero') {
-        return new Sprite('img/' + type + '.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
+
+    if (type === 'hero' && selectable) {
+       return new Sprite('img/hero.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
+    } else if (type === 'soldier' && selectable) {
+        return new Sprite('img/soldier-asset.png', [0, 0], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
     }else if(type === 'moneybag'){
-        console.log()
-        return new Sprite('img/'+ type +'.png', [0,0], [10,25], 1, [-1], selectable);
+        return new Sprite('img/'+ type +'.png', [0,0], [10,25], 1, [-1], false);
     }
 }

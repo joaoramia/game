@@ -1,16 +1,38 @@
 var socket = io.connect('http://' + ip + ':3030');
 
+function setupSocket (socket) {
+    socket.on('otherPlayerJoin', function (otherPlayerData) {
+        console.log(otherPlayerData.id + ' has joined!');
+        otherPlayerData.units.forEach(function(unit){
+            unit.sprite = generateSprite(unit.type);
+        });
+          //new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', true);
+        otherPlayers[otherPlayerData.id] = otherPlayerData;
+    });
+
+    socket.on('otherPlayerDC', function (socketId) {
+        delete otherPlayers[socketId];
+    })
+}
+
+socket.emit('respawn', {});
+
+resources.load([
+    'img/sprites2.png',
+    'img/hero.png',
+    'img/terrain.png',
+    'img/moneybag.png',
+    'img/soldier-asset.png'
+]);
+
+resources.onReady(init);
+
 // The main game loop
-var lastTime,
-    birthTime;
+var lastTime;
 
 function main() {
     var now = Date.now();
     var dt = (now - lastTime) / 1000.0;
-
-    if (rightClick.x && rightClick.y){
-        walk(rightClick.x, rightClick.y, dt);
-    }
 
     update(dt);
     render();
@@ -22,33 +44,31 @@ function main() {
 function init() {
     terrainPattern = ctx.createPattern(resources.get('img/terrain.png'), 'repeat');
 
-    //document.getElementById('play-again').addEventListener('click', function() {
-    //    reset();
-    //});
-    //reset();
     lastTime = Date.now();
-    birthTime = Date.now();
-    socket.emit('respawn', {});
-    socket.emit('moneyBagsCoordsOnUserLogin', {});
     
     socket.on("playersArray", function(playersCollection){
         otherPlayers = playersCollection;
-        console.log(otherPlayers);
+
+        /*
+        for each of the other players, assign each unit,
+        its appropriate sprite
+        */
+
         for (var otherPlayer in otherPlayers){
-            //for each player assign each unit its appropriate sprite
             otherPlayers[otherPlayer].units.forEach(function (unit) {
                 unit.sprite = generateSprite(unit.type, false);
 
             })
-
         }
     });
 
-    socket.on("gameReady", function(playerData) {
-        player = playerData;
+    socket.on("gameReady", function(gameData) {
+        player = gameData.playerData;
         player.units.forEach(function (unit) {
             unit.sprite = generateSprite(unit.type, true);
         })
+        setupMoneyBags(gameData.moneyBags);
+        setupSocket(socket);
         drawViewport();
         main();
     })
@@ -58,15 +78,7 @@ function init() {
     viewCanvas.addEventListener('mousemove', mouseMove, false);
 }
 
-resources.load([
-    'img/sprites2.png',
-    'img/hero.png',
-    'img/terrain.png',
-    'img/moneybag.png'
-]);
-resources.onReady(init);
-
-// Game state
+// Defines some initial global variables that're overwritten when game loads
 var moneyBags = {};
 
 var player = {
@@ -80,34 +92,6 @@ var otherPlayers = {
 var currentSelection = [];
 
 var otherPlayerSelection = [];
-
-socket.on('otherPlayerJoin', function (otherPlayerData) {
-    console.log(otherPlayerData.id + ' has joined!');
-    otherPlayerData.units.forEach(function(unit){
-        unit.sprite = generateSprite(unit.type);
-    });
-      //new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', true);
-    otherPlayers[otherPlayerData.id] = otherPlayerData;
-});
-
-socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
-    moneyBags = moneyBagsFromServer;
-    delete moneyBags.count;
-    for (var moneyBag in moneyBags) {
-        if (moneyBags.hasOwnProperty(moneyBag)) {
-            var coords = moneyBag.split(",");
-            coords[0] = parseInt(coords[0]);
-            coords[1] = parseInt(coords[1]);
-            moneyBags[moneyBag].pos = coords;
-            moneyBags[moneyBag].sprite = generateSprite("moneybag");
-        }
-    }
-})
-
-socket.on('otherPlayerDC', function (socketId) {
-    delete otherPlayers[socketId];
-})
-
 
 var gameTime = 0;
 var terrainPattern;
@@ -174,6 +158,7 @@ function render() {
     renderSelectionBox();
 
     renderEntities(moneyBags);
+    cameraPan(currentMousePosition);
 };
 
 function renderEntities(list) {
