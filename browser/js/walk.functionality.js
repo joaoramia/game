@@ -11,7 +11,6 @@ function walk(x, y, dt){
 
                 unit.sprite._index += 0.25;
             }
-            unit.sprite.update();
 		}
 	})
 }

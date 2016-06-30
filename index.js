@@ -2,7 +2,10 @@ var express = require('express');
 var app = express();
 var path = require('path');
 var io = require('socket.io');
-var utils = require('./utils');
+var utils = require('./server/utils');
+var Player = require('./server/player.constructor');
+var Unit = require('./server/unit.constructor').Unit;
+var Hero = require('./server/unit.constructor').Hero;
 
 app.use(express.static(__dirname + '/public/'));
 app.use(express.static(__dirname + '/browser/'));
@@ -13,82 +16,34 @@ var gameConfig = require('./config.json');
 var quadtree = require('simple-quadtree');
 var tree = quadtree(0, 0, gameConfig.width, gameConfig.height);
 
-var players = [];
+var players = {};
 var sockets = {};
 var removedPlayers = 0; // once it reaches 100 garbage COLLECTION!
 var moneyBags = {};
 
 //initially generate money bags for the moneyBags object
-for (var i = 0; i < 10; i++) {
+for (var i = 0; i < 200; i++) {
 	//values of array represent x and y. later, change this so that x = max x of canvas and y is max y of canvas
-	moneyBags[[utils.getRandomNum(512), utils.getRandomNum(480)]] = {value : utils.getRandomNum(75, 150)};
+	moneyBags[[utils.getRandomNum(2000), utils.getRandomNum(1000)]] = {value : utils.getRandomNum(75, 150)};
 }
 
 moneyBags.count = Object.keys(moneyBags).length - 1;
 
-// function addMan (manToAdd, socketId) {
-// 	manToAdd.id = socketId;
-// 	manToAdd.x = utils.getRandomNum();
-// 	manToAdd.y = utils.getRandomNum();
-// 	men.push(manToAdd);
-// 	tree.put(manToAdd);
-// }
-
-// function removeMan (manToRemove) {
-// 	var removeIndex = men.indexOf(manToRemove);
-// 	men.splice(removeIndex, 1);
-// 	tree.remove(manToRemove);
-// }
-
-
-
-// function addPlayer(playerData, socketId) {
-// 	playerData.id = socketId;
-// 	playerData.money = 500;
-// 	//gives player $500 to start
-// 	//player[socketId][money] = 500;
-// 	player.push(playerData);
-// }
 
 function addPlayer (playerData, socketId) {
-	playerData.id = socketId;
-	players.push(playerData);
+	players[socketId] = playerData;
 }
 
 function removePlayer (socket) {
-    removedPlayers += 1;
-    if (removedPlayers > 100) {
-    	players = utils.garbageCollection(players);
-    	removedPlayers = 0;
-    }
-   
     delete sockets[socket.id];
-    players.forEach(function (player) {
-        if (player.id === socket.id) player = null;
-    });
+    delete players[socket.id];
 }
 
-// function moveLoop () {
-// 	for (var i = 0; i < men.length; i++) {
-// 		trackMan(men[i]);
-// 	}
-// }
-
-// function trackMan (man) {
-// 	moveMan(man);
-
-// 	tree.clear();
-// 	men.forEach(tree.put);
-// }
-
-// function moveMan (man) {
-
-// }
 
 function sendUpdates () {
-	players.forEach(function (player) {
-        if (sockets[player.id]) sockets[player.id].emit('gameUpdate', 'asdf'); 
-	});
+    for (var player in players){
+        if (sockets[player.id]) sockets[player.id].emit('gameUpdate', 'asdf');
+    }
 }
 
 app.get('/*', function (req, res) {
@@ -102,26 +57,19 @@ var server = app.listen(3030, function () {
 io = io.listen(server);
 
 io.on('connection', function (socket) {
-    var currentPlayer;
+    var currentPlayer = new Player(socket.id);
+
     sockets[socket.id] = socket;
 
-    //for populating map with money
-
-    /*
-	var numberOfBags = Object.keys(moneyBags).length;
-	if (numberOfBags < 100) {
-		for (var i = numberOfBags; i < 100; i++) {
-			moneyBags[[utils.getRandomNum(512), utils.getRandomNum(480)]] = {value : utils.getRandomNum(75, 150)};
-		}
-	}
-    */
-
     socket.on('respawn', function (newPlayerData) {
-        socket.emit('playersArray', players);
 
-        newPlayerData.pos = [0, 0];
-        addPlayer(newPlayerData, socket.id);
-        currentPlayer = newPlayerData;
+        //currentPlayer.userName = newPlayerData.username // TODO
+
+        socket.emit('playersArray', players); //to see everyone else
+
+        currentPlayer.units[0] = new Hero([200,200]);
+
+        addPlayer(currentPlayer, socket.id);
         socket.emit('gameReady', currentPlayer);
         socket.broadcast.emit('otherPlayerJoin', currentPlayer);
     });
