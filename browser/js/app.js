@@ -29,11 +29,10 @@ function init() {
     lastTime = Date.now();
     birthTime = Date.now();
     socket.emit('respawn', {});
-    socket.emit('moneyBagsCoordsOnUserLogin', {});
+    // socket.emit('moneyBagsCoordsOnUserLogin', {});
     
     socket.on("playersArray", function(playersCollection){
         otherPlayers = playersCollection;
-        console.log(otherPlayers);
         for (var otherPlayer in otherPlayers){
             //for each player assign each unit its appropriate sprite
             otherPlayers[otherPlayer].units.forEach(function (unit) {
@@ -44,11 +43,12 @@ function init() {
         }
     });
 
-    socket.on("gameReady", function(playerData) {
-        player = playerData;
+    socket.on("gameReady", function(gameData) {
+        player = gameData.playerData;
         player.units.forEach(function (unit) {
             unit.sprite = generateSprite(unit.type, true);
         })
+        setupMoneyBags(gameData.moneyBags);
         drawViewport();
         main();
     })
@@ -90,7 +90,8 @@ socket.on('otherPlayerJoin', function (otherPlayerData) {
     otherPlayers[otherPlayerData.id] = otherPlayerData;
 });
 
-socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
+
+function setupMoneyBags (moneyBagsFromServer) {
     moneyBags = moneyBagsFromServer;
     delete moneyBags.count;
     for (var moneyBag in moneyBags) {
@@ -102,7 +103,7 @@ socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
             moneyBags[moneyBag].sprite = new Sprite('img/money-bag-asset.png', [0,0], [10,25], 1, [-1]); 
         }
     }
-})
+}
 
 socket.on('otherPlayerDC', function (socketId) {
     delete otherPlayers[socketId];
