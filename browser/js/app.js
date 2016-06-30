@@ -19,9 +19,9 @@ socket.emit('respawn', {});
 
 resources.load([
     'img/sprites2.png',
-    'img/capguy-walk-asset.png',
+    'img/hero.png',
     'img/terrain.png',
-    'img/money-bag-asset.png',
+    'img/moneybag.png',
     'img/soldier-asset.png'
 ]);
 
