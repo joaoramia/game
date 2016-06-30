@@ -24,25 +24,6 @@ var sockets = {};
 var moneyBags = {count: 0};
 generateMoneyBags(100);
 
-<<<<<<< HEAD
-//initially generate money bags for the moneyBags object
-for (var i = 0; i < 50; i++) {
-	//values of array represent x and y. later, change this so that x = max x of canvas and y is max y of canvas
-	moneyBags[[utils.getRandomNum(2000), utils.getRandomNum(1000)]] = {value : utils.getRandomNum(25, 75)};
-}
-
-moneyBags.count = Object.keys(moneyBags).length - 1;
-=======
->>>>>>> 06a30814175042bb607df1185a2656b3ee8a7dea
-
-
-
-// function sendUpdates () {
-//     for (var player in players){
-//         if (sockets[player.id]) sockets[player.id].emit('gameUpdate', 'asdf');
-//     }
-// }
-
 app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));
 });
@@ -93,21 +74,13 @@ io.on('connection', function (socket) {
     socket.on('moneyDiscovered', function (moneyBagData) {
     	//increase the wealth of the player
     	players[moneyBagData.playerId].wealth += moneyBagData.value;
-        console.log("MORE MONEY MORE PROBLEMS", players[moneyBagData.playerId].wealth)
     	delete moneyBags[moneyBagData.name];
     	//replenish the moneyBags object
-    	moneyBags[[utils.getRandomNum(512), utils.getRandomNum(480)]] = {value : utils.getRandomNum(25, 75)};
-    })
-
-
-    socket.on("ttest", function (res){
-        console.log("hererere", res.test);
+    	generateMoneyBags(1);
     })
 
 });
 
-
-// setInterval(sendUpdates, 1000);
 
 //initially generate money bags for the moneyBags object
 function generateMoneyBags(count){
