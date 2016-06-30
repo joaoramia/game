@@ -1,18 +1,22 @@
 var socket = io.connect('http://' + ip + ':3030');
 
 function setupSocket (socket) {
+
     socket.on('otherPlayerJoin', function (otherPlayerData) {
         console.log(otherPlayerData.id + ' has joined!');
+        // generate the new players sprites
         otherPlayerData.units.forEach(function(unit){
-            unit.sprite = generateSprite(unit.type);
+            unit.sprite = generateSprite(unit.type, false);
+
         });
-          //new Sprite('img/capguy-walk-asset.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', true);
         otherPlayers[otherPlayerData.id] = otherPlayerData;
+
     });
 
     socket.on('otherPlayerDC', function (socketId) {
+        console.log(socketId + ' left!!!!!');
         delete otherPlayers[socketId];
-    })
+    });
 }
 
 socket.emit('respawn', {});
@@ -24,6 +28,7 @@ resources.load([
     'img/moneybag.png',
     'img/soldier-asset.png'
 ]);
+
 
 resources.onReady(init);
 
@@ -47,7 +52,9 @@ function init() {
     lastTime = Date.now();
     
     socket.on("playersArray", function(playersCollection){
+        console.log("all the players", playersCollection)
         otherPlayers = playersCollection;
+
 
         /*
         for each of the other players, assign each unit,
@@ -55,10 +62,13 @@ function init() {
         */
 
         for (var otherPlayer in otherPlayers){
-            otherPlayers[otherPlayer].units.forEach(function (unit) {
-                unit.sprite = generateSprite(unit.type, false);
-
-            })
+            if (otherPlayers.hasOwnProperty(otherPlayer)){
+                //for each player assign each unit its appropriate sprint
+                otherPlayers[otherPlayer].units.forEach(function (unit) {
+                    unit.sprite = generateSprite(unit.type, true);
+                    console.log("current unit", unit.sprite);
+                });
+            }
         }
     });
 
@@ -76,22 +86,25 @@ function init() {
     viewCanvas.addEventListener('mousedown', mouseDown, false);
     viewCanvas.addEventListener('mouseup', mouseUp, false);
     viewCanvas.addEventListener('mousemove', mouseMove, false);
+
+
+    socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
+        setupMoneyBags(moneyBagsFromServer);
+    })
+
+
+
 }
 
 // Defines some initial global variables that're overwritten when game loads
 var moneyBags = {};
 
-var player = {
-    units: [],
-    pos: [0,0],
-};
+var player = {};
 
-var otherPlayers = {
-};
+var otherPlayers = {};
 
 var currentSelection = [];
 
-var otherPlayerSelection = [];
 
 var gameTime = 0;
 var terrainPattern;
@@ -103,9 +116,7 @@ var scoreEl = document.getElementById('score');
 function update(dt) {
     gameTime += dt;
 
-    if (rightClick.x && rightClick.y){
-        walk(rightClick.x, rightClick.y, dt);
-    }
+    walk(dt);
 
     handleInput(dt);
 
@@ -117,6 +128,7 @@ function update(dt) {
 
     socket.on("otherPlayerMoves", function(playerData) {
         otherPlayers[playerData.id]=playerData;
+
     });
 
     drawViewport();
@@ -151,8 +163,10 @@ function render() {
 
     renderEntities(player.units);
 
-    for (var otherPlayer in otherPlayers){
-        renderEntities(otherPlayers[otherPlayer].units);
+    for (var key in otherPlayers){
+        console.log("object of toher playees", otherPlayers[key])
+        if (otherPlayers.hasOwnProperty(key))
+            renderEntities(otherPlayers[key].units);
     }
 
     renderSelectionBox();
@@ -176,7 +190,14 @@ function renderEntities(list) {
 function renderEntity(entity) {
     ctx.save();
     ctx.translate(entity.pos[0], entity.pos[1]);
-    entity.sprite.render(ctx);
+    if (!(entity.sprite instanceof Sprite) && entity.sprite){
+        entity.sprite.selectable = false;
+        Sprite.prototype.render.apply(entity.sprite, [ctx]);
+        // entity.sprite.render(ctx);
+    }
+    else if (entity.sprite){
+        entity.sprite.render(ctx);   
+    }
     ctx.restore();
 }
 

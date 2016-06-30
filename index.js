@@ -14,14 +14,17 @@ app.use(express.static(__dirname + '/node_modules/'));
 
 var gameConfig = require('./config.json');
 
+// currently not used
 var quadtree = require('simple-quadtree');
 var tree = quadtree(0, 0, gameConfig.width, gameConfig.height);
 
+// all the objects on the canvas
 var players = {};
 var sockets = {};
-var removedPlayers = 0; // once it reaches 100 garbage COLLECTION!
-var moneyBags = {};
+var moneyBags = {count: 0};
+generateMoneyBags(100);
 
+<<<<<<< HEAD
 //initially generate money bags for the moneyBags object
 for (var i = 0; i < 50; i++) {
 	//values of array represent x and y. later, change this so that x = max x of canvas and y is max y of canvas
@@ -29,16 +32,9 @@ for (var i = 0; i < 50; i++) {
 }
 
 moneyBags.count = Object.keys(moneyBags).length - 1;
+=======
+>>>>>>> 06a30814175042bb607df1185a2656b3ee8a7dea
 
-
-function addPlayer (playerData, socketId) {
-	players[socketId] = playerData;
-}
-
-function removePlayer (socket) {
-    delete sockets[socket.id];
-    delete players[socket.id];
-}
 
 
 // function sendUpdates () {
@@ -58,27 +54,33 @@ var server = app.listen(3030, function () {
 io = io.listen(server);
 
 io.on('connection', function (socket) {
+    console.log("hey user has joined ", socket.id)
     var currentPlayer = new Player(socket.id);
 
     sockets[socket.id] = socket;
 
+    // when the new user joins!
     socket.on('respawn', function (newPlayerData) {
 
         //currentPlayer.userName = newPlayerData.username // TODO
-
-        socket.emit('playersArray', players); //to see everyone else
-        socket.broadcast.emit('otherPlayerJoin', currentPlayer);
-
+        currentPlayer.id = socket.id;
         currentPlayer.units[0] = new Hero([200,200]);
         currentPlayer.units[1] = new Soldier([300, 300]);
 
+        // emit the current array of players then add your player
+        socket.emit('playersArray', players); //to see everyone else
+
+
         addPlayer(currentPlayer, socket.id);
+
         socket.emit('gameReady', {playerData: currentPlayer, moneyBags: moneyBags});
+        socket.broadcast.emit('otherPlayerJoin', currentPlayer);
         
     });
 
     socket.on('disconnect', function () {
-        removePlayer(socket); // removes them from players array AND sockets obj
+        console.log("hey user has left ", socket.id)
+        removePlayer(socket); // removes them from players AND sockets collections
 
         socket.broadcast.emit('otherPlayerDC', socket.id);
         socket.disconnect();
@@ -94,11 +96,36 @@ io.on('connection', function (socket) {
         console.log("MORE MONEY MORE PROBLEMS", players[moneyBagData.playerId].wealth)
     	delete moneyBags[moneyBagData.name];
     	//replenish the moneyBags object
-    	moneyBags[[utils.getRandomNum(512), utils.getRandomNum(480)]] = {value : utils.getRandomNum(75, 175)};
-        socket.emit('moneyBagsUpdate', moneyBags);
-
+    	moneyBags[[utils.getRandomNum(512), utils.getRandomNum(480)]] = {value : utils.getRandomNum(25, 75)};
     })
+
+
+    socket.on("ttest", function (res){
+        console.log("hererere", res.test);
+    })
+
 });
 
 
 // setInterval(sendUpdates, 1000);
+
+//initially generate money bags for the moneyBags object
+function generateMoneyBags(count){
+    moneyBags.count = Object.keys(moneyBags).length - 1 + count;
+    for (var i = 0; i < count; i++) {
+        //values of array represent x and y. later, change this so that x = max x of canvas and y is max y of canvas
+        moneyBags[[utils.getRandomNum(2000), utils.getRandomNum(1000)]] = {value : utils.getRandomNum(25, 75)};
+    }
+}
+
+
+function addPlayer (playerData) {
+    players[playerData.id] = playerData;
+}
+
+function removePlayer (socket) {
+    delete sockets[socket.id];
+    delete players[socket.id];
+}
+
+
