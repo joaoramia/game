@@ -2,14 +2,16 @@ var rect = {};
 var drag = false;
 var rightClick = {};
 
+var currentMousePosition;
+
 function mouseDown(e) {
   console.log("pageX: ", e.pageX, "pageY: ", e.pageY);
   console.log("layerX: ", e.layerX, "layerY: ", e.layerY);
 
   console.log("CTRL", e.ctrlKey);
   if (e.which === 1 && !e.ctrlKey){
-    rect.startX = e.layerX;// - this.offsetLeft;
-    rect.startY = e.layerY;// - this.offsetTop;
+    rect.startX = e.pageX - this.offsetLeft;
+    rect.startY = e.pageY - this.offsetTop;
     rect.w = 5;
     rect.h = 5;
     drag = true;
@@ -35,17 +37,10 @@ function mouseMove(e) {
     ctx.clearRect(0,0,canvas.width,canvas.height);
     draw();
   }
-  // for scrolling without clicking
-  if (e.layerX < 10) {
-    vp.pos[0] -= 10;
-  } else if (e.layerX >= viewCanvas.width - 10) {
-    vp.pos[0] += 10;
-  } else if (e.layerY < 10) {
-    vp.pos[1] -= 10;
-  } else if (e.layerY >= viewCanvas.height - 10) {
-    vp.pos[1] += 10;
-  }
 
+  currentMousePosition = e;
+  // for scrolling without clicking
+  // diagonal movement check
 }
 
 function draw() {
