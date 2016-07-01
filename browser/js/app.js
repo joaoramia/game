@@ -166,10 +166,7 @@ function update(dt) {
 //         }
 //     })
 // }
-function renderTerrain () {
-    ctx.fillStyle = terrainPattern;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
+
 // Draw everything
 function render() {
     renderTerrain(); // terrain in the background
@@ -217,5 +214,10 @@ function renderEntity(entity) {
 function renderSelectionBox(){
     ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
     ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
+}
+
+function renderTerrain () {
+    ctx.fillStyle = terrainPattern;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 

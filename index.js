@@ -21,6 +21,8 @@ var tree = quadtree(0, 0, gameConfig.width, gameConfig.height);
 // all the objects on the canvas
 var players = {};
 var sockets = {};
+var units = {};
+var buiildings = {};
 var moneyBags = {count: 0};
 generateMoneyBags(100);
 
@@ -113,6 +115,10 @@ function generateMoneyBags(count){
 
 function addPlayer (playerData) {
     players[playerData.id] = playerData;
+}
+
+function addEntities () {
+    tree.add()
 }
 
 function removePlayer (socket) {

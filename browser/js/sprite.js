@@ -14,17 +14,23 @@
 
     Sprite.prototype = {
 
-        renderEllipse: function(){
+        renderEllipse: function(enemy){
             ctx.beginPath();
             ctx.ellipse(this.pos[0] + this.size[0]/2, this.pos[1] + this.size[1], this.size[1]/3, this.size[1]/5, 0, 0, Math.PI*2);
-            ctx.fillStyle = this.selected ? "rgba(0, 0, 255, 0.3)" : "rgba(0, 0, 0, 0.3)";
+            
+            if (enemy) {
+                ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
+            } else {
+                ctx.fillStyle = this.selected ? "rgba(0, 0, 255, 0.3)" : "rgba(0, 0, 0, 0.3)";
+            
+            }
             ctx.fill();
             ctx.closePath();
         },
 
         renderHpBar: function (currentHealth, maxHealth) {
             if (this.url === 'img/moneybag.png') return;
-            
+
             ctx.strokeStyle = 'black'; // HP Border for maxHealth
             ctx.strokeRect(this.pos[0], this.pos[1] - 10, this.size[0], 5);
 
