@@ -1,8 +1,16 @@
 html, body {
     margin: 0;
     padding: 0;
-    background-color: #151515;
+    /*background-color: #151515;*/
     font-family: 'Work Sans', sans-serif;
+    background-image: url("../img/green-bg.jpg");
+    background-attachment: fixed;
+    /* Center the background image */
+    background-position: center;
+    /* Set the background image to no repeat */
+    background-repeat: no-repeat;
+    /* Scale the background image to be as large as possible */
+    background-size: cover;
 }
 
 p {
