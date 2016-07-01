@@ -130,7 +130,7 @@ var gameTime = 0;
 var terrainPattern;
 
 var score = 200;
-var scoreEl = document.getElementById('score');
+var scoreEl = $("#player-wealth-display").text(score);
 
 // Update game objects
 function update(dt) {

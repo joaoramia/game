@@ -16,6 +16,7 @@ function checkCollisionWithMoneyBag() {
                 playSoundOnEvent(moneyFoundSound);
                 socket.emit('moneyDiscovered', moneyBagData);
                 score += moneyBagData.value;
+                $("#player-wealth-display").text(score);
             }
         }
     }  

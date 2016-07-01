@@ -8,9 +8,26 @@
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="styles/main.css">
+    <!-- gets resources for Work Sans font from Google -->
+    <link href='https://fonts.googleapis.com/css?family=Work+Sans' rel='stylesheet' type='text/css'>
   </head>
   <body oncontextmenu="return false;">
     <div id="game-ui">
+      <div id="world-wealth-display">
+        <div id="leaderboard">
+          <h3>Leaderboard</h3>
+          <p>THE BOSS:</p> 
+          <p><span>Ian</span> ($192038)</p>
+          <br>
+          <p>2. Ferdinand</p>
+          <p>3. Julian</p>
+          <p>4. Todd</p>
+          <p>5. Emilio</p>
+        </div>
+        <div id="players-wealth">
+          <p>Your wealth: $<span id="player-wealth-display"></span></p>
+        </div>
+      </div>
       <div id="game-view">
       </div>
       <div id="game-controls">
@@ -27,7 +44,16 @@
           </div>
           <div id="ui-buttons">
             <div class="ui-container">
-              <img src="http://placehold.it/220x180">
+              <div id="button-container">
+                <div id="buttons-message-box" class="a-button">
+                  <p id="buttons-message-content">No units selected</p>
+                </div>
+                <ul id="buttons-list">
+<!--                   <li class="a-button">Build (B)</li>
+                  <li class="a-button">Attack (A)</li>
+                  <li class="a-button">Move (M)</li> -->
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -49,6 +75,8 @@
     <script type="text/javascript" src="js/audio.js"></script>
     <script type="text/javascript" src="js/moneybag.functionality.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
-    
+    <script type="text/javascript" src="js/ui/main-menu.js"></script>
+    <script type="text/javascript" src="js/ui/build-menu.js"></script>
+
   </body>
 </html>
