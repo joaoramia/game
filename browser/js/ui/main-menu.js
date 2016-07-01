@@ -9,13 +9,13 @@ function heroIsSelected (array) {
 
 function replaceButtonsOnMenu (newButtons) {
 	$("#buttons-list").empty();
-	newButtons.forEach(function(buttonText){
-		$("#buttons-list").append('<li class="a-button">' + buttonText + '</li>');
+	newButtons.forEach(function(button){
+		$("#buttons-list").append('<li id="' + button.tagName + '" class="a-button">' + button.text + '</li>');
+		$("#buttons-list").on("click", "#" + button.tagName, button.clickFunction);
 	})
 }
 
 function changeButtonsMessage (message) {
-	console.log("MESSAGE", message);
 	if (typeof message === 'string') {
 		$("#buttons-message-content").text(message);
 	} else if (message === 1) {
@@ -25,13 +25,33 @@ function changeButtonsMessage (message) {
 	}
 }
 
-//add Patrol?
-var heroButtons = ["Build (B)", "Attack (A)", "Defend (D)", "Move (M)"];
-var nonHeroButtons = ["Attack (A)", "Defend (D)", "Move (M)"];
+function placeholderFunction(){
+	console.log("This button doesn't do anything yet");
+}
 
-function updateButtonMenu (){
+//add Patrol?
+
+//buttons must be formatted in this way in order for replaceButtonsOnMenu to work
+var heroSelectedButtons = [
+	{text: "Build (B)", tagName: "build-button", clickFunction: updateForBuildMenu},
+	{text: "Attack (A)", tagName: "attack-button", clickFunction: placeholderFunction},
+	{text: "Defend (D)", tagName: "defend-button", clickFunction: placeholderFunction},
+	{text: "Move (M)", tagName: "move-button", clickFunction: placeholderFunction}
+]
+
+var nonHeroSelectedButtons = [
+	{text: "Attack (A)", clickFunction: placeholderFunction},
+	{text: "Defend (D)", clickFunction: placeholderFunction},
+	{text: "Move (M)", clickFunction: placeholderFunction}
+];
+
+var buildMenuButtons = [
+	{text: "Bar (K)", tagName: "build-bar", clickFunction: placeholderFunction},
+	{text: "Bank (H)", tagName: "build-bank", clickFunction: placeholderFunction}
+]
+
+function updateButtonMenuOnClick (){
 	//currently assumes there are only units
-	console.log("CURRENT SELECTION", currentSelection);
 	if (currentSelection.length === 0) {
 		//if no units selected
 		changeButtonsMessage("No units selected");
@@ -39,10 +59,17 @@ function updateButtonMenu (){
 	} else if (heroIsSelected(currentSelection)) {
 		//if hero is selected
 		changeButtonsMessage("Hero selected. Build!");
-		replaceButtonsOnMenu(heroButtons);
+		replaceButtonsOnMenu(heroSelectedButtons);
 	} else {
 		//if any unit other than hero is selected
 		changeButtonsMessage(currentSelection.length);
-		replaceButtonsOnMenu(nonHeroButtons);
+		replaceButtonsOnMenu(nonHeroSelectedButtons);
 	}
 }
+
+function updateForBuildMenu (){
+	changeButtonsMessage("Select a building");
+	replaceButtonsOnMenu(buildMenuButtons);
+}
+
+
