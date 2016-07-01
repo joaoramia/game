@@ -20,6 +20,10 @@ function mouseDown(e) {
     rightClick.x = e.layerX + vp.pos[0];
     rightClick.y = e.layerY + vp.pos[1];
   }
+  else if (attackPending && e.which === 1) {
+    var target = checkForTarget(e.layerX + vp.pos[0], e.layerY + vp.pos[1]);
+
+  }
 }
 
 function mouseUp(e) {
