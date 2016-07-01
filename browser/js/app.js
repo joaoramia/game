@@ -19,7 +19,13 @@ function setupSocket (socket) {
     });
 }
 
-socket.emit('respawn', {});
+
+function start(){
+    $( "#game-ui" ).toggleClass( "display-none" );
+    $( "#login-screen" ).toggleClass( "display-none" );
+    socket.emit('respawn', {userName: $( "#nick" ).val()});
+}
+
 
 resources.load([
     'img/sprites2.png',
@@ -135,10 +141,11 @@ function update(dt) {
     //scoreEl.innerHTML = score;
 
     socket.emit("playerMoves", player);
+    //socket.emit("playerMoves", {id: player.id, unitsPos: getUnitPosByPlayer(player)});
 
     socket.on("otherPlayerMoves", function(playerData) {
         otherPlayers[playerData.id]=playerData;
-
+        //setUnitPosByPlayer(otherPlayers[playerData.id], playerData.units);
     });
 
     drawViewport();
@@ -203,6 +210,7 @@ function renderEntity(entity) {
         entity.sprite.selectable = false;
         Sprite.prototype.render.apply(entity.sprite, [ctx, entity.currentHealth, entity.maxHealth]);
         // entity.sprite.render(ctx);
+
     }
     else if (entity.sprite){
         entity.sprite.render(ctx, entity.currentHealth, entity.maxHealth);   
@@ -215,8 +223,27 @@ function renderSelectionBox(){
     ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
 }
 
+
 function renderTerrain () {
     ctx.fillStyle = terrainPattern;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
+
+
+
+function getUnitPosByPlayer(player){ 
+    var posObj = {}; 
+    for (var key in player.units){ 
+        posObj[key] = player.units[key].pos; 
+    } 
+    return posObj; 
+}  
+
+function setUnitPosByPlayer(player, posObj){ 
+    for (var unitId in player.units ){ 
+        if (posObj[unitId]) 
+            //player.units[unitId].pos = posObj[unitId].pos; 
+        console.log("prev pos=", player.units[unitId].pos, "new position= ", posObj[unitId].pos )
+    }
+ }
 

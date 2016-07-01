@@ -12,7 +12,7 @@
     <link href='https://fonts.googleapis.com/css?family=Work+Sans' rel='stylesheet' type='text/css'>
   </head>
   <body oncontextmenu="return false;">
-    <div id="game-ui">
+    <div id="game-ui" class="display-none">
       <div id="world-wealth-display">
         <div id="leaderboard">
           <h3>Leaderboard</h3>
@@ -58,6 +58,12 @@
           </div>
         </div>
       </div>
+    </div>
+
+
+    <div id="login-screen">
+      <input class="sumsginp" id="nick" style="width: 220px; height: 24px;" placeholder="Enter your nickname" maxlength="24">
+      <button class="sumsginp" onclick="start()">&nbsp;Play&nbsp;</button>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
