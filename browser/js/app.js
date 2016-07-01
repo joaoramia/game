@@ -6,10 +6,10 @@ function setupSocket (socket) {
         console.log(otherPlayerData.id + ' has joined!');
         console.log("CURRENT KING: ", currentKing);
         // generate the new players sprites
-        otherPlayerData.units.forEach(function(unit){
+        for (var unitId in otherPlayerData.units) {
+            var unit = otherPlayerData.units[unitId];
             unit.sprite = generateSprite(unit.type, false);
-
-        });
+        }
         otherPlayers[otherPlayerData.id] = otherPlayerData;
 
     });
@@ -65,19 +65,21 @@ function init() {
         for (var otherPlayer in otherPlayers){
             if (otherPlayers.hasOwnProperty(otherPlayer)){
                 //for each player assign each unit its appropriate sprint
-                otherPlayers[otherPlayer].units.forEach(function (unit) {
-                    unit.sprite = generateSprite(unit.type, true);
-                    console.log("current unit", unit.sprite);
-                });
+                for (var unitId in otherPlayer.units) {
+                    var unit = otherPlayer.units[unitId];
+                    unit.sprite = generateSprite(unit.type, false);
+                }
             }
         }
     });
 
     socket.on("gameReady", function(gameData) {
+        console.log(gameData);
         player = gameData.playerData;
-        player.units.forEach(function (unit) {
+        for (var unitId in player.units) {
+            var unit = player.units[unitId];
             unit.sprite = generateSprite(unit.type, true);
-        })
+        }
         setupMoneyBags(gameData.moneyBags);
         setupSocket(socket);
         drawViewport();
@@ -146,25 +148,25 @@ function update(dt) {
 };
 
 
-function checkPlayerBounds() {
-    // Check bounds
+// function checkPlayerBounds() {
+//     // Check bounds
 
-    player.units.forEach(function(unit){
-        if(unit.pos[0] < 0) {
-            unit.pos[0] = 0;
-        }
-        else if(unit.pos[0] > canvas.width - unit.sprite.size[0]) {
-            unit.pos[0] = canvas.width - unit.sprite.size[0];
-        }
+//     player.units.forEach(function(unit){
+//         if(unit.pos[0] < 0) {
+//             unit.pos[0] = 0;
+//         }
+//         else if(unit.pos[0] > canvas.width - unit.sprite.size[0]) {
+//             unit.pos[0] = canvas.width - unit.sprite.size[0];
+//         }
 
-        if(unit.pos[1] < 0) {
-            unit.pos[1] = 0;
-        }
-        else if(unit.pos[1] > canvas.height - unit.sprite.size[1]) {
-            unit.pos[1] = canvas.height - unit.sprite.size[1];
-        }
-    })
-}
+//         if(unit.pos[1] < 0) {
+//             unit.pos[1] = 0;
+//         }
+//         else if(unit.pos[1] > canvas.height - unit.sprite.size[1]) {
+//             unit.pos[1] = canvas.height - unit.sprite.size[1];
+//         }
+//     })
+// }
 
 // Draw everything
 function render() {

@@ -18,7 +18,7 @@ function boxCollides(pos, size, pos2, size2) {
 
 
 function checkCollisions() {
-    checkPlayerBounds();
+    // checkPlayerBounds();
     checkCollisionWithMoneyBag();
 
     // Run collision detection for all enemies and bullets
