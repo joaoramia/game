@@ -6,30 +6,35 @@
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
-
     <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="styles/main.css">
   </head>
   <body oncontextmenu="return false;">
-    <div id="game-over-overlay">
-    </div>
-
-    <div id="game-over">
-      <h1>GAME OVER</h1>
-      <!-- <button id="play-again">Play Again</button> -->
-    </div>
-    <!-- <img src="http://i.telegraph.co.uk/multimedia/archive/03589/Wellcome_Image_Awa_3589699k.jpg" style="opacity: 0.5"> -->
-    <div class="wrapper">
-      <div id="instructions">
-        <div>
-          move with <span class="key">arrows</span> or <span class="key">wasd</span>
-        </div>
-        <div>
-          shoot with <span class="key">space</span>
+    <div id="game-ui">
+      <div id="game-view">
+      </div>
+      <div id="game-controls">
+        <div id="controls-panel">
+          <div id="map">
+            <div class="ui-container">
+              <img src="http://placehold.it/220x180">
+            </div>
+          </div>
+          <div id="info-panel">
+            <div class="ui-container">
+              <img src="http://placehold.it/480x180">
+            </div>
+          </div>
+          <div id="ui-buttons">
+            <div class="ui-container">
+              <img src="http://placehold.it/220x180">
+            </div>
+          </div>
         </div>
       </div>
-
-      <div id="score"></div>
     </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="socket.io/socket.io.js"></script>
     <script type="text/javascript" src="js/ip.js"></script><!-- TO BE TAKEN OUT ONCE WE DEPLOY IT -->
     <script type="text/javascript" src="js/canvassetup.js"></script>

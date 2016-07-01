@@ -5,67 +5,74 @@ html, body {
 }
 
 canvas {
+    margin: 0;
+}
+
+#game-ui {
+    min-height: 100vh;
+    min-width: 100wh;
+    background-color: green;
+}
+#game-view {
+    min-height: 70%;
+    max-height: 70%;
+}
+
+#game-controls {
+    min-height:100%;
+    min-width: 100%;
+    display: inline-block;
+    background-color: black;
+}
+
+#controls-panel {
+    background: blue;
+    display: flex;
+    min-height: 100%;
+}
+
+#map {
+    background: red;
+    width: 25%;
+    min-height: 100%;
+    float: left;
+    display: inline;
+} 
+
+#map img {
     display: block;
     margin: auto;
-
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
 }
 
-.wrapper {
-    width: 512px;
-    margin: 0 auto;
-    margin-top: 2em;
+#info-panel {
+    display: inline;
+    background-color: orange;
+    min-width: 50%;
+    min-height: 100%;
 }
 
-#instructions {
-    float: left;
-    font-family: sans-serif;
-    color: #757575;
-}
-
-#score {
-    float: right;
-    color: white;
-    font-size: 2em;
-}
-
-.key {
-    color: #aaffdd;
-}
-
-#game-over, #game-over-overlay {
+#info-panel img {
+    display: block;
     margin: auto;
-    width: 512px;
-    height: 480px;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 1;
-    display: none;
 }
 
-#game-over-overlay {
-    background-color: black;
-    opacity: .5;
+#ui-buttons {
+    display: inline;
+    background-color: pink;
+    min-width: 25%;
+    min-height: 100%;
 }
 
-#game-over {
-    height: 200px;
-    text-align: center;
-    color: white;
+#ui-buttons img {
+    display: block;
+    margin: auto;
 }
 
-#game-over h1 {
-    font-size: 3em;
-    font-family: sans-serif;
-}
+.ui-container {
+    border: 1px solid gainsboro;
+    border-radius: 5px;
+    background: white;
+    height: 98%;
+    width: 98%;
 
-#game-over button {
-    font-size: 1.5em;
 }

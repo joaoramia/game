@@ -122,7 +122,7 @@ function update(dt) {
 
     checkCollisions();
 
-    scoreEl.innerHTML = score;
+    //scoreEl.innerHTML = score;
 
     socket.emit("playerMoves", player);
 
@@ -172,7 +172,7 @@ function render() {
     renderSelectionBox();
 
     renderEntities(moneyBags);
-    cameraPan(currentMousePosition);
+    //cameraPan(currentMousePosition);
 };
 
 function renderEntities(list) {
