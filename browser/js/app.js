@@ -1,13 +1,16 @@
 var socket = io.connect('http://' + ip + ':3030');
+var currentKing;
+
 
 function setupSocket (socket) {
 
     socket.on('otherPlayerJoin', function (otherPlayerData) {
         console.log(otherPlayerData.id + ' has joined!');
+
         // generate the new players sprites
         for (var unitId in otherPlayerData.units) {
             var unit = otherPlayerData.units[unitId];
-            unit.sprite = generateSprite(unit.type, false);
+            unit.sprite = generateSprite(unit.type, false, otherPlayerData.id);
         }
         otherPlayers[otherPlayerData.id] = otherPlayerData;
 
@@ -19,6 +22,9 @@ function setupSocket (socket) {
     });
 }
 
+socket.on('newKing', function(newKing){
+    currentKing = newKing;
+})
 
 function start(){
     $( "#game-ui" ).toggleClass( "display-none" );
@@ -26,13 +32,13 @@ function start(){
     socket.emit('respawn', {userName: $( "#nick" ).val()});
 }
 
-
 resources.load([
     'img/sprites2.png',
     'img/hero.png',
     'img/terrain.png',
     'img/moneybag.png',
-    'img/soldier-asset.png'
+    'img/soldier-asset.png',
+    'img/king.png'
 ]);
 
 
@@ -72,18 +78,19 @@ function init() {
                 //for each player assign each unit its appropriate sprint
                 for (var unitId in otherPlayer.units) {
                     var unit = otherPlayer.units[unitId];
-                    unit.sprite = generateSprite(unit.type, false);
+                    unit.sprite = generateSprite(unit.type, false, otherPlayer.id);
                 }
             }
         }
     });
 
-    socket.on("gameReady", function(gameData) {
+    socket.on("gameReady", function(gameData, king) {
         console.log(gameData);
+        currentKing = king;
         player = gameData.playerData;
         for (var unitId in player.units) {
             var unit = player.units[unitId];
-            unit.sprite = generateSprite(unit.type, true);
+            unit.sprite = generateSprite(unit.type, true, player.id);
         }
         setupMoneyBags(gameData.moneyBags);
         setupSocket(socket);
@@ -179,11 +186,11 @@ function render() {
     ctx.fillStyle = terrainPattern;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    renderEntities(player.units);
+    renderEntities(player.units, player.id);
 
     for (var key in otherPlayers){
         if (otherPlayers.hasOwnProperty(key))
-            renderEntities(otherPlayers[key].units);
+            renderEntities(otherPlayers[key].units, key);
     }
 
     renderSelectionBox();
@@ -192,28 +199,28 @@ function render() {
     //cameraPan(currentMousePosition);
 };
 
-function renderEntities(list) {
+function renderEntities(list, playerId) {
     if (Array.isArray(list)){
         for(var i=0; i<list.length; i++) {
-            renderEntity(list[i]);
+            renderEntity(list[i], playerId);
         }
     } else if (typeof list === "object") {
         for (var item in list) {
-            renderEntity(list[item]);
+            renderEntity(list[item], playerId);
         }
     }
 }
 
-function renderEntity(entity) {
+function renderEntity(entity, playerId) {
     ctx.save();
     ctx.translate(entity.pos[0], entity.pos[1]);
     if (!(entity.sprite instanceof Sprite) && entity.sprite){
         entity.sprite.selectable = false;
-        Sprite.prototype.render.apply(entity.sprite, [ctx]);
-        //entity.sprite.render(ctx);
+        Sprite.prototype.render.apply(entity.sprite, [ctx, playerId, entity.type]);
+        // entity.sprite.render(ctx);
     }
     else if (entity.sprite){
-        entity.sprite.render(ctx);   
+        entity.sprite.render(ctx, playerId, entity.type);
     }
     ctx.restore();
 }
@@ -230,7 +237,7 @@ function getUnitPosByPlayer(player){ 
         posObj[key] = player.units[key].pos; 
     } 
     return posObj; 
-}  
+}
 
 function setUnitPosByPlayer(player, posObj){ 
     for (var unitId in player.units ){ 
