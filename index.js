@@ -49,7 +49,7 @@ io.on('connection', function (socket) {
         currentPlayer.units[1] = new Soldier([300, 300]);
         currentPlayer.unitNumber = 2;
 
-        // emit the current array of players then add your player
+        // emit the current array of players then add your player no the array
         socket.emit('playersArray', players); //to see everyone else
 
 
