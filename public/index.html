@@ -10,9 +10,45 @@
     <link rel="stylesheet" href="styles/main.css">
     <!-- gets resources for Work Sans font from Google -->
     <link href='https://fonts.googleapis.com/css?family=Work+Sans' rel='stylesheet' type='text/css'>
+    <style>
+
+      #game-ui{
+
+      }
+
+      .sumsginp {
+        font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+        font-size: 15px;
+        word-wrap: break-word;
+        color: #e0e0ff;
+        background: none;
+        resize: none;
+        border: 0px;
+        height: 23px;
+        opacity: 1;
+        position: relative;
+        display: block;
+        margin : 0 auto;
+        text-align: center;
+      }
+
+      #login-screen{
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        position: relative;
+        top: 250px;
+      }
+
+      .display-none {
+        display: none;
+      }
+
+
+    </style>
   </head>
   <body oncontextmenu="return false;">
-    <div id="game-ui">
+    <div id="game-ui" class="display-none">
       <div id="game-view">
       </div>
       <div id="game-controls">
@@ -43,6 +79,12 @@
           </div>
         </div>
       </div>
+    </div>
+
+
+    <div id="login-screen">
+      <input class="sumsginp" id="nick" style="width: 220px; height: 24px;" placeholder="Enter your nickname" maxlength="24">
+      <button class="sumsginp" onclick="start()">&nbsp;Play&nbsp;</button>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
