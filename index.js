@@ -127,7 +127,7 @@ function generateMoneyBags(count){
 
 function addPlayer (playerData) {
     players[playerData.id] = playerData;
-    addEntities(playerData.)
+    
 }
 
 function addEntities () {
