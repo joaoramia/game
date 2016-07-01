@@ -91,6 +91,14 @@ io.on('connection', function (socket) {
     	generateMoneyBags(1);
     })
 
+    socket.on('checkIfPlayerHasEnoughMoneyForBar', function(id){
+        if (player[id].wealth < 1200) {
+            socket.emit('buildBar', false);
+        } else {
+            
+        }
+    })
+
 });
 
 
