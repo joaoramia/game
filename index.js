@@ -61,10 +61,8 @@ io.on('connection', function (socket) {
             changeKing(currentPlayer.id);
         }
 
-        console.log("PLAYERS: ", players, currentKing);
-        
-        socket.emit('gameReady', {playerData: currentPlayer, moneyBags: moneyBags});
-        socket.broadcast.emit('otherPlayerJoin', currentPlayer, currentKing);
+        socket.emit('gameReady', {playerData: currentPlayer, moneyBags: moneyBags}, currentKing);
+        socket.broadcast.emit('otherPlayerJoin', currentPlayer);
     });
 
     socket.on('disconnect', function () {
@@ -73,9 +71,23 @@ io.on('connection', function (socket) {
 
         //if a king disconnects, search again for the new king
         if (socket.id === currentKing){
-            
+            if (Object.keys(players).length > 0){
+                var currentRichest;
+                for (var id in players){
+                    if(!currentRichest){
+                        currentRichest = players[id];
+                    }
+                    else if (players[id].wealth > currentRichest.wealth){
+                        currentRichest = players[id];
+                    }
+                }
+                changeKing(currentRichest.id);
+            }
+            else {
+                currentKing = undefined;
+            }
+            socket.broadcast.emit('newKing', currentKing);
         }
-
         socket.broadcast.emit('otherPlayerDC', socket.id);
         socket.disconnect();
     });
@@ -91,6 +103,7 @@ io.on('connection', function (socket) {
         //check if this player's wealth becomes higher than the king's
         if (players[moneyBagData.playerId].wealth > players[currentKing].wealth){
             changeKing(moneyBagData.playerId, currentKing);
+            io.emit('newKing', currentKing);
         }
 
         //change object representing available money on all clients
@@ -127,7 +140,6 @@ function generateMoneyBags(count){
         }
     }
 }
-
 
 function addPlayer (playerData) {
     players[playerData.id] = playerData;

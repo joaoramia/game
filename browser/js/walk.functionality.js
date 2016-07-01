@@ -7,11 +7,14 @@ function walk(dt){
     			if (unit.pos[0] > unit.targetpos[0]) unit.pos[0] -= unit.speed*dt;
     			if (unit.pos[1] < unit.targetpos[1]) unit.pos[1] += unit.speed*dt;
     			if (unit.pos[1] > unit.targetpos[1]) unit.pos[1] -= unit.speed*dt;
-                if (unit.type === 'hero'){
+                if (unit.type === 'hero' && player.id !== currentKing){
                     unit.sprite._index += 0.25;
                 }
                 if (unit.type === 'soldier'){
-                    unit.sprite._index += 0.2;
+                    unit.sprite._index += 0.25;
+                }
+                if (unit.type === 'hero' && player.id === currentKing){
+                    unit.sprite._index += 0.25;
                 }
             }
             else {
