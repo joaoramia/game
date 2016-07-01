@@ -24,6 +24,7 @@
 
         renderHpBar: function (currentHealth, maxHealth) {
             if (this.url === 'img/moneybag.png') return;
+            
             ctx.strokeStyle = 'black'; // HP Border for maxHealth
             ctx.strokeRect(this.pos[0], this.pos[1] - 10, this.size[0], 5);
 

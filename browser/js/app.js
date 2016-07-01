@@ -166,23 +166,26 @@ function update(dt) {
 //         }
 //     })
 // }
-
-// Draw everything
-function render() {
+function renderTerrain () {
     ctx.fillStyle = terrainPattern;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    renderEntities(player.units);
-
-    for (var key in otherPlayers){
+}
+// Draw everything
+function render() {
+    renderTerrain(); // terrain in the background
+    
+    renderEntities(moneyBags); // moneybags before units so that units show up in front
+    
+    for (var key in otherPlayers){ 
         if (otherPlayers.hasOwnProperty(key))
             renderEntities(otherPlayers[key].units);
     }
 
+    renderEntities(player.units);
+
     renderSelectionBox();
 
-    renderEntities(moneyBags);
-    //cameraPan(currentMousePosition);
+    // cameraPan(currentMousePosition);
 };
 
 function renderEntities(list) {

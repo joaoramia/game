@@ -5,9 +5,9 @@ var rightClick = {};
 var currentMousePosition;
 
 function mouseDown(e) {
-  console.log("pageX: ", e.pageX, "pageY: ", e.pageY);
-  console.log("layerX: ", e.layerX, "layerY: ", e.layerY);
-  console.log("VP POS: ", vp.pos);
+  // console.log("pageX: ", e.pageX, "pageY: ", e.pageY);
+  // console.log("layerX: ", e.layerX, "layerY: ", e.layerY);
+  // console.log("VP POS: ", vp.pos);
 
   if (e.which === 1 && !e.ctrlKey){
     rect.startX = e.layerX + vp.pos[0];
