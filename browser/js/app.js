@@ -30,7 +30,7 @@ function start(){
 resources.load([
     'img/sprites2.png',
     'img/hero.png',
-    'img/terrain.png',
+    'img/terrain.jpg',
     'img/moneybag.png',
     'img/soldier-asset.png'
 ]);
@@ -53,7 +53,7 @@ function main() {
 };
 
 function init() {
-    terrainPattern = ctx.createPattern(resources.get('img/terrain.png'), 'repeat');
+    terrainPattern = ctx.createPattern(resources.get('img/terrain.jpg'), 'repeat');
 
     lastTime = Date.now();
     
