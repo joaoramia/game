@@ -15,7 +15,7 @@
 
         renderEllipse: function(){
             ctx.beginPath();
-            ctx.ellipse(this.pos[0] + this.size[0]/2, this.pos[1] + this.size[1], this.size[1]/3, this.size[1]/5, 0, 0, Math.PI*2);
+            ctx.ellipse(this.size[0]/2, this.size[1], this.size[1]/3, this.size[1]/5, 0, 0, Math.PI*2);
             ctx.fillStyle = this.selected ? "rgba(0, 0, 255, 0.3)" : "rgba(0, 0, 0, 0.3)";
             ctx.fill();
             ctx.closePath();
@@ -84,14 +84,14 @@ function generateSprite(type, selectable, playerId){
 
     if (currentKing){
         if (type === 'hero' && playerId === currentKing){
-            return new Sprite('img/king.png', [0, 155], [34, 50], 10, [0, 1, 2, 3], 'horizontal', selectable);
+            return new Sprite('img/king.png', [0, 105], [34, 50], 10, [0, 1, 2, 3], 'horizontal', selectable);
         }
     }
 
     if (type === 'hero' && selectable) {
        return new Sprite('img/hero.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
     } else if (type === 'soldier' && selectable) {
-        return new Sprite('img/soldier-asset.png', [0, 0], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
+        return new Sprite('img/soldier-asset.png', [0, 128], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
     } else if(type === 'moneybag'){
         return new Sprite('img/'+ type +'.png', [0,0], [10,25], 1, [-1], false);
     } 
