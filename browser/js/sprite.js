@@ -1,6 +1,6 @@
 (function() {
     function Sprite(url, pos, size, speed, frames, dir, selectable) {
-        this.pos = pos;
+        this.pos = pos; // Not the same pos as the pos on the canvas
         this.size = size;
         this.speed = typeof speed === 'number' ? speed : 0;
         this.frames = frames;
@@ -33,10 +33,10 @@
             if (this.url === 'img/moneybag.png') return;
 
             ctx.strokeStyle = 'black'; // HP Border for maxHealth
-            ctx.strokeRect(this.pos[0], this.pos[1] - 10, this.size[0], 5);
+            ctx.strokeRect(0, - 10, this.size[0], 5);
 
             ctx.beginPath(); // HP Green for currentHealth
-            ctx.rect(this.pos[0], this.pos[1] - 10, currentHealth / maxHealth * this.size[0], 5);
+            ctx.rect(0, - 10, currentHealth / maxHealth * this.size[0], 5);
             ctx.fillStyle = "rgba(0,128,0, 1)";
             ctx.closePath();
             ctx.fill();
