@@ -202,11 +202,11 @@ function renderEntity(entity) {
     ctx.translate(entity.pos[0], entity.pos[1]);
     if (!(entity.sprite instanceof Sprite) && entity.sprite){
         entity.sprite.selectable = false;
-        Sprite.prototype.render.apply(entity.sprite, [ctx]);
+        Sprite.prototype.render.apply(entity.sprite, [ctx, entity.currentHealth, entity.maxHealth]);
         // entity.sprite.render(ctx);
     }
     else if (entity.sprite){
-        entity.sprite.render(ctx);   
+        entity.sprite.render(ctx, entity.currentHealth, entity.maxHealth);   
     }
     ctx.restore();
 }
