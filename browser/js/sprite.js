@@ -1,7 +1,6 @@
-
 (function() {
     function Sprite(url, pos, size, speed, frames, dir, selectable) {
-        this.pos = pos;
+        this.pos = pos; // Not the same pos as the pos on the canvas
         this.size = size;
         this.speed = typeof speed === 'number' ? speed : 0;
         this.frames = frames;
@@ -14,16 +13,50 @@
 
     Sprite.prototype = {
 
-        renderEllipse: function(){
+        renderEllipse: function(enemy){
             ctx.beginPath();
-            ctx.ellipse(this.pos[0] + this.size[0]/2, this.pos[1] + this.size[1], this.size[1]/3, this.size[1]/5, 0, 0, Math.PI*2);
-            ctx.fillStyle = this.selected ? "rgba(0, 0, 255, 0.3)" : "rgba(0, 0, 0, 0.3)";
+
+            ctx.ellipse(this.size[0]/2, this.size[1], this.size[1]/3, this.size[1]/5, 0, 0, Math.PI*2);
+            
+            if (enemy) {
+                ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
+            } else {
+                ctx.fillStyle = this.selected ? "rgba(0, 0, 255, 0.3)" : "rgba(0, 0, 0, 0.3)";
+            
+            }
+
             ctx.fill();
             ctx.closePath();
         },
 
-        render: function(ctx) {
+        renderHpBar: function (currentHealth, maxHealth) {
+            if (this.url === 'img/moneybag.png') return;
+
+            ctx.strokeStyle = 'black'; // HP Border for maxHealth
+            ctx.strokeRect(0, - 10, this.size[0], 5);
+
+            ctx.beginPath(); // HP Green for currentHealth
+            ctx.rect(0, - 10, currentHealth / maxHealth * this.size[0], 5);
+            ctx.fillStyle = "rgba(0,128,0, 1)";
+            ctx.closePath();
+            ctx.fill();
+        },
+
+        render: function(ctx, playerId, type, currentHealth, maxHealth) {
             var frame;
+
+            if(playerId === currentKing && type === 'hero') {
+                this.url = 'img/king.png';
+                this.size = [34, 50];
+                this.frames = [0, 1, 2, 3];
+                this.speed = 10;
+            }
+            else if (type === 'hero'){
+                this.url = 'img/hero.png';
+                this.size = [46, 81];
+                this.frames = [0, 1, 2, 3, 4, 5, 6, 7];
+                this.speed = 16;
+            }
 
             if(this.speed > 0) {
                 var max = this.frames.length;
@@ -39,7 +72,6 @@
                 frame = 0;
             }
 
-
             var x = this.pos[0];
             var y = this.pos[1];
 
@@ -51,6 +83,8 @@
             }
 
             if (this.selectable) this.renderEllipse();
+
+            this.renderHpBar(currentHealth, maxHealth);
 
             if (frame === -1) {
                 ctx.drawImage(resources.get(this.url),
@@ -68,14 +102,20 @@
     window.Sprite = Sprite;
 })()
 
-function generateSprite(type, selectable){
+function generateSprite(type, selectable, playerId){
     selectable = selectable || false;
+
+    if (currentKing){
+        if (type === 'hero' && playerId === currentKing){
+            return new Sprite('img/king.png', [0, 105], [34, 50], 10, [0, 1, 2, 3], 'horizontal', selectable);
+        }
+    }
 
     if (type === 'hero' && selectable) {
        return new Sprite('img/hero.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
     } else if (type === 'soldier' && selectable) {
-        return new Sprite('img/soldier-asset.png', [0, 0], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
-    }else if(type === 'moneybag'){
+        return new Sprite('img/soldier-asset.png', [0, 128], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
+    } else if(type === 'moneybag'){
         return new Sprite('img/'+ type +'.png', [0,0], [10,25], 1, [-1], false);
-    }
+    } 
 }

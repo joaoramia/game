@@ -10,9 +10,9 @@ function Building (pos, type, health, defense) {
 //we can change the name of this building
 function Bar (pos) {
 	Unit.call(this, pos, 'barracks', 800, 5);
-	this.cost = 1200;
+	this.cost = 2000;
 }
 
 module.exports = {
-	Barracks: Barracks
+	Bar: Bar
 }

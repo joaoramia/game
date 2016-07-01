@@ -5,9 +5,6 @@ var rightClick = {};
 var currentMousePosition;
 
 function mouseDown(e) {
-  console.log("pageX: ", e.pageX, "pageY: ", e.pageY);
-  console.log("layerX: ", e.layerX, "layerY: ", e.layerY);
-  console.log("VP POS: ", vp.pos);
 
   if (e.which === 1 && !e.ctrlKey){
     rect.startX = e.layerX + vp.pos[0];
@@ -23,7 +20,9 @@ function mouseDown(e) {
 }
 
 function mouseUp(e) {
-  if (e.which === 1 && !e.ctrlKey){
+  if (attackPending && e.which === 1) { // Attack functionality ('on a-click')
+    handleAttackInput(e.layerX + vp.pos[0], e.layerY + vp.pos[1]); // takes in the x and y corresponding to the big canvas
+  } else if (e.which === 1 && !e.ctrlKey){ // Regular Click
     select();
   }
   else {
