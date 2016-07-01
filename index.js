@@ -15,8 +15,12 @@ app.use(express.static(__dirname + '/node_modules/'));
 var gameConfig = require('./config.json');
 
 // currently not used
-var quadtree = require('simple-quadtree');
-var tree = quadtree(0, 0, gameConfig.width, gameConfig.height);
+// var quadtree = require('simple-quadtree');
+// var tree = quadtree(0, 0, gameConfig.width, gameConfig.height);
+
+// rBush
+var tree = require('rbush')();
+
 
 // all the objects on the canvas
 var players = {};
@@ -93,6 +97,14 @@ io.on('connection', function (socket) {
     	generateMoneyBags(1);
     })
 
+    socket.on('checkIfPlayerHasEnoughMoneyForBar', function(id){
+        if (player[id].wealth < 1200) {
+            socket.emit('buildBar', false);
+        } else {
+            
+        }
+    })
+
 });
 
 
@@ -115,6 +127,7 @@ function generateMoneyBags(count){
 
 function addPlayer (playerData) {
     players[playerData.id] = playerData;
+    addEntities(playerData.)
 }
 
 function addEntities () {

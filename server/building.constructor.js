@@ -8,7 +8,7 @@ function Building (pos, type, health, defense) {
 }
 
 //we can change the name of this building
-function Barracks (pos) {
+function Bar (pos) {
 	Unit.call(this, pos, 'barracks', 800, 5);
 	this.cost = 1200;
 }

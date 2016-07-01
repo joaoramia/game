@@ -13,6 +13,21 @@
   </head>
   <body oncontextmenu="return false;">
     <div id="game-ui">
+      <div id="world-wealth-display">
+        <div id="leaderboard">
+          <h3>Leaderboard</h3>
+          <p>THE BOSS:</p> 
+          <p><span>Ian</span> ($192038)</p>
+          <br>
+          <p>2. Ferdinand</p>
+          <p>3. Julian</p>
+          <p>4. Todd</p>
+          <p>5. Emilio</p>
+        </div>
+        <div id="players-wealth">
+          <p>Your wealth: $<span id="player-wealth-display"></span></p>
+        </div>
+      </div>
       <div id="game-view">
       </div>
       <div id="game-controls">
@@ -30,13 +45,13 @@
           <div id="ui-buttons">
             <div class="ui-container">
               <div id="button-container">
-                <div id="buttons-message" class="a-button">
-                  <p>Message</p>
+                <div id="buttons-message-box" class="a-button">
+                  <p id="buttons-message-content">No units selected</p>
                 </div>
                 <ul id="buttons-list">
-                  <li class="a-button">Build (B)</li>
+<!--                   <li class="a-button">Build (B)</li>
                   <li class="a-button">Attack (A)</li>
-                  <li class="a-button">Move (M)</li>
+                  <li class="a-button">Move (M)</li> -->
                 </ul>
               </div>
             </div>
@@ -47,6 +62,7 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="socket.io/socket.io.js"></script>
+
     <script src="js/ip.js"></script><!-- TO BE TAKEN OUT ONCE WE DEPLOY IT -->
     <script src="js/canvassetup.js"></script>
     <script src="js/resources.js"></script>
@@ -63,6 +79,7 @@
     <script src="js/moneybag.functionality.js"></script>
     <script src="js/app.js"></script>
     <script src="js/ui/main-menu.js"></script>
-    
+    <script src="js/ui/build-menu.js"></script>
+  
   </body>
 </html>

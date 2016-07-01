@@ -55,7 +55,6 @@ function init() {
         console.log("all the players", playersCollection)
         otherPlayers = playersCollection;
 
-
         /*
         for each of the other players, assign each unit,
         its appropriate sprite
@@ -121,7 +120,7 @@ var gameTime = 0;
 var terrainPattern;
 
 var score = 200;
-var scoreEl = document.getElementById('score');
+var scoreEl = $("#player-wealth-display").text(score);
 
 // Update game objects
 function update(dt) {
