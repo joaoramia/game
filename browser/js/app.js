@@ -14,7 +14,7 @@ function setupSocket (socket) {
     });
 
     socket.on('otherPlayerDC', function (socketId) {
-        console.log(socketId + ' left!!!!!');
+        console.log(socketId + ' left!');
         delete otherPlayers[socketId];
     });
 }
@@ -94,8 +94,15 @@ function init() {
 
 }
 
-socket.on('deleteMoneyBag', function(moneyBagName){
-    delete moneyBags[moneyBagName];
+socket.on('deleteAndUpdateMoneyBags', function (bagUpdate) {
+    delete moneyBags[bagUpdate.deletedBagName];
+    moneyBags[bagUpdate.newBagName] = bagUpdate.newBagValue;
+    //abstract this away
+    var coords = bagUpdate.newBagName.split(",");
+    coords[0] = parseInt(coords[0]);
+    coords[1] = parseInt(coords[1]);
+    moneyBags[bagUpdate.newBagName].pos = coords;
+    moneyBags[bagUpdate.newBagName].sprite = generateSprite("moneybag");
 })
 
 // Defines some initial global variables that're overwritten when game loads

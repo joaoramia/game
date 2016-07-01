@@ -75,7 +75,16 @@ io.on('connection', function (socket) {
     	//increase the wealth of the player
     	players[moneyBagData.playerId].wealth += moneyBagData.value;
         //change object representing available money on all clients
-        socket.broadcast.emit('deleteMoneyBag', moneyBagData.name);
+
+        var newBagKeyName = generateMoneyBags(1);
+
+        var bagUpdate = {
+            deletedBagName: moneyBagData.name,
+            newBagName: newBagKeyName.join(","),
+            newBagValue: moneyBags[newBagKeyName]
+        }
+        console.log(bagUpdate);
+        io.emit('deleteAndUpdateMoneyBags', bagUpdate);
     	delete moneyBags[moneyBagData.name];
     	//replenish the moneyBags object
     	generateMoneyBags(1);
@@ -87,9 +96,16 @@ io.on('connection', function (socket) {
 //initially generate money bags for the moneyBags object
 function generateMoneyBags(count){
     moneyBags.count = Object.keys(moneyBags).length - 1 + count;
-    for (var i = 0; i < count; i++) {
-        //values of array represent x and y. later, change this so that x = max x of canvas and y is max y of canvas
-        moneyBags[[utils.getRandomNum(2000), utils.getRandomNum(1000)]] = {value : utils.getRandomNum(25, 75)};
+    if (count === 1) {
+        var keyName = [utils.getRandomNum(2000), utils.getRandomNum(1000)]
+        moneyBags[keyName] = {value : utils.getRandomNum(25, 75)};
+        return keyName;
+
+    } else {
+        for (var i = 0; i < count; i++) {
+            //values of array represent x and y. later, change this so that x = max x of canvas and y is max y of canvas
+            moneyBags[[utils.getRandomNum(2000), utils.getRandomNum(1000)]] = {value : utils.getRandomNum(25, 75)};
+        }
     }
 }
 

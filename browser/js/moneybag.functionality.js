@@ -27,6 +27,7 @@ function setupMoneyBags (moneyBagsFromServer) {
     delete moneyBags.count;
     for (var moneyBag in moneyBags) {
         if (moneyBags.hasOwnProperty(moneyBag)) {
+            //abstract THIS
             var coords = moneyBag.split(",");
             coords[0] = parseInt(coords[0]);
             coords[1] = parseInt(coords[1]);
