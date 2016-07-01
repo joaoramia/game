@@ -1,23 +1,33 @@
 var buildMenuButtons = [
-	{text: "Bar (K)", tagName: "build-bar", clickFunction: buildBar},
-	{text: "Bank (H)", tagName: "build-bank", clickFunction: buildBank},
-	{text: "House (L)", tagName: "build-house", clickFunction: buildHouse}
+	{text: "Bar (K)", tagName: "build-bar", clickFunction: buildBarRequest},
+	{text: "Bank (H)", tagName: "build-bank", clickFunction: buildBankRequest},
+	{text: "House (L)", tagName: "build-house", clickFunction: buildHouseRequest}
 ];
 
-function buildBar(){
+function buildBarRequest(){
 	console.log("This button builds a bar!");
+	var requestObj = {id: player.id};
 	//first check to see if the player has enough money to build a bar
-
-	//if player doesn't have money, tell them they need more money
-
-	//if player does, cursor changes to be building
+	socket.emit('checkIfPlayerHasEnoughMoneyForBar', requestObj);
 }
 
-function buildBank() {
+function buildBankRequest() {
 	console.log("This button builds a bank!");
 }
 
-function buildHouse() {
+function buildHouseRequest() {
 	console.log("This button builds a house!");
 }
 
+socket.on("buildBar", function(barData){
+	if (barData === false) {
+	//if player doesn't have money, tell them they need more money
+
+	} else {
+	//if player does, cursor changes to be building
+
+	//check that user still has enough money before approving
+	
+	}
+	
+})
