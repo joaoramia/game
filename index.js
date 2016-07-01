@@ -16,12 +16,18 @@ app.use(express.static(__dirname + '/node_modules/'));
 var gameConfig = require('./config.json');
 
 // currently not used
-var quadtree = require('simple-quadtree');
-var tree = quadtree(0, 0, gameConfig.width, gameConfig.height);
+// var quadtree = require('simple-quadtree');
+// var tree = quadtree(0, 0, gameConfig.width, gameConfig.height);
+
+// rBush
+var tree = require('rbush')();
+
 
 // all the objects on the canvas
 var players = {};
 var sockets = {};
+var units = {};
+var buiildings = {};
 var moneyBags = {count: 0};
 var currentKing;
 generateMoneyBags(100);
@@ -47,8 +53,8 @@ io.on('connection', function (socket) {
 
         currentPlayer.userName = newPlayerData.userName;
         currentPlayer.id = socket.id;
-        currentPlayer.units[0] = new Hero([200,200]);
-        currentPlayer.units[1] = new Soldier([300, 300]);
+        currentPlayer.units[0] = new Hero(socket.id, [200,200]);
+        currentPlayer.units[1] = new Soldier(socket.id, [300, 300]);
         currentPlayer.unitNumber = 2;
 
         // emit the current object of players then add your player no the array
@@ -155,6 +161,11 @@ function generateMoneyBags(count){
 
 function addPlayer (playerData) {
     players[playerData.id] = playerData;
+    
+}
+
+function addEntities () {
+    tree.add()
 }
 
 function removePlayer (socket) {

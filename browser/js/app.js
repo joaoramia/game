@@ -67,7 +67,6 @@ function init() {
         console.log("all the players", playersCollection)
         otherPlayers = playersCollection;
 
-
         /*
         for each of the other players, assign each unit,
         its appropriate sprite
@@ -183,9 +182,11 @@ function update(dt) {
 
 // Draw everything
 function render() {
-    ctx.fillStyle = terrainPattern;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+    renderTerrain(); // terrain in the background
+    
+    renderEntities(moneyBags); // moneybags before units so that units show up in front
+    
     renderEntities(player.units, player.id);
 
     for (var key in otherPlayers){
@@ -193,10 +194,11 @@ function render() {
             renderEntities(otherPlayers[key].units, key);
     }
 
+    renderEntities(player.units, player.id);
+
     renderSelectionBox();
 
-    renderEntities(moneyBags);
-    //cameraPan(currentMousePosition);
+    // cameraPan(currentMousePosition);
 };
 
 function renderEntities(list, playerId) {
@@ -216,11 +218,13 @@ function renderEntity(entity, playerId) {
     ctx.translate(entity.pos[0], entity.pos[1]);
     if (!(entity.sprite instanceof Sprite) && entity.sprite){
         entity.sprite.selectable = false;
-        Sprite.prototype.render.apply(entity.sprite, [ctx, playerId, entity.type]);
+
+        Sprite.prototype.render.apply(entity.sprite, [ctx, playerId, entity.type, entity.currentHealth, entity.maxHealth]);
         // entity.sprite.render(ctx);
     }
     else if (entity.sprite){
-        entity.sprite.render(ctx, playerId, entity.type);
+        entity.sprite.render(ctx, playerId, entity.type, entity.currentHealth, entity.maxHealth);
+
     }
     ctx.restore();
 }
@@ -229,6 +233,13 @@ function renderSelectionBox(){
     ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
     ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
 }
+
+
+function renderTerrain () {
+    ctx.fillStyle = terrainPattern;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
 
 
 function getUnitPosByPlayer(player){ 
@@ -245,4 +256,7 @@ function setUnitPosByPlayer(player, posObj){ 
             //player.units[unitId].pos = posObj[unitId].pos; 
         console.log("prev pos=", player.units[unitId].pos, "new position= ", posObj[unitId].pos )
     }
+
  }
+
+ 

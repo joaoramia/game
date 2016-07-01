@@ -20,7 +20,9 @@ function mouseDown(e) {
 }
 
 function mouseUp(e) {
-  if (e.which === 1 && !e.ctrlKey){
+  if (attackPending && e.which === 1) { // Attack functionality ('on a-click')
+    handleAttackInput(e.layerX + vp.pos[0], e.layerY + vp.pos[1]); // takes in the x and y corresponding to the big canvas
+  } else if (e.which === 1 && !e.ctrlKey){ // Regular Click
     select();
   }
   else {
