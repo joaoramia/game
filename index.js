@@ -43,13 +43,13 @@ io.on('connection', function (socket) {
     // when the new user joins!
     socket.on('respawn', function (newPlayerData) {
 
-        //currentPlayer.userName = newPlayerData.username // TODO
+        currentPlayer.userName = newPlayerData.userName;
         currentPlayer.id = socket.id;
         currentPlayer.units[0] = new Hero([200,200]);
         currentPlayer.units[1] = new Soldier([300, 300]);
         currentPlayer.unitNumber = 2;
 
-        // emit the current array of players then add your player
+        // emit the current array of players then add your player no the array
         socket.emit('playersArray', players); //to see everyone else
 
 
