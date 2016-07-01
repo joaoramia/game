@@ -2,8 +2,9 @@ var socket = io.connect('http://' + ip + ':3030');
 
 function setupSocket (socket) {
 
-    socket.on('otherPlayerJoin', function (otherPlayerData) {
+    socket.on('otherPlayerJoin', function (otherPlayerData, currentKing) {
         console.log(otherPlayerData.id + ' has joined!');
+        console.log("CURRENT KING: ", currentKing);
         // generate the new players sprites
         otherPlayerData.units.forEach(function(unit){
             unit.sprite = generateSprite(unit.type, false);
