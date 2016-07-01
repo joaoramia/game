@@ -92,9 +92,11 @@ function init() {
         setupMoneyBags(moneyBagsFromServer);
     })
 
-
-
 }
+
+socket.on('deleteMoneyBag', function(moneyBagName){
+    delete moneyBags[moneyBagName];
+})
 
 // Defines some initial global variables that're overwritten when game loads
 var moneyBags = {};
@@ -164,7 +166,6 @@ function render() {
     renderEntities(player.units);
 
     for (var key in otherPlayers){
-        console.log("object of toher playees", otherPlayers[key])
         if (otherPlayers.hasOwnProperty(key))
             renderEntities(otherPlayers[key].units);
     }

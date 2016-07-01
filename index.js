@@ -74,6 +74,8 @@ io.on('connection', function (socket) {
     socket.on('moneyDiscovered', function (moneyBagData) {
     	//increase the wealth of the player
     	players[moneyBagData.playerId].wealth += moneyBagData.value;
+        //change object representing available money on all clients
+        socket.broadcast.emit('deleteMoneyBag', moneyBagData.name);
     	delete moneyBags[moneyBagData.name];
     	//replenish the moneyBags object
     	generateMoneyBags(1);
