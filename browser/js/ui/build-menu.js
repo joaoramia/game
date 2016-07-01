@@ -18,6 +18,9 @@ socket.on('buildBar', function(data){
 		if (data.valid === false) {
 			//tell them they need more money
 			console.log("user cannot build building")
+			displayErrorToUser("You don't have enough money to build that! Get more money!");
+			//reset the menu
+
 		} else {
 		//if player does, cursor changes to be building
 			console.log("user can build building. where?");

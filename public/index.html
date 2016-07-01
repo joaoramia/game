@@ -9,10 +9,13 @@
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="styles/main.css">
     <!-- gets resources for Work Sans font from Google -->
-    <link href='https://fonts.googleapis.com/css?family=Work+Sans' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,700' rel='stylesheet' type='text/css'>
   </head>
   <body oncontextmenu="return false;">
     <div id="game-ui">
+      <div id="display-error-container">
+        <p id="display-error-content"><span>ALERT:</span> This is an error.</p>
+      </div>
       <div id="world-wealth-display">
         <div id="leaderboard">
           <h3>Leaderboard</h3>
@@ -77,6 +80,6 @@
     <script type="text/javascript" src="js/app.js"></script>
     <script type="text/javascript" src="js/ui/main-menu.js"></script>
     <script type="text/javascript" src="js/ui/build-menu.js"></script>
-
+    <script type="text/javascript" src="js/ui/ui-error.js"></script>
   </body>
 </html>

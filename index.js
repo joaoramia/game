@@ -95,7 +95,7 @@ io.on('connection', function (socket) {
     socket.on('checkIfPlayerCanBuildBar', function(data){
         if (data.request === 1) {
             if (players[data.id].wealth < 2000) {
-                socket.emit('buildBar', false);
+                socket.emit('buildBar', {valid: false, request: 1});
             } else {
                 socket.emit('buildBar', true);
             }

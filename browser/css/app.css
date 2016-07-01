@@ -24,6 +24,23 @@ canvas {
     max-height: 70%;
 }
 
+#display-error-container {
+    position: fixed;
+    z-index: 1;
+    top: 5px;
+    left: 5px;
+    min-width: 60%;
+    max-width: 60%;
+    background-color: rgba(23, 23, 23, 0.5);
+    color: white;
+    font-size: 20px;
+    display: none;
+}
+
+#display-error-container p span {
+    font-weight: 700;
+}
+
 #world-wealth-display {
     position: fixed;
     z-index: 1;
