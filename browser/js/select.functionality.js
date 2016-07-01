@@ -27,9 +27,10 @@ function mouseUp(e) {
     select();
   }
   else {
-    player.units.forEach(function(unit){
+    for (var unitId in player.units) {
+      var unit = player.units[unitId];
       if (unit.sprite.selected) unit.targetpos = [rightClick.x, rightClick.y];
-    })
+    }
   }
   drag = false;
   rect = {};
@@ -53,7 +54,8 @@ function select(){
   var rectEndX = rect.startX + rect.w;
   var rectEndY = rect.startY + rect.h;
 
-  player.units.forEach(function(unit) {
+  for (var unitId in player.units) {
+    var unit = player.units[unitId];
     unit.sprite.selected = false;
     var playerEndX = unit.pos[0] + vp.pos[0] + unit.sprite.size[0];
     var playerEndY = unit.pos[1] + vp.pos[1] + unit.sprite.size[1];
@@ -62,8 +64,7 @@ function select(){
       currentSelection.push(unit);
       unit.sprite.selected = true;
     }
-  })
-
+  }
   rightClick = {};
   drag = false;
 }

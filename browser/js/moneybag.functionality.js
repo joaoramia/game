@@ -3,21 +3,22 @@ function checkCollisionWithMoneyBag() {
     var moneyPos = moneyBags[moneyBag].pos;
     var moneySize = moneyBags[moneyBag].sprite.size;
 
-    player.units.forEach(function(unit){
+    for (var unitId in player.units) {
+        var unit = player.units[unitId];
         if (moneyBags[moneyBag]){
             if (boxCollides(unit.pos, unit.sprite.size, moneyBags[moneyBag].pos, moneyBags[moneyBag].sprite.size)) {
-            var moneyBagData = {
-            playerId: player.id,
-            name: moneyBag,
-            value: moneyBags[moneyBag].value
+                var moneyBagData = {
+                    playerId: player.id,
+                    name: moneyBag,
+                    value: moneyBags[moneyBag].value
+                }
+                delete moneyBags[moneyBag];
+                playSoundOnEvent(moneyFoundSound);
+                socket.emit('moneyDiscovered', moneyBagData);
+                score += moneyBagData.value;
             }
-            delete moneyBags[moneyBag];
-            playSoundOnEvent(moneyFoundSound);
-            socket.emit('moneyDiscovered', moneyBagData);
-            score += moneyBagData.value;
         }
-      }  
-    })
+    }  
   }
 }
 

@@ -1,5 +1,6 @@
 function walk(dt){
-    player.units.forEach(function(unit){
+    for (var unitId in player.units) {
+        var unit = player.units[unitId];
         if (unit.targetpos){
             if (Math.abs(unit.pos[0] - unit.targetpos[0]) > 5 || Math.abs(unit.pos[1] - unit.targetpos[1]) > 5){
     			if (unit.pos[0] < unit.targetpos[0]) unit.pos[0] += unit.speed*dt;
@@ -17,5 +18,5 @@ function walk(dt){
                 unit.targetpos = undefined;
             }
         }
-	})
+	}
 }
