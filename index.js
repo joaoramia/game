@@ -7,6 +7,7 @@ var Player = require('./server/player.constructor');
 var Unit = require('./server/unit.constructor').Unit;
 var Hero = require('./server/unit.constructor').Hero;
 var Soldier = require('./server/unit.constructor').Soldier;
+var Bar = require('./server/unit.constructor').Bar;
 
 app.use(express.static(__dirname + '/public/'));
 app.use(express.static(__dirname + '/browser/'));
@@ -91,11 +92,15 @@ io.on('connection', function (socket) {
     	generateMoneyBags(1);
     })
 
-    socket.on('checkIfPlayerHasEnoughMoneyForBar', function(id){
-        if (player[id].wealth < 1200) {
-            socket.emit('buildBar', false);
-        } else {
-            
+    socket.on('checkIfPlayerCanBuildBar', function(data){
+        if (data.request === 1) {
+            if (players[data.id].wealth < 2000) {
+                socket.emit('buildBar', false);
+            } else {
+                socket.emit('buildBar', true);
+            }
+        } else if (data.request === 2) {
+
         }
     })
 
