@@ -14,6 +14,7 @@ function resizeViewport () {
 	//viewCanvas.style.height = height+'px';
 	viewCanvas.width = width;
 	viewCanvas.height = height;
+	//draw viewport function in render
 }
 
 	

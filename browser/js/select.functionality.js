@@ -34,6 +34,7 @@ function mouseUp(e) {
   }
   drag = false;
   rect = {};
+  updateButtonMenu();
 }
 
 function mouseMove(e) {
