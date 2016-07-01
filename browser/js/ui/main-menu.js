@@ -46,8 +46,8 @@ var nonHeroSelectedButtons = [
 ];
 
 var buildMenuButtons = [
-	{text: "Bar (K)", tagName: "build-bar", clickFunction: placeholderFunction},
-	{text: "Bank (H)", tagName: "build-bank", clickFunction: placeholderFunction}
+	{text: "Bar (K)", tagName: "build-bar", clickFunction: buildBar},
+	{text: "Bank (H)", tagName: "build-bank", clickFunction: buildBank}
 ]
 
 function updateButtonMenuOnClick (){
