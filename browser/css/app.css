@@ -2,6 +2,12 @@ html, body {
     margin: 0;
     padding: 0;
     background-color: #151515;
+    font-family: 'Work Sans', sans-serif;
+}
+
+p {
+    margin: 0;
+    padding: 0;
 }
 
 canvas {
@@ -63,16 +69,60 @@ canvas {
     min-height: 100%;
 }
 
-#ui-buttons img {
+#buttons-panel img {
     display: block;
     margin: auto;
 }
 
+#ui-buttons:first-child {
+    background-color: green;
+}
+
 .ui-container {
-    border: 1px solid gainsboro;
+    display: block;
+    margin: auto;
+    border: 2px solid gainsboro;
     border-radius: 5px;
     background: white;
-    height: 98%;
-    width: 98%;
+    height: 100%;
+    width: 80%;
 
+}
+
+.a-button {
+    display: block;
+    margin: 10px auto 10px auto;
+    width: 90%;
+    height: 25%;
+    background-color: white;
+    border: 1px solid gainsboro;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.a-button:hover {
+    background-color: #D4D4D4;
+    cursor: pointer;
+}
+
+#button-container {
+    display: block;
+    margin: auto;
+    min-height: 95%;
+    min-width: 95%;
+}
+
+#button-container p {
+    text-align: center;
+}
+
+#buttons-list {
+    list-style: none;
+    margin: 0;
+    width: 100%;
+}
+
+#buttons-list li {
+    margin: 5px;
+    display: inline-block;
 }

@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width">
     <link rel="stylesheet" href="css/app.css">
     <link rel="stylesheet" href="styles/main.css">
+    <!-- gets resources for Work Sans font from Google -->
+    <link href='https://fonts.googleapis.com/css?family=Work+Sans' rel='stylesheet' type='text/css'>
   </head>
   <body oncontextmenu="return false;">
     <div id="game-ui">
@@ -27,7 +29,16 @@
           </div>
           <div id="ui-buttons">
             <div class="ui-container">
-              <img src="http://placehold.it/220x180">
+              <div id="button-container">
+                <div id="buttons-message" class="a-button">
+                  <p>Message</p>
+                </div>
+                <ul id="buttons-list">
+                  <li class="a-button">Build (B)</li>
+                  <li class="a-button">Attack (A)</li>
+                  <li class="a-button">Move (M)</li>
+                </ul>
+              </div>
             </div>
           </div>
         </div>
@@ -50,6 +61,7 @@
     <script type="text/javascript" src="js/audio.js"></script>
     <script type="text/javascript" src="js/moneybag.functionality.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/ui/main-menu.js"></script>
     
   </body>
 </html>
