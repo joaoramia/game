@@ -1,4 +1,3 @@
-
 (function() {
     function Sprite(url, pos, size, speed, frames, dir, selectable) {
         this.pos = pos;
@@ -25,8 +24,6 @@
         render: function(ctx, playerId, type) {
             var frame;
 
-            // console.log('here', playerId);
-            console.log(playerId === currentKing);
             if(playerId === currentKing && type === 'hero') {
                 this.url = 'img/king.png';
                 this.size = [34, 50];
@@ -53,7 +50,6 @@
             else {
                 frame = 0;
             }
-
 
             var x = this.pos[0];
             var y = this.pos[1];
@@ -86,10 +82,9 @@
 function generateSprite(type, selectable, playerId){
     selectable = selectable || false;
 
-    console.log("I AM CURRENT KING: ", currentKing, type);
     if (currentKing){
         if (type === 'hero' && playerId === currentKing){
-            return new Sprite('img/king.png', [0, 0], [34, 50], 10, [0, 1, 2, 3], 'horizontal', selectable);
+            return new Sprite('img/king.png', [0, 155], [34, 50], 10, [0, 1, 2, 3], 'horizontal', selectable);
         }
     }
 

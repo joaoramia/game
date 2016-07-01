@@ -224,4 +224,3 @@ function renderSelectionBox(){
     ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
     ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
 }
-
