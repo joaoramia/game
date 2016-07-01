@@ -20,6 +20,7 @@ socket.on('buildBar', function(data){
 			console.log("user cannot build building")
 			displayErrorToUser("You don't have enough money to build that! Get more money!");
 			//reset the menu
+			updateButtonMenuOnClick();
 
 		} else {
 		//if player does, cursor changes to be building
