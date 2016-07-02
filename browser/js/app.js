@@ -131,6 +131,10 @@ var otherPlayers = {};
 
 var currentSelection = [];
 
+var buildMode = {
+    on: false,
+    type: ""
+}
 
 var gameTime = 0;
 var terrainPattern;

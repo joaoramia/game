@@ -137,11 +137,15 @@ io.on('connection', function (socket) {
             }
         } else if (data.request === 2) {
             if (players[data.id].wealth < 2000) {
-                socket.emit('buildBar', {valid: false, request: 2});
+                socket.emit('buildBar', {valid: false, request: 2, error: "lacking resources"});
             } else if (false) {
-            //make sure the building doesn't colid with another building
+            //make sure the building doesn't collide with another building
+                socket.emit('buildBar', {valid: false, request: 2, error: "collision"});
             } else {
-                var newBar = new Bar(data.pos);
+                console.log("DATA OBJECT", data);
+                console.log("BEFORE RUNNING CONSTRUCTOR", data.pos);
+                var newBar = new Bar(data.pos, data.id);
+                console.log("AFTER CONSTRUCTOR", newBar);
                 players[data.id][players[data.id].buildingNumber] = newBar;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 2000;

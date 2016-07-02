@@ -1,11 +1,17 @@
 var rect = {};
 var drag = false;
 var rightClick = {};
+var positionOfNewBuilding;
 
 var currentMousePosition;
 
 function mouseDown(e) {
-  if (e.which === 1 && !e.ctrlKey){
+  if ( buildMode.on && (e.which === 1 && !e.ctrlKey) ) {
+    var tempX = e.layerX + vp.pos[0];
+    var tempY = e.layerY + vp.pos[1];
+    positionOfNewBuilding = [tempX, tempY];
+    console.log(positionOfNewBuilding);
+  } else if (e.which === 1 && !e.ctrlKey){
     rect.startX = e.layerX + vp.pos[0];
     rect.startY = e.layerY + vp.pos[1];
     rect.w = 5;
@@ -19,7 +25,10 @@ function mouseDown(e) {
 }
 
 function mouseUp(e) {
-  if (attackPending && e.which === 1) { // Attack functionality ('on a-click')
+  if (buildMode.on) {
+    submitBuildingLocation(positionOfNewBuilding);
+    buildModeOff();
+  } else if (attackPending && e.which === 1) { // Attack functionality ('on a-click')
     handleAttackInput(e.layerX + vp.pos[0], e.layerY + vp.pos[1]); // takes in the x and y corresponding to the big canvas
   } else if (e.which === 1 && !e.ctrlKey){ // Regular Click
     select();
@@ -32,7 +41,7 @@ function mouseUp(e) {
   }
   drag = false;
   rect = {};
-  updateButtonMenuOnClick();
+  displayRootMenu(); //defined in js/ui/main-menu.js
 }
 
 function mouseMove(e) {
