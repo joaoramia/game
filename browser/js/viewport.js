@@ -6,14 +6,14 @@ function resizeViewport () {
 
 	//http://cssdeck.com/labs/emcxdwuz
 
-	var height = window.innerHeight * .70;
-	var ratio = viewCanvas.width/viewCanvas.height;
-	var width = height * ratio;
+	//var height = window.innerHeight * .70;
+	//var ratio = viewCanvas.width/viewCanvas.height;
+	//var width = height * ratio;
 	
 	//viewCanvas.style.width = width+'px';
 	//viewCanvas.style.height = height+'px';
-	viewCanvas.width = width;
-	viewCanvas.height = height;
+	viewCanvas.width = window.innerWidth;
+	viewCanvas.height = window.innerHeight; //height;
 	//draw viewport function in render
 }
 
