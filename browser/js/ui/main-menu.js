@@ -45,7 +45,7 @@ var nonHeroSelectedButtons = [
 	{text: "Move (M)", clickFunction: placeholderFunction}
 ];
 
-function updateButtonMenuOnClick (){
+function displayRootMenu (){
 	//currently assumes there are only units
 	if (currentSelection.length === 0) {
 		//if no units selected

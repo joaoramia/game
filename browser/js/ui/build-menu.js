@@ -10,27 +10,49 @@ function buildBarRequest(){
 	socket.emit('checkIfPlayerCanBuildBar', requestObj);
 }
 
+function submitBuildingLocation (pos) {
+  var requestObj = {pos: pos, id: player.id, request: 2};
+  socket.emit('checkIfPlayerCanBuildBar', requestObj);
+}
+
+function buildModeOn(type){
+	buildMode.on = true;
+	buildMode.type = type;
+	displayErrorToUserUntimed("BUILD MODE", "Select a location to build, or press Esc to quit.");
+	$("#buttons-list").empty();
+}
+
+function buildModeOff(){
+	buildMode.on = false;
+	buildMode.type = "";
+	turnOffUntimedMessage();
+}
+
 socket.on('buildBar', function(data){
 	//first check to see if the player has enough money to build a bar
 	if (data.request === 1) {
 	//if player doesn't have money...
 		if (data.valid === false) {
 			//tell them they need more money
-			displayErrorToUser("You don't have enough money to build that! Make more money!");
+			displayErrorToUserTimed("You don't have enough money to build that! Make more money!");
 			//reset the menu
-			updateButtonMenuOnClick();
+			displayRootMenu();
 		} else {
-			console.log("user can build building. where?");
 			//if player does, cursor changes to be building
-			//wherever user clicks a building is built
-			socket.emit('checkIfPlayerCanBuildBar', {pos: [400, 400], id: player.id, request: 2});
+			//enable build mode: build building where user clicks
+			buildModeOn("bar"); 
+			//run submitBuildingLocation on click when in buildMode
 		}
 	//send another request to create the building object on the server
 	} else if (data.request === 2) {
 		//if player ran out of money since placing building, can't build
-		if (data.valid === false) {
-			displayErrorToUser("You don't have enough money to build that anymore! Make more!");
-			updateButtonMenuOnClick();
+		if (data.valid === false && data.error === "lacking resources") {
+			displayErrorToUserTimed("You don't have enough money to build that anymore! Make more!");
+			displayRootMenu();
+		//if the player chooses an an invalid location
+		} else if (data.valid === false && data.error === "collision") {
+			displayErrorToUserTimed("You can't build there! There's something in the way!");
+			displayRootMenu();
 		} else {
 		//if building is valid, update the player's buildings object
 		player.buildings[data.name] = data.bar;

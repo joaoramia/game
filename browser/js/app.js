@@ -88,6 +88,8 @@ function init() {
         console.log(gameData);
         currentKing = king;
         player = gameData.playerData;
+        wealth = gameData.playerData.wealth;
+        $("#player-wealth-display").text(wealth);
         for (var unitId in player.units) {
             var unit = player.units[unitId];
             unit.sprite = generateSprite(unit.type, true, player.id);
@@ -129,12 +131,15 @@ var otherPlayers = {};
 
 var currentSelection = [];
 
+var buildMode = {
+    on: false,
+    type: ""
+}
 
 var gameTime = 0;
 var terrainPattern;
 
-var score = 200;
-$("#player-wealth-display").text(score);
+var wealth = 0;
 
 // Update game objects
 function update(dt) {
@@ -145,8 +150,6 @@ function update(dt) {
     handleInput(dt);
 
     checkCollisions();
-
-    //scoreEl.innerHTML = score;
 
     socket.emit("playerMoves", player);
     //socket.emit("playerMoves", {id: player.id, unitsPos: getUnitPosByPlayer(player)});
