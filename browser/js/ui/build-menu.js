@@ -35,6 +35,9 @@ socket.on('buildBar', function(data){
 		//if building is valid, update the player's buildings object
 		player.buildings[data.name] = data.bar;
 		player.buildings[data.name].sprite = generateSprite(data.bar.type, true);
+		//update the player's wealth
+		player.wealth = data.currentWealth;
+		$("#player-wealth-display").text(player.wealth);
 		console.log(player.buildings);
 		}
 	}
