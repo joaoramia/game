@@ -38,11 +38,8 @@ resources.load([
     'img/terrain.jpg',
     'img/moneybag.png',
     'img/soldier-asset.png',
-<<<<<<< HEAD
-    'img/bar-asset.png'
-=======
+    'img/bar-asset.png',
     'img/king.png'
->>>>>>> master
 ]);
 
 
@@ -187,24 +184,19 @@ function update(dt) {
 // Draw everything
 function render() {
 
-<<<<<<< HEAD
-    renderEntities(player.units);
-    renderEntities(player.buildings);
-=======
     renderTerrain(); // terrain in the background
     
     renderEntities(moneyBags); // moneybags before units so that units show up in front
     
     renderEntities(player.units, player.id);
->>>>>>> master
 
     for (var key in otherPlayers){
         if (otherPlayers.hasOwnProperty(key))
             renderEntities(otherPlayers[key].units, key);
     }
-
-    renderEntities(player.units, player.id);
-
+    
+    renderEntities(player.buildings);
+    
     renderSelectionBox();
 
     // cameraPan(currentMousePosition);
