@@ -174,6 +174,7 @@ function render() {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     renderEntities(player.units);
+    renderEntities(player.buildings);
 
     for (var key in otherPlayers){
         if (otherPlayers.hasOwnProperty(key))

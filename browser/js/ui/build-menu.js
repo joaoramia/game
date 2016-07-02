@@ -23,7 +23,7 @@ socket.on('buildBar', function(data){
 			console.log("user can build building. where?");
 			//if player does, cursor changes to be building
 			//wherever user clicks a building is built
-			socket.emit('checkIfPlayerCanBuildBar', {pos: [50, 50], id: player.id, request: 2});
+			socket.emit('checkIfPlayerCanBuildBar', {pos: [400, 400], id: player.id, request: 2});
 		}
 	//send another request to create the building object on the server
 	} else if (data.request === 2) {
@@ -33,10 +33,10 @@ socket.on('buildBar', function(data){
 			updateButtonMenuOnClick();
 		} else {
 		//if building is valid, update the player's buildings object
-		console.log("Building data received", data);
-		
+		player.buildings[data.name] = data.bar;
+		player.buildings[data.name].sprite = generateSprite(data.bar.type, true);
+		console.log(player.buildings);
 		}
-		
 	}
 })
 

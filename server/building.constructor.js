@@ -9,7 +9,7 @@ function Building (pos, type, health, defense) {
 
 //we can change the name of this building
 function Bar (pos) {
-	Building.call(this, pos, 'barracks', 800, 5);
+	Building.call(this, pos, 'bar', 800, 5);
 	this.cost = 2000;
 }
 

@@ -108,7 +108,7 @@ io.on('connection', function (socket) {
                 var newBar = new Bar(data.pos);
                 players[data.id][players[data.id].buildingNumber] = newBar;
                 players[data.id].buildingNumber++;
-                socket.emit('buildBar', {valid: true, request: 2, bar: newBar});
+                socket.emit('buildBar', {valid: true, request: 2, bar: newBar, name: players[data.id].buildingNumber++});
             }
         }
     })
