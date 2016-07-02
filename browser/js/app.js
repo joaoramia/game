@@ -26,7 +26,8 @@ resources.load([
     'img/hero.png',
     'img/terrain.png',
     'img/moneybag.png',
-    'img/soldier-asset.png'
+    'img/soldier-asset.png',
+    'img/bar-asset.png'
 ]);
 
 

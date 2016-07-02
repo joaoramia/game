@@ -7,7 +7,7 @@ var Player = require('./server/player.constructor');
 var Unit = require('./server/unit.constructor').Unit;
 var Hero = require('./server/unit.constructor').Hero;
 var Soldier = require('./server/unit.constructor').Soldier;
-var Bar = require('./server/unit.constructor').Bar;
+var Bar = require('./server/building.constructor').Bar;
 
 app.use(express.static(__dirname + '/public/'));
 app.use(express.static(__dirname + '/browser/'));
@@ -97,10 +97,19 @@ io.on('connection', function (socket) {
             if (players[data.id].wealth < 2000) {
                 socket.emit('buildBar', {valid: false, request: 1});
             } else {
-                socket.emit('buildBar', true);
+                socket.emit('buildBar', {valid: true, request: 1});
             }
         } else if (data.request === 2) {
-
+            if (players[data.id].wealth < 2000) {
+                socket.emit('buildBar', {valid: false, request: 2});
+            } else if (false) {
+            //make sure the building doesn't colid with another building
+            } else {
+                var newBar = new Bar(data.pos);
+                players[data.id][players[data.id].buildingNumber] = newBar;
+                players[data.id].buildingNumber++;
+                socket.emit('buildBar', {valid: true, request: 2, bar: newBar});
+            }
         }
     })
 
