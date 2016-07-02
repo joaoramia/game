@@ -11,23 +11,35 @@ function buildBarRequest(){
 }
 
 socket.on('buildBar', function(data){
-	console.log("I TELL YOU WHETHER YOU CAN BUILD!", data);
 	//first check to see if the player has enough money to build a bar
 	if (data.request === 1) {
 	//if player doesn't have money...
 		if (data.valid === false) {
 			//tell them they need more money
-			console.log("user cannot build building")
+			displayErrorToUser("You don't have enough money to build that! Make more money!");
+			//reset the menu
+			updateButtonMenuOnClick();
 		} else {
-		//if player does, cursor changes to be building
 			console.log("user can build building. where?");
-		//check that user still has enough money before approving
-		
+			//if player does, cursor changes to be building
+			//wherever user clicks a building is built
+			socket.emit('checkIfPlayerCanBuildBar', {pos: [400, 400], id: player.id, request: 2});
 		}
-
-	//before user 
+	//send another request to create the building object on the server
 	} else if (data.request === 2) {
-
+		//if player ran out of money since placing building, can't build
+		if (data.valid === false) {
+			displayErrorToUser("You don't have enough money to build that anymore! Make more!");
+			updateButtonMenuOnClick();
+		} else {
+		//if building is valid, update the player's buildings object
+		player.buildings[data.name] = data.bar;
+		player.buildings[data.name].sprite = generateSprite(data.bar.type, true);
+		//update the player's wealth
+		player.wealth = data.currentWealth;
+		$("#player-wealth-display").text(player.wealth);
+		console.log(player.buildings);
+		}
 	}
 })
 

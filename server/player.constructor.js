@@ -5,7 +5,8 @@ function Player(id, userName) {
   this.wealth = 200;
   this.units = {}; // obj of Unit objects
   this.unitNumber = 0;
-  this.buildings = []; // array of building objects
+  this.buildings = {}; // obj of building objects
+  this.buildingNumber = 0;
   this.isKing = false;
 }
 

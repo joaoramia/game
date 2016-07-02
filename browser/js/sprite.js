@@ -114,8 +114,11 @@ function generateSprite(type, selectable, playerId){
     if (type === 'hero' && selectable) {
        return new Sprite('img/hero.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
     } else if (type === 'soldier' && selectable) {
-        return new Sprite('img/soldier-asset.png', [0, 128], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
-    } else if(type === 'moneybag'){
-        return new Sprite('img/'+ type +'.png', [0,0], [10,25], 1, [-1], false);
-    } 
+        return new Sprite('img/soldier-asset.png', [0, 0], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
+    } else if (type === 'moneybag') {
+        return new Sprite('img/moneybag.png', [0,0], [10,25], 1, [-1], false);
+    } else if (type === 'bar' && selectable) {
+        return new Sprite('img/bar-asset.png', [0,0], [320, 288], 1, [-1], true);
+        console.log("new bar sprite", player.building);
+    }
 }

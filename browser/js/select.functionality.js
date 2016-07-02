@@ -5,7 +5,6 @@ var rightClick = {};
 var currentMousePosition;
 
 function mouseDown(e) {
-
   if (e.which === 1 && !e.ctrlKey){
     rect.startX = e.layerX + vp.pos[0];
     rect.startY = e.layerY + vp.pos[1];

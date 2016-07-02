@@ -38,7 +38,11 @@ resources.load([
     'img/terrain.jpg',
     'img/moneybag.png',
     'img/soldier-asset.png',
+<<<<<<< HEAD
+    'img/bar-asset.png'
+=======
     'img/king.png'
+>>>>>>> master
 ]);
 
 
@@ -133,7 +137,7 @@ var gameTime = 0;
 var terrainPattern;
 
 var score = 200;
-var scoreEl = $("#player-wealth-display").text(score);
+$("#player-wealth-display").text(score);
 
 // Update game objects
 function update(dt) {
@@ -183,11 +187,16 @@ function update(dt) {
 // Draw everything
 function render() {
 
+<<<<<<< HEAD
+    renderEntities(player.units);
+    renderEntities(player.buildings);
+=======
     renderTerrain(); // terrain in the background
     
     renderEntities(moneyBags); // moneybags before units so that units show up in front
     
     renderEntities(player.units, player.id);
+>>>>>>> master
 
     for (var key in otherPlayers){
         if (otherPlayers.hasOwnProperty(key))

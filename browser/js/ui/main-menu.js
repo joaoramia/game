@@ -45,11 +45,6 @@ var nonHeroSelectedButtons = [
 	{text: "Move (M)", clickFunction: placeholderFunction}
 ];
 
-var buildMenuButtons = [
-	{text: "Bar (K)", tagName: "build-bar", clickFunction: buildBar},
-	{text: "Bank (H)", tagName: "build-bank", clickFunction: buildBank}
-]
-
 function updateButtonMenuOnClick (){
 	//currently assumes there are only units
 	if (currentSelection.length === 0) {
