@@ -1,8 +1,16 @@
 html, body {
     margin: 0;
     padding: 0;
-    background-color: #151515;
+    /*background-color: #151515;*/
     font-family: 'Work Sans', sans-serif;
+    background-image: url("../img/green-bg.jpg");
+    background-attachment: fixed;
+    /* Center the background image */
+    background-position: center;
+    /* Set the background image to no repeat */
+    background-repeat: no-repeat;
+    /* Scale the background image to be as large as possible */
+    background-size: cover;
 }
 
 p {
@@ -166,4 +174,32 @@ canvas {
 #buttons-list li {
     margin: 5px;
     display: inline-block;
+}
+
+.sumsginp {
+    font-family: 'Lucida Sans Unicode', 'Lucida Grande', sans-serif;
+    font-size: 15px;
+    word-wrap: break-word;
+    color: #e0e0ff;
+    background: none;
+    resize: none;
+    border: 0px;
+    height: 23px;
+    opacity: 1;
+    position: relative;
+    display: block;
+    margin : 0 auto;
+    text-align: center;
+}
+
+#login-screen{
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    position: relative;
+    top: 250px;
+}
+
+.display-none {
+    display: none;
 }

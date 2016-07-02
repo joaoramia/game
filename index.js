@@ -16,13 +16,20 @@ app.use(express.static(__dirname + '/node_modules/'));
 var gameConfig = require('./config.json');
 
 // currently not used
-var quadtree = require('simple-quadtree');
-var tree = quadtree(0, 0, gameConfig.width, gameConfig.height);
+// var quadtree = require('simple-quadtree');
+// var tree = quadtree(0, 0, gameConfig.width, gameConfig.height);
+
+// rBush
+var tree = require('rbush')();
+
 
 // all the objects on the canvas
 var players = {};
 var sockets = {};
+var units = {};
+var buiildings = {};
 var moneyBags = {count: 0};
+var currentKing;
 generateMoneyBags(100);
 
 app.get('/*', function (req, res) {
@@ -44,27 +51,49 @@ io.on('connection', function (socket) {
     // when the new user joins!
     socket.on('respawn', function (newPlayerData) {
 
-        //currentPlayer.userName = newPlayerData.username // TODO
+        currentPlayer.userName = newPlayerData.userName;
         currentPlayer.id = socket.id;
-        currentPlayer.units[0] = new Hero([200,200]);
-        currentPlayer.units[1] = new Soldier([300, 300]);
+        currentPlayer.units[0] = new Hero(socket.id, [200,200]);
+        currentPlayer.units[1] = new Soldier(socket.id, [300, 300]);
         currentPlayer.unitNumber = 2;
 
-        // emit the current array of players then add your player
+        // emit the current object of players then add your player no the array
         socket.emit('playersArray', players); //to see everyone else
-
 
         addPlayer(currentPlayer);
 
-        socket.emit('gameReady', {playerData: currentPlayer, moneyBags: moneyBags});
+        //assign current player as king if he is the first one to join
+        if (Object.keys(players).length < 2) {
+            changeKing(currentPlayer.id);
+        }
+
+        socket.emit('gameReady', {playerData: currentPlayer, moneyBags: moneyBags}, currentKing);
         socket.broadcast.emit('otherPlayerJoin', currentPlayer);
-        
     });
 
     socket.on('disconnect', function () {
         console.log("hey user has left ", socket.id)
         removePlayer(socket); // removes them from players AND sockets collections
 
+        //if a king disconnects, search again for the new king
+        if (socket.id === currentKing){
+            if (Object.keys(players).length > 0){
+                var currentRichest;
+                for (var id in players){
+                    if(!currentRichest){
+                        currentRichest = players[id];
+                    }
+                    else if (players[id].wealth > currentRichest.wealth){
+                        currentRichest = players[id];
+                    }
+                }
+                changeKing(currentRichest.id);
+            }
+            else {
+                currentKing = undefined;
+            }
+            socket.broadcast.emit('newKing', currentKing);
+        }
         socket.broadcast.emit('otherPlayerDC', socket.id);
         socket.disconnect();
     });
@@ -76,6 +105,13 @@ io.on('connection', function (socket) {
     socket.on('moneyDiscovered', function (moneyBagData) {
     	//increase the wealth of the player
     	players[moneyBagData.playerId].wealth += moneyBagData.value;
+
+        //check if this player's wealth becomes higher than the king's
+        if (players[moneyBagData.playerId].wealth > players[currentKing].wealth){
+            changeKing(moneyBagData.playerId, currentKing);
+            io.emit('newKing', currentKing);
+        }
+
         //change object representing available money on all clients
 
         var newBagKeyName = generateMoneyBags(1);
@@ -133,9 +169,13 @@ function generateMoneyBags(count){
     }
 }
 
-
 function addPlayer (playerData) {
     players[playerData.id] = playerData;
+    
+}
+
+function addEntities () {
+    tree.add()
 }
 
 function removePlayer (socket) {
@@ -143,4 +183,8 @@ function removePlayer (socket) {
     delete players[socket.id];
 }
 
-
+function changeKing (newKing, previousKing){
+    if(previousKing) players[previousKing].isKing = false;
+    players[newKing].isKing = true;
+    currentKing = newKing;
+}

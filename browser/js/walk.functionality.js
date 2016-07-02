@@ -3,15 +3,75 @@ function walk(dt){
         var unit = player.units[unitId];
         if (unit.targetpos){
             if (Math.abs(unit.pos[0] - unit.targetpos[0]) > 5 || Math.abs(unit.pos[1] - unit.targetpos[1]) > 5){
-    			if (unit.pos[0] < unit.targetpos[0]) unit.pos[0] += unit.speed*dt;
-    			if (unit.pos[0] > unit.targetpos[0]) unit.pos[0] -= unit.speed*dt;
-    			if (unit.pos[1] < unit.targetpos[1]) unit.pos[1] += unit.speed*dt;
-    			if (unit.pos[1] > unit.targetpos[1]) unit.pos[1] -= unit.speed*dt;
-                if (unit.type === 'hero'){
+
+                if (unit.type === 'hero' && player.id === currentKing){
+                    if (unit.pos[1] - unit.targetpos[1] < -5){
+                        //up
+                        unit.sprite.pos = [0, 0];
+                        unit.pos[1] += unit.speed*dt;
+                    }
+                    if (unit.pos[1] - unit.targetpos[1] > 5){
+                        //down
+                        unit.sprite.pos = [0, 155];
+                        unit.pos[1] -= unit.speed*dt;  
+                    } 
+                    if (unit.pos[0] - unit.targetpos[0] < -5){
+                        //right
+                        unit.sprite.pos = [0, 105];
+                        unit.pos[0] += unit.speed*dt;
+                    }
+                    if (unit.pos[0] - unit.targetpos[0] > 5){
+                        //left
+                        unit.sprite.pos = [0, 53];
+                        unit.pos[0] -= unit.speed*dt;  
+                    }
+                    unit.sprite._index += 0.25;
+                }
+                if (unit.type === 'hero' && player.id !== currentKing){
+                    if (unit.pos[1] - unit.targetpos[1] < -5){
+                        //up
+                        // unit.sprite.pos = [0, 0];
+                        unit.pos[1] += unit.speed*dt;
+                    }
+                    if (unit.pos[1] - unit.targetpos[1] > 5){
+                        //down
+                        // unit.sprite.pos = [0, 155];
+                        unit.pos[1] -= unit.speed*dt;  
+                    } 
+                    if (unit.pos[0] - unit.targetpos[0] < -5){
+                        //right
+                        // unit.sprite.pos = [0, 105];
+                        unit.pos[0] += unit.speed*dt;
+                    }
+                    if (unit.pos[0] - unit.targetpos[0] > 5){
+                        //left
+                        // unit.sprite.pos = [0, 53];
+                        unit.pos[0] -= unit.speed*dt;  
+                    }
                     unit.sprite._index += 0.25;
                 }
                 if (unit.type === 'soldier'){
-                    unit.sprite._index += 0.2;
+                    if (unit.pos[1] - unit.targetpos[1] < -5){
+                        //up
+                        // unit.sprite.pos = [0, 0];
+                        unit.pos[1] += unit.speed*dt;
+                    }
+                    if (unit.pos[1] - unit.targetpos[1] > 5){
+                        //down
+                        // unit.sprite.pos = [0, 155];
+                        unit.pos[1] -= unit.speed*dt;  
+                    } 
+                    if (unit.pos[0] - unit.targetpos[0] < -5){
+                        //right
+                        unit.sprite.pos = [0, 0];
+                        unit.pos[0] += unit.speed*dt;
+                    }
+                    if (unit.pos[0] - unit.targetpos[0] > 5){
+                        //left
+                        unit.sprite.pos = [0, 64];
+                        unit.pos[0] -= unit.speed*dt;  
+                    }
+                    unit.sprite._index += 0.25;
                 }
             }
             else {
