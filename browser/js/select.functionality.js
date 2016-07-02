@@ -58,21 +58,40 @@ function mouseMove(e) {
 //May still require adjustments, but seems to be able to accomodate multi-unit selection
 function select(){
   currentSelection = [];
+  var buildingFound = false;
 
   var rectEndX = rect.startX + rect.w;
   var rectEndY = rect.startY + rect.h;
 
+  for (var buildingId in player.buildings) {
+    var aBuilding = player.buildings[buildingId];
+    aBuilding.sprite.selected = false;
+    var playerEndX = aBuilding.pos[0] + vp.pos[0] + aBuilding.sprite.size[0];
+    var playerEndY = aBuilding.pos[1] + vp.pos[1] + aBuilding.sprite.size[1];
+    if ( !buildingFound && (inRange(aBuilding.pos[0], playerEndX, rect.startX, rectEndX) 
+                        && inRange(aBuilding.pos[1], playerEndY, rect.startY, rectEndY)) ) {
+      aBuilding.sprite.selected = true;
+      currentSelection.push(aBuilding);
+      buildingFound = true;
+    }
+
+  }
+
   for (var unitId in player.units) {
     var unit = player.units[unitId];
     unit.sprite.selected = false;
-    var playerEndX = unit.pos[0] + vp.pos[0] + unit.sprite.size[0];
-    var playerEndY = unit.pos[1] + vp.pos[1] + unit.sprite.size[1];
+    if (!buildingFound) {
+      var playerEndX = unit.pos[0] + vp.pos[0] + unit.sprite.size[0];
+      var playerEndY = unit.pos[1] + vp.pos[1] + unit.sprite.size[1];
 
-    if (inRange(unit.pos[0], playerEndX, rect.startX, rectEndX) && inRange(unit.pos[1], playerEndY, rect.startY, rectEndY)){
-      currentSelection.push(unit);
-      unit.sprite.selected = true;
+      if (inRange(unit.pos[0], playerEndX, rect.startX, rectEndX) && inRange(unit.pos[1], playerEndY, rect.startY, rectEndY)){
+        currentSelection.push(unit);
+        unit.sprite.selected = true;
+      }
     }
   }
+  //}
   rightClick = {};
   drag = false;
+  console.log("SECOND TIME. CONTENTS OF CURRENTSELECTION?", currentSelection);
 }
