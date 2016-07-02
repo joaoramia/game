@@ -15,6 +15,12 @@ function Bar (pos, socketId) {
 	this.cost = 2000;
 }
 
+function House (pos, socketId) {
+	Building.call(this, pos, 'house', 650, 5, socketId);
+	this.cost = 1000;
+}
+
 module.exports = {
-	Bar: Bar
+	Bar: Bar,
+	House: House
 }

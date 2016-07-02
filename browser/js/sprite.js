@@ -119,5 +119,7 @@ function generateSprite(type, selectable, playerId){
         return new Sprite('img/moneybag.png', [0,0], [33,36], 1, [0], false);
     } else if (type === 'bar' && selectable) {
         return new Sprite('img/bar-asset.png', [0,0], [320, 288], 1, [0], true);
+    } else if (type === 'house' && selectable) {
+        return new Sprite('img/house-asset.png', [0,0], [96, 160], 1, [0], true);
     }
 }
