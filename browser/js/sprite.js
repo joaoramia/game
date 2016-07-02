@@ -12,7 +12,7 @@
     };
 
     Sprite.prototype = {
-
+ 
         renderEllipse: function(enemy){
             ctx.beginPath();
 
