@@ -40,13 +40,12 @@ resources.load([
     'img/soldier-asset.png',
     'img/bar-asset.png',
     'img/king.png',
-    'img/desert1.1.png', 'img/desert1.2.png', 'img/desert1.3.png', 'img/desert1.4.png', 'img/desert1.5.png', 'img/desert1.6.png', 'img/desert1.7.png', 'img/desert1.8.png', 'img/desert1.9.png', 'img/desert1.10.png', 'img/desert1.11.png', 'img/desert1.12.png', 'img/desert1.13.png', 'img/desert1.14.png', 'img/desert1.15.png',
-    'img/background/desert1.png', 'img/background/desert2.png', 'img/background/desert3.png', 'img/background/desert4.png', 'img/background/desert5.png', 'img/background/desert6.png',
+    'img/background/desert1.1.png', 'img/background/desert1.2.png', 'img/background/desert1.3.png', 'img/background/desert1.4.png', 'img/background/desert1.5.png', 'img/background/desert1.6.png', 'img/background/desert1.7.png', 'img/background/desert1.8.png', 'img/background/desert1.9.png', 'img/background/desert1.10.png', 'img/background/desert1.11.png', 'img/background/desert1.12.png', 'img/background/desert1.13.png', 'img/background/desert1.14.png', 'img/background/desert1.15.png',
     'img/ruinbuild1.png',
     'img/test.png',
     'img/poiseplant.png',
     'img/tree.png',
-    'img/cactus.png',
+    'img/background/cactus.png',
     'img/road.png',
     'img/house-asset.png'
 ]);
