@@ -198,7 +198,18 @@ io.on('connection', function (socket) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
         //else it's a valid request. Start building, and send updates
         } else {
-            
+            var progress = 0;
+            function measureProgress(){
+                socket.emit('hireMercenaryResponse', {valid: true, progress: progress});
+                console.log(progress);
+                var again = setTimeout(function(){
+                    if (progress < 15) {
+                        progress++;
+                        measureProgress();
+                    }
+                }, 800);
+            }
+            measureProgress();
         }
     })
 

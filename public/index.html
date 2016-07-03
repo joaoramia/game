@@ -12,7 +12,10 @@
     <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,700' rel='stylesheet' type='text/css'>
   </head>
   <body oncontextmenu="return false;">
+
     <div id="game-ui">
+
+      <!-- <div id="game-view"></div> -->
     <!-- <div id="game-ui" class="display-none"> -->
       <div id="display-error-container">
         <p id="display-error-content"><span>ALERT:</span> This is an error.</p>
@@ -32,12 +35,31 @@
           <p>Your wealth: $<span id="player-wealth-display"></span></p>
         </div>
       </div>
-      <div id="game-view">
-      </div>
+      
+
       <div id="game-controls">
+
         <div id="building-info-panel">
-          <p>test</p>
+          <table id="building-panel-content">
+            <tr>
+              <td id="unit-name-container">
+                <p>Hiring unit...<br><span id="building-panel-unit-name">Mercenary</span></p>
+              </td>
+              <td id="unit-thumbnail-container">
+                <img src="http://www.placecage.com/c/32/32">
+              </td>
+            </tr>
+          </table>
+          <div id="progress-bar-container">
+            <div id="progress-bar-border">
+              <!-- non-breaking space. don't delete -->
+              <div id="progress-bar">
+                &nbsp;
+              </div>
+            </div>
+          </div>
         </div>
+
         <div id="ui-buttons">
           <fieldset>
             <div id="button-container">
@@ -51,12 +73,10 @@
             </div>
           </fieldset>
         </div>
-      </div>
-    </div>
-<!--         </div>
-      </div> -->
-<!--     </div> -->
 
+      </div>
+
+    </div>
 
 <!--     <div id="login-screen">
       <input class="sumsginp" id="nick" style="width: 220px; height: 24px;" placeholder="Enter your nickname" maxlength="24">
