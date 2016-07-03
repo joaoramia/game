@@ -9,9 +9,7 @@ var lastSelectedBuilding; //replace later -- make null if not building not selec
 function hireMercenary(){
 	//need to send building id with each request
 	//add requested unit to the queue of the building selected
-	var buildingId = lastSelectedBuilding.id.toString();
-	console.log("BUILDING ID?", buildingId);
-	//logs undefined. save to a variable
+	var buildingId = lastSelectedBuilding.id.toString(); //needs to be a string
 	var playerId = player.id;
 	var unit = "mercenary";
 	socket.emit('hireMercenaryRequest', {buildingId: buildingId, playerId: playerId, unit: unit});
@@ -44,13 +42,23 @@ socket.on("hireMercenaryResponse", function (data) {
 			$("#progress-bar").css("background-color", "green");
 		}
 		$("#progress-bar").css("width", "" + percent + "%");
+	//if complete, erase progress bar
 	} else if (data.newUnit) {
-		//if complete, erase progress bar
 		$("#progress-bar").css("width", "" + 0 + "%");
-		//add to player object
+
 		var newUnit = data.newUnit;
 		newUnit.sprite = generateSprite("soldier", true);
-		player.units[newUnit.id] = newUnit;
+		//only add to player object if id on unit matches id of player 
+		if (player.id === newUnit.socketId) {
+			player.units[newUnit.id] = newUnit;
+		//else, add to otherPlayers object
+		} else {
+			console.log("DOES IT EVEN GET HERE?"); //YES 
+			console.log("CAN IT FIND THE PLAYER OBJ?", otherPlayers[newUnit.socketId]) //YES 
+			console.log("CAN IT FIND THE UNITS OBJ?", otherPlayers[newUnit.socketId].units) //YES
+			otherPlayers[newUnit.socketId].units[newUnit.id] = newUnit;
+			console.log("IS THE NEW UNIT ON THE OBJ?", otherPlayers[newUnit.socketId].units[newUnit.id]);
+		}
 
 	}
 })
