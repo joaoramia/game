@@ -35,18 +35,23 @@ socket.on("hireMercenaryResponse", function (data) {
 	//if valid but receiving progress updates, unit in process of hiring
 	} else if (data.progress) {
 		console.log(data);
-		var percent = (data.progress * 100) / 16;
-		if (data.progress < 6) {
+		var percent = (data.progress * 100) / 20;
+		if (data.progress < 8) {
 			$("#progress-bar").css("background-color", "red");
-		} else if (data.progress < 12) {
+		} else if (data.progress < 17) {
 			$("#progress-bar").css("background-color", "yellow");
 		} else {
 			$("#progress-bar").css("background-color", "green");
 		}
 		$("#progress-bar").css("width", "" + percent + "%");
-	} else {
+	} else if (data.newUnit) {
 		//if complete, erase progress bar
 		$("#progress-bar").css("width", "" + 0 + "%");
+		//add to player object
+		var newUnit = data.newUnit;
+		newUnit.sprite = generateSprite("soldier", true);
+		player.units[newUnit.id] = newUnit;
+
 	}
 })
 

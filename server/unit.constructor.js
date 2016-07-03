@@ -1,4 +1,4 @@
-function Unit (pos, type, maxHealth, attack, defense, speed, socketId) {
+function Unit (pos, type, maxHealth, attack, defense, speed, socketId, unitId) {
   this.pos = pos; // array of [x, y]
   this.type = type; //string
   this.selected = false;
@@ -11,15 +11,16 @@ function Unit (pos, type, maxHealth, attack, defense, speed, socketId) {
   this.targetpos = undefined;
   this.vigilant = false;
   this.socketId = socketId;
+  this.id = unitId;
 }
 
 function Hero (pos, socketId, unitId){
-  Unit.call(this, pos, 'hero', 100, 5, 1, 50, socketId);
+  Unit.call(this, pos, 'hero', 100, 5, 1, 50, socketId, unitId);
   this.rateOfAttack = 1;
 }
 
 function Soldier (pos, socketId, unitId){
-  Unit.call(this, pos, 'soldier', 60, 15, 0, 75, socketId);
+  Unit.call(this, pos, 'soldier', 60, 15, 0, 75, socketId, unitId);
   this.rateOfAttack = 5;
 }
 

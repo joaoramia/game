@@ -54,8 +54,8 @@ io.on('connection', function (socket) {
 
         currentPlayer.userName = newPlayerData.userName;
         currentPlayer.id = socket.id;
-        currentPlayer.units[0] = new Hero([200,200], socket.id);
-        currentPlayer.units[1] = new Soldier([300, 300], socket.id);
+        currentPlayer.units[0] = new Hero([200,200], socket.id, 0);
+        currentPlayer.units[1] = new Soldier([300, 300], socket.id, 1);
         currentPlayer.unitNumber = 2;
 
         // emit the current object of players then add your player no the array
@@ -203,9 +203,10 @@ io.on('connection', function (socket) {
             //check to see whether the building has a rendezvous point
 
             //if not, get coords for the building, and use those to create the default
-            //NOTE TO SELF: create a function on the prototype
-            //new unit is valid. add to queue for this building 
-            players[data.playerId].buildings[data.buildingId].productionQueue.push(new Soldier([100, 100], data.playerId, players[data.playerId].unitNumber));
+            //NOTE TO SELF: create a function on the prototype that does it
+            //building new unit is permitted. add to queue for this building
+            var newUnit = new Soldier([50, 50], data.playerId, players[data.playerId].unitNumber); 
+            players[data.playerId].buildings[data.buildingId].productionQueue.push(newUnit);
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;
             var progress = 0;
@@ -214,14 +215,14 @@ io.on('connection', function (socket) {
                 socket.emit('hireMercenaryResponse', {valid: true, progress: progress});
                 console.log(progress);
                 var again = setTimeout(function(){
-                    if (progress < 16) {
+                    if (progress < 20) {
                         progress++;
                         measureProgress();
                     } else {
-                        //add mercenary to player object on server, and send to client
-
-                        //remove the mercenary from the queue (shift)
-                        players[data.playerId].buildings[data.buildingId].productionQueue.shift();
+                        //remove the mercenary from the production queue
+                        var newUnitForClient = players[data.playerId].buildings[data.buildingId].productionQueue.shift();
+                        //add it to player object on server, and send to client
+                        io.emit('hireMercenaryResponse', {valid: true, newUnit: newUnitForClient});
                         //if another merc has been added to the queue, do this again
                         if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 0) {
                             progress = 0;
@@ -244,7 +245,7 @@ io.on('connection', function (socket) {
 });
 
 
-//initially generate money bags for the moneyBags object
+//for generating money bags for the moneyBags object on server start
 function generateMoneyBags(count){
     moneyBags.count = Object.keys(moneyBags).length - 1 + count;
     if (count === 1) {
