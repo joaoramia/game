@@ -189,6 +189,19 @@ io.on('connection', function (socket) {
         }
     })
 
+    socket.on('hireMercenaryRequest', function (data) {
+        //checks to see if player has enough money to buy a merc
+        if (players[data.playerId].wealth < 400) {
+            socket.emit('hireMercenaryResponse', {valid: false, error: "lacking resources"});
+        //checks to see that would not surpass current max supply by building another unit
+        } else if (players[data.playerId].currentSupply + 1 > players[data.playerId].currentMaxSupply) {
+            socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
+        //else it's a valid request. Start building, and send updates
+        } else {
+            
+        }
+    })
+
 });
 
 

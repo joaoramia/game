@@ -8,6 +8,10 @@ function Player(id, userName) {
   this.buildings = {}; // obj of building objects
   this.buildingNumber = 0;
   this.isKing = false;
+  this.absoluteMaxSupply = 50;
+  this.currentMaxSupply = 10;
+  //create a prototype that calculates current supply 
+  this.currentSupply = 2;
 }
 
 module.exports = Player;

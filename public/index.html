@@ -12,8 +12,8 @@
     <link href='https://fonts.googleapis.com/css?family=Work+Sans:400,700' rel='stylesheet' type='text/css'>
   </head>
   <body oncontextmenu="return false;">
-    <!-- <div id="game-ui"> -->
-    <div id="game-ui" class="display-none">
+    <div id="game-ui">
+    <!-- <div id="game-ui" class="display-none"> -->
       <div id="display-error-container">
         <p id="display-error-content"><span>ALERT:</span> This is an error.</p>
       </div>
@@ -35,40 +35,33 @@
       <div id="game-view">
       </div>
       <div id="game-controls">
-        <div id="controls-panel">
-          <div id="map">
-            <div class="ui-container">
-              <img src="http://placehold.it/220x180">
-            </div>
-          </div>
-          <div id="info-panel">
-            <div class="ui-container">
-              <img src="http://placehold.it/480x180">
-            </div>
-          </div>
-          <div id="ui-buttons">
-            <div class="ui-container">
-              <div id="button-container">
-                <div id="buttons-message-box" class="a-button">
-                  <p id="buttons-message-content">No units selected</p>
-                </div>
-                <ul id="buttons-list">
-<!--                   <li class="a-button">Build (B)</li>
-                  <li class="a-button">Attack (A)</li>
-                  <li class="a-button">Move (M)</li> -->
-                </ul>
+        <div id="building-info-panel">
+          <p>test</p>
+        </div>
+        <div id="ui-buttons">
+          <fieldset>
+            <div id="button-container">
+              <div id="buttons-message-box" class="a-button">
+                <p id="buttons-message-content">No units selected</p>
+              </div>
+              <div id="buttons-list">
+                <!-- contents generated on game start -->
+                <div class="a-button">Sample</div>
               </div>
             </div>
-          </div>
+          </fieldset>
         </div>
       </div>
     </div>
+<!--         </div>
+      </div> -->
+<!--     </div> -->
 
 
-    <div id="login-screen">
+<!--     <div id="login-screen">
       <input class="sumsginp" id="nick" style="width: 220px; height: 24px;" placeholder="Enter your nickname" maxlength="24">
       <button class="sumsginp" onclick="start()">&nbsp;Play&nbsp;</button>
-    </div>
+    </div> -->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="socket.io/socket.io.js"></script>
@@ -90,5 +83,6 @@
     <script type="text/javascript" src="js/ui/main-menu.js"></script>
     <script type="text/javascript" src="js/ui/build-menu.js"></script>
     <script type="text/javascript" src="js/ui/ui-error.js"></script>
+    <script type="text/javascript" src="js/ui/selected-bar-menu.js"></script>
   </body>
 </html>

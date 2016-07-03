@@ -27,8 +27,9 @@ socket.on('newKing', function(newKing){
 })
 
 function start(){
-    $( "#game-ui" ).toggleClass( "display-none" );
-    $( "#login-screen" ).toggleClass( "display-none" );
+    //$( "#game-ui" ).toggleClass( "display-none" );
+    //$( "#login-screen" ).toggleClass( "display-none" );
+    $("#building-info-panel").hide();
     socket.emit('respawn', {userName: $( "#nick" ).val()});
 }
 
@@ -61,6 +62,7 @@ function main() {
 };
 
 function init() {
+    start();
     terrainPattern = ctx.createPattern(resources.get('img/terrain.jpg'), 'repeat');
 
     lastTime = Date.now();
