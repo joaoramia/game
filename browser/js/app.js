@@ -64,37 +64,8 @@ function main() {
     requestAnimFrame(main);
 };
 
-var tilesMap = [];
-var brightCactusMap = [];
-var darkCactusMap = [];
-
-function drawTiles (){
-  for (var i = 0; i < canvas.width; i += 64){
-    for (var j = 0; j < canvas.height; j+= 64){
-        tilesMap.push({img: "img/desert1." + (Math.floor(Math.random() * 15) + 1) + ".png", x: i, y: j});
-        if (j % 5 === 0 && Math.random() > 0.9) brightCactusMap.push({x: i, y: j});
-        if (j % 6 === 0 && Math.random() < 0.1) darkCactusMap.push({x: i, y: j});
-    }
-  }
-}
-
-drawTiles();
-
 function init() {
-    // terrainPattern = ctx.createPattern(resources.get('img/desert1.15.png'), 'repeat');
 
-    // terrainPattern = resources.get('img/desert1.13.png');
-
-    // var image = new Image();
-    //
-    // image.src = 'img/desert1.2.png';
-    //
-    // image.onload = function(){
-    //     ctx.drawImage(this, 0, 0, 1000, 1000);
-    // }
-
-    // drawTiles();
-    // ctx.drawTile(resources.get('img/desert1.10.png'), 0,0);
     lastTime = Date.now();
 
     socket.on("playersArray", function(playersCollection){
@@ -170,7 +141,6 @@ var buildMode = {
 }
 
 var gameTime = 0;
-var terrainPattern;
 
 var wealth = 0;
 
@@ -272,31 +242,6 @@ function renderEntity(entity, playerId) {
 function renderSelectionBox(){
     ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
     ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
-}
-
-
-function renderTerrain () {
-    tilesMap.forEach(function(obj, index){
-      ctx.fillStyle = ctx.drawImage(resources.get(obj.img), obj.x, obj.y);
-    })
-
-    darkCactusMap.forEach(function(obj){
-      ctx.drawImage(resources.get('img/cactus.png'), obj.x, obj.y);
-    })
-    // ctx.fillStyle = ctx.drawImage(resources.get('img/cactus.png'), 100, 10);
-    // ctx.fillStyle = ctx.drawImage(resources.get('img/tree.png'), 300, 300);
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
-
-function generateCactuses(){
-    brightCactusMap.forEach(function(obj){
-      ctx.drawImage(resources.get('img/cactus.png'), obj.x, obj.y);
-    })
-    // for (var i = 0; i < canvas.width; i += 100){
-    //   for (var j = 0; j < canvas.height; j += 50){
-    //     if (Math.random() > 0.9) ctx.drawImage(resources.get('img/cactus.png'), i, j);
-    //   }
-    // }
 }
 
 function getUnitPosByPlayer(player){ 
