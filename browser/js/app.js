@@ -29,7 +29,7 @@ socket.on('newKing', function(newKing){
 function start(){
     //$( "#game-ui" ).toggleClass( "display-none" );
     //$( "#login-screen" ).toggleClass( "display-none" );
-    console.log("AM I START?");
+    $("#building-info-panel").hide();
     socket.emit('respawn', {userName: $( "#nick" ).val()});
 }
 

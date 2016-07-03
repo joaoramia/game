@@ -57,6 +57,7 @@ function mouseMove(e) {
 
 //May still require adjustments, but seems to be able to accomodate multi-unit selection
 function select(){
+  $("#building-info-panel").hide();
   currentSelection = [];
   var buildingFound = false;
 

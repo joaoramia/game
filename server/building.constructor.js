@@ -14,6 +14,7 @@ function Bar (pos, socketId) {
 	Building.call(this, pos, 'bar', 1000, 5, socketId);
 	this.cost = 2000;
 	this.productionQueue = [];
+	this.currentlyBuilding = false;
 }
 
 function House (pos, socketId) {

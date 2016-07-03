@@ -78,6 +78,7 @@ function updateForBuildMenu (){
 
 function updateForSelectedBuilding (type) {
 	if (type === "bar") {
+		$("#building-info-panel").show();
 		changeButtonsMessage("Bar selected");
 		replaceButtonsOnMenu(selectedBarMenuButtons);
 	} else if (type === "house") {
