@@ -6,7 +6,6 @@ var selectedBarMenuButtons = [
 
 
 function hireMercenary(){
-	console.log("CAN'T HIRE MERC YET");
 	//need to send building id with each request
 	//add requested unit to the queue of the building selected
 	var buildingId = currentSelection[0].id;
@@ -26,7 +25,18 @@ socket.on("hireMercenaryResponse", function (data) {
 		} else if (data.error === "surpasses cap") {
 			displayErrorToUserTimed("You don't have enough housing to hire another soldier. Build more houses!");
 		}
-	} else {
+	//if valid but receiving progress updates, unit in process of hiring
+	} else if (data.progress) {
+		console.log(data);
+		var percent = (data.progress * 100) / 16;
+		if (data.progress < 6) {
+			$("#progress-bar").css("background-color", "red");
+		} else if (data.progress < 12) {
+			$("#progress-bar").css("background-color", "yellow");
+		} else {
+			$("#progress-bar").css("background-color", "green");
+		}
+		$("#progress-bar").css("width", "" + percent + "%");
 	}
 })
 

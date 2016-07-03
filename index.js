@@ -203,7 +203,7 @@ io.on('connection', function (socket) {
                 socket.emit('hireMercenaryResponse', {valid: true, progress: progress});
                 console.log(progress);
                 var again = setTimeout(function(){
-                    if (progress < 15) {
+                    if (progress < 16) {
                         progress++;
                         measureProgress();
                     }
