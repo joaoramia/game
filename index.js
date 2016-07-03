@@ -200,6 +200,7 @@ io.on('connection', function (socket) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
         //else it's a valid request. Start building, and send updates
         } else {
+            //NEED TO FIX: Building objects don't have ideas on them
             console.log("DATA OBJECT", data);
             //check to see whether the building has a rendezvous point
 

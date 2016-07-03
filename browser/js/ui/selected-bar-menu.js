@@ -3,12 +3,14 @@ var selectedBarMenuButtons = [
 	{text: "Hire Assault (L)", tagName: "hire-assault", clickFunction: hireAssault}
 ];
 
-
+var lastSelectedBuilding; //replace later -- make null if not building not selected on last selection
 
 function hireMercenary(){
 	//need to send building id with each request
 	//add requested unit to the queue of the building selected
-	var buildingId = currentSelection[0].id;
+	var buildingId = lastSelectedBuilding;
+	console.log("BUILDING ID?", buildingId);
+	//logs undefined. save to a variable
 	var playerId = player.id;
 	var unit = "mercenary";
 	socket.emit('hireMercenaryRequest', {buildingId: buildingId, playerId: playerId, unit: unit});
@@ -43,4 +45,3 @@ socket.on("hireMercenaryResponse", function (data) {
 	}
 })
 
-//listener receives updates until the building is complete

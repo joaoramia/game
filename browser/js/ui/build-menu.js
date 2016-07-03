@@ -54,7 +54,6 @@ socket.on('initialBuildResponse', function (data){
 		} else {
 			//if player does, cursor changes to be building
 			//enable build mode: build building where user clicks
-			console.log("BUILD TYPE", data.type)
 			buildModeOn(data.type); 
 		}
 	//send another request to create the building object on the server

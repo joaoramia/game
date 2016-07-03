@@ -73,6 +73,7 @@ function select(){
                         && inRange(aBuilding.pos[1], playerEndY, rect.startY, rectEndY)) ) {
       aBuilding.sprite.selected = true;
       currentSelection.push(aBuilding);
+      lastSelectedBuilding = aBuilding;
       buildingFound = true;
     }
 
