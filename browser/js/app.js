@@ -190,13 +190,22 @@ function update(dt) {
 //         }
 //     })
 // }
-
 // Draw everything
+
 function render() {
 
-    renderTerrain(); // terrain in the background
+    // the below uses a copy of the canvas (tempCanvas) and if that copy has already been generated, there is no need to render the terrain again, we just assign the original canvas to that copy.
+    if (alreadyRendered){
+        ctx.drawImage(tempCanvas, 0, 0);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    else {
+        console.log("HERHERHERHEHRE")
+        renderTerrain();
+    }
 
     generateCactuses();
+
     // ctx.fillStyle = ctx.drawImage(resources.get('img/cactus.png'), 100, 100);
     renderEntities(moneyBags); // moneybags before units so that units show up in front
 
