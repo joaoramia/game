@@ -215,6 +215,8 @@ io.on('connection', function (socket) {
             var progress = 0;
             //currently uses setTimeout, but this will likely crowd the event loop 
             function measureProgress(){
+                
+                //use the currentlyBuilding property
                 socket.emit('hireMercenaryResponse', {valid: true, progress: progress});
                 console.log(progress);
                 var again = setTimeout(function(){

@@ -1,6 +1,7 @@
 var selectedBarMenuButtons = [
 	{text: "Hire Mercenary (M)", tagName: "hire-mercenary", clickFunction: hireMercenary},
-	{text: "Hire Assault (L)", tagName: "hire-assault", clickFunction: hireAssault}
+	{text: "Hire Assault (L)", tagName: "hire-assault", clickFunction: hireAssault},
+	{text: "Set Rendezvous (O)", tagName: "set-rendezvous", clickFunction: setRendezvous}
 ];
 
 var lastSelectedBuilding; //replace later -- make null if not building not selected on last selection
@@ -18,6 +19,10 @@ function hireMercenary(){
 
 function hireAssault(){
 	console.log("CAN'T HIRE ASSAULT YET");
+}
+
+function setRendezvous() {
+	console.log("CAN'T DO THIS YET");
 }
 
 socket.on("hireMercenaryResponse", function (data) {
