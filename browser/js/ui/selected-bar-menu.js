@@ -9,7 +9,7 @@ var lastSelectedBuilding; //replace later -- make null if not building not selec
 function hireMercenary(){
 	//need to send building id with each request
 	//add requested unit to the queue of the building selected
-	var buildingId = lastSelectedBuilding;
+	var buildingId = lastSelectedBuilding.id.toString();
 	console.log("BUILDING ID?", buildingId);
 	//logs undefined. save to a variable
 	var playerId = player.id;

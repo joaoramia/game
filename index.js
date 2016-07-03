@@ -161,7 +161,7 @@ io.on('connection', function (socket) {
             //temporarily false because we don't have collision set up
             } else {
                 var newBar = new Bar(data.pos, data.id, players[data.id].buildingNumber);
-                players[data.id][players[data.id].buildingNumber] = newBar;
+                players[data.id].buildings[players[data.id].buildingNumber] = newBar;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 2000;
                 io.emit('finalBuildResponse', { valid: true, 
@@ -179,7 +179,7 @@ io.on('connection', function (socket) {
             //temporarily false because we don't have collision set up
             } else {
                 var newHouse = new House(data.pos, data.id, players[data.id].buildingNumber);
-                players[data.id][players[data.id].buildingNumber] = newHouse;
+                players[data.id].buildings[players[data.id].buildingNumber] = newHouse;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 1000;
                 io.emit('finalBuildResponse', { valid: true, 
@@ -206,11 +206,12 @@ io.on('connection', function (socket) {
 
             //if not, get coords for the building, and use those to create the default
             //NOTE TO SELF: create a function on the prototype
-
-            //new unit is valid. add to queue for this building
-            players[data.playerId].unitNumber++; 
+            console.log("DOES IT FIND THE PLAYER OBJECT?", players[data.playerId]);
+            //new unit is valid. add to queue for this building 
             console.log("DOES IT FIND THE BUILDING?", players[data.playerId].buildings[data.buildingId]);
             players[data.playerId].buildings[data.buildingId].productionQueue.push(new Solider([100, 100], data.playerId, playersplayers[data.playerId].unitNumber));
+            //increment the unit number to generate the id for the player's next unit
+            players[data.playerId].unitNumber++;
             console.log("ADDED TO QUEUE?", players[data.playerId].buildings[data.buildingId].productionQueue);
             var progress = 0;
             //currently uses setTimeout, but this will likely crowd the event loop 
