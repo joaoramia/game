@@ -200,7 +200,7 @@ io.on('connection', function (socket) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
         //else it's a valid request. Start building, and send updates
         } else {
-            //NEED TO FIX: Building objects don't have ideas on them
+            //NEED TO FIX: Building objects don't have ids on them
             console.log("DATA OBJECT", data);
             //check to see whether the building has a rendezvous point
 
@@ -216,7 +216,6 @@ io.on('connection', function (socket) {
             //currently uses setTimeout, but this will likely crowd the event loop 
             function measureProgress(){
                 
-                //use the currentlyBuilding property
                 socket.emit('hireMercenaryResponse', {valid: true, progress: progress});
                 console.log(progress);
                 var again = setTimeout(function(){
@@ -232,6 +231,7 @@ io.on('connection', function (socket) {
                     }
                 }, 800);
             }
+            //check the currentlyBuilding property. if currently building, don't need to invoke measure progress again
             measureProgress();
         }
     })
