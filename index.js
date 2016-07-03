@@ -209,7 +209,7 @@ io.on('connection', function (socket) {
             console.log("DOES IT FIND THE PLAYER OBJECT?", players[data.playerId]);
             //new unit is valid. add to queue for this building 
             console.log("DOES IT FIND THE BUILDING?", players[data.playerId].buildings[data.buildingId]);
-            players[data.playerId].buildings[data.buildingId].productionQueue.push(new Solider([100, 100], data.playerId, playersplayers[data.playerId].unitNumber));
+            players[data.playerId].buildings[data.buildingId].productionQueue.push(new Soldier([100, 100], data.playerId, players[data.playerId].unitNumber));
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;
             console.log("ADDED TO QUEUE?", players[data.playerId].buildings[data.buildingId].productionQueue);
@@ -227,7 +227,7 @@ io.on('connection', function (socket) {
                         //add mercenary to player object on server, and send to client
 
                         //remove the mercenary from the queue (shift)
-                        players[data.playerId].buildings[buildingId].productionQueue.shift();
+                        players[data.playerId].buildings[data.buildingId].productionQueue.shift();
                         //if another merc has been added to the queue, do this again
                     }
                 }, 800);
