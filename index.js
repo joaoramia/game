@@ -160,7 +160,7 @@ io.on('connection', function (socket) {
                 io.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
             //temporarily false because we don't have collision set up
             } else {
-                var newBar = new Bar(data.pos, data.id);
+                var newBar = new Bar(data.pos, data.id, players[data.id].buildingNumber);
                 players[data.id][players[data.id].buildingNumber] = newBar;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 2000;
@@ -178,7 +178,7 @@ io.on('connection', function (socket) {
                 io.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
             //temporarily false because we don't have collision set up
             } else {
-                var newHouse = new House(data.pos, data.id);
+                var newHouse = new House(data.pos, data.id, players[data.id].buildingNumber);
                 players[data.id][players[data.id].buildingNumber] = newHouse;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 1000;
