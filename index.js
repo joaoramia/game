@@ -8,6 +8,7 @@ var Unit = require('./server/unit.constructor').Unit;
 var Hero = require('./server/unit.constructor').Hero;
 var Soldier = require('./server/unit.constructor').Soldier;
 var Bar = require('./server/building.constructor').Bar;
+var House = require('./server/building.constructor').House;
 
 app.use(express.static(__dirname + '/public/'));
 app.use(express.static(__dirname + '/browser/'));
@@ -43,7 +44,7 @@ var server = app.listen(3030, function () {
 io = io.listen(server);
 
 io.on('connection', function (socket) {
-    console.log("hey user has joined ", socket.id)
+    console.log("New user has joined. ID: ", socket.id)
     var currentPlayer = new Player(socket.id);
 
     sockets[socket.id] = socket;
@@ -53,8 +54,8 @@ io.on('connection', function (socket) {
 
         currentPlayer.userName = newPlayerData.userName;
         currentPlayer.id = socket.id;
-        currentPlayer.units[0] = new Hero(socket.id, [200,200]);
-        currentPlayer.units[1] = new Soldier(socket.id, [300, 300]);
+        currentPlayer.units[0] = new Hero([200,200], socket.id);
+        currentPlayer.units[1] = new Soldier([300, 300], socket.id);
         currentPlayer.unitNumber = 2;
 
         // emit the current object of players then add your player no the array
@@ -72,7 +73,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function () {
-        console.log("hey user has left ", socket.id)
+        console.log("User with ID", socket.id, "has disconnected.")
         removePlayer(socket); // removes them from players AND sockets collections
 
         //if a king disconnects, search again for the new king
@@ -128,29 +129,76 @@ io.on('connection', function (socket) {
     	generateMoneyBags(1);
     })
 
-    socket.on('checkIfPlayerCanBuildBar', function(data){
-        if (data.request === 1) {
+    socket.on('initialBuildRequest', function (data){
+        if (data.request === 1 && data.type === "bar") {
             if (players[data.id].wealth < 2000) {
-                socket.emit('buildBar', {valid: false, request: 1});
+                //denied
+                socket.emit('initialBuildResponse', {valid: false, request: 1, type: "bar"});
             } else {
-                socket.emit('buildBar', {valid: true, request: 1});
+                //approved
+                socket.emit('initialBuildResponse', {valid: true, request: 1, type: "bar"});
             }
-        } else if (data.request === 2) {
+        } else if (data.request === 1 && data.type === "house") {
+            if (players[data.id].wealth < 1000) {
+                //denied
+                socket.emit('initialBuildResponse', {valid: false, request: 1, type: "house"});
+            } else {
+                //approved
+                socket.emit('initialBuildResponse', {valid: true, request: 1, type: "house"});
+            }
+        }
+    });
+
+    socket.on('finalBuildRequest', function (data) {
+        if (data.request === 2 && data.type === "bar") {
             if (players[data.id].wealth < 2000) {
-                socket.emit('buildBar', {valid: false, request: 2, error: "lacking resources"});
+                io.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
             } else if (false) {
             //make sure the building doesn't collide with another building
-                socket.emit('buildBar', {valid: false, request: 2, error: "collision"});
+                io.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
+            //temporarily false because we don't have collision set up
             } else {
-                console.log("DATA OBJECT", data);
-                console.log("BEFORE RUNNING CONSTRUCTOR", data.pos);
                 var newBar = new Bar(data.pos, data.id);
-                console.log("AFTER CONSTRUCTOR", newBar);
                 players[data.id][players[data.id].buildingNumber] = newBar;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 2000;
-                socket.emit('buildBar', {valid: true, request: 2, bar: newBar, name: players[data.id].buildingNumber++, currentWealth: players[data.id].wealth});
+                io.emit('finalBuildResponse', { valid: true, 
+                                                    request: 2, 
+                                                    buildingObj: newBar, 
+                                                    name: players[data.id].buildingNumber, 
+                                                    currentWealth: players[data.id].wealth});
             }
+        } else if (data.request === 2 && data.type === "house") {
+            if (players[data.id].wealth < 1000) {
+                io.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
+            } else if (false) {
+            //make sure the building doesn't collide with another building
+                io.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
+            //temporarily false because we don't have collision set up
+            } else {
+                var newHouse = new House(data.pos, data.id);
+                players[data.id][players[data.id].buildingNumber] = newHouse;
+                players[data.id].buildingNumber++;
+                players[data.id].wealth = players[data.id].wealth - 1000;
+                io.emit('finalBuildResponse', { valid: true, 
+                                                    request: 2, 
+                                                    buildingObj: newHouse, 
+                                                    name: players[data.id].buildingNumber, 
+                                                    currentWealth: players[data.id].wealth});
+            }
+        }
+    })
+
+    socket.on('hireMercenaryRequest', function (data) {
+        //checks to see if player has enough money to buy a merc
+        if (players[data.playerId].wealth < 400) {
+            socket.emit('hireMercenaryResponse', {valid: false, error: "lacking resources"});
+        //checks to see that would not surpass current max supply by building another unit
+        } else if (players[data.playerId].currentSupply + 1 > players[data.playerId].currentMaxSupply) {
+            socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
+        //else it's a valid request. Start building, and send updates
+        } else {
+            
         }
     })
 

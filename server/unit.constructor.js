@@ -13,12 +13,12 @@ function Unit (pos, type, maxHealth, attack, defense, speed, socketId) {
   this.socketId = socketId;
 }
 
-function Hero (socketId, pos){
+function Hero (pos, socketId, unitId){
   Unit.call(this, pos, 'hero', 100, 5, 1, 50, socketId);
   this.rateOfAttack = 1;
 }
 
-function Soldier (socketId, pos){
+function Soldier (pos, socketId, unitId){
   Unit.call(this, pos, 'soldier', 60, 15, 0, 75, socketId);
   this.rateOfAttack = 5;
 }

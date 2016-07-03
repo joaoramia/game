@@ -26,8 +26,9 @@ socket.on('newKing', function(newKing){
 })
 
 function start(){
-    $( "#game-ui" ).toggleClass( "display-none" );
-    $( "#login-screen" ).toggleClass( "display-none" );
+    //$( "#game-ui" ).toggleClass( "display-none" );
+    //$( "#login-screen" ).toggleClass( "display-none" );
+    $("#building-info-panel").hide();
     socket.emit('respawn', {userName: $( "#nick" ).val()});
 }
 
@@ -44,7 +45,8 @@ resources.load([
     'img/poiseplant.png',
     'img/tree.png',
     'img/cactus.png',
-    'img/road.png'
+    'img/road.png',
+    'img/house-asset.png'
 ]);
 
 
@@ -65,6 +67,7 @@ function main() {
 };
 
 function init() {
+    start();
 
     lastTime = Date.now();
 

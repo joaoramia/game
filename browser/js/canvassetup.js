@@ -20,7 +20,7 @@ canvas.height = 1000;
 var viewCanvas = document.createElement('canvas');
 var ctxV = viewCanvas.getContext('2d');
   viewCanvas.width = window.innerWidth;
-  viewCanvas.height = window.innerHeight * .70;
+  viewCanvas.height = window.innerHeight;
 var vp = {
 	pos: [0,0]
 };
