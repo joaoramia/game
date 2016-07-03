@@ -200,23 +200,17 @@ io.on('connection', function (socket) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
         //else it's a valid request. Start building, and send updates
         } else {
-            //NEED TO FIX: Building objects don't have ids on them
-            console.log("DATA OBJECT", data);
             //check to see whether the building has a rendezvous point
 
             //if not, get coords for the building, and use those to create the default
             //NOTE TO SELF: create a function on the prototype
-            console.log("DOES IT FIND THE PLAYER OBJECT?", players[data.playerId]);
             //new unit is valid. add to queue for this building 
-            console.log("DOES IT FIND THE BUILDING?", players[data.playerId].buildings[data.buildingId]);
             players[data.playerId].buildings[data.buildingId].productionQueue.push(new Soldier([100, 100], data.playerId, players[data.playerId].unitNumber));
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;
-            console.log("ADDED TO QUEUE?", players[data.playerId].buildings[data.buildingId].productionQueue);
             var progress = 0;
             //currently uses setTimeout, but this will likely crowd the event loop 
             function measureProgress(){
-                
                 socket.emit('hireMercenaryResponse', {valid: true, progress: progress});
                 console.log(progress);
                 var again = setTimeout(function(){
@@ -229,11 +223,21 @@ io.on('connection', function (socket) {
                         //remove the mercenary from the queue (shift)
                         players[data.playerId].buildings[data.buildingId].productionQueue.shift();
                         //if another merc has been added to the queue, do this again
+                        if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 0) {
+                            progress = 0;
+                            measureProgress();
+                        } else {
+                            players[data.playerId].buildings[data.buildingId].currentlyBuilding = false;
+                        }
+                        //else, currentlyBuilding = false;
                     }
                 }, 800);
             }
-            //check the currentlyBuilding property. if currently building, don't need to invoke measure progress again
-            measureProgress();
+            //check that currentlyBuilding property is false. if currently building, don't need to invoke measure progress again
+            if (players[data.playerId].buildings[data.buildingId].currentlyBuilding === false) {
+                currentlyBuilding = true;
+                measureProgress();
+            }
         }
     })
 
