@@ -9,12 +9,12 @@ function Building (pos, type, maxHealth, defense, socketId) {
 	this.socketId = socketId;
 }
 
-//we can change the name of this building
 function Bar (pos, socketId) {
 	Building.call(this, pos, 'bar', 1000, 5, socketId);
 	this.cost = 2000;
 	this.productionQueue = [];
 	this.currentlyBuilding = false;
+	this.rendezvousPoint = null;
 }
 
 function House (pos, socketId) {

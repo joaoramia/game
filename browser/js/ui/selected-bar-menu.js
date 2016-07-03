@@ -37,6 +37,9 @@ socket.on("hireMercenaryResponse", function (data) {
 			$("#progress-bar").css("background-color", "green");
 		}
 		$("#progress-bar").css("width", "" + percent + "%");
+	} else {
+		//if complete, erase progress bar
+		$("#progress-bar").css("width", "" + 0 + "%");
 	}
 })
 

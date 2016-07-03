@@ -130,6 +130,7 @@ io.on('connection', function (socket) {
     })
 
     socket.on('initialBuildRequest', function (data){
+        //if bar
         if (data.request === 1 && data.type === "bar") {
             if (players[data.id].wealth < 2000) {
                 //denied
@@ -138,6 +139,7 @@ io.on('connection', function (socket) {
                 //approved
                 socket.emit('initialBuildResponse', {valid: true, request: 1, type: "bar"});
             }
+        //if house
         } else if (data.request === 1 && data.type === "house") {
             if (players[data.id].wealth < 1000) {
                 //denied
@@ -198,7 +200,19 @@ io.on('connection', function (socket) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
         //else it's a valid request. Start building, and send updates
         } else {
+            console.log("DATA OBJECT", data);
+            //check to see whether the building has a rendezvous point
+
+            //if not, get coords for the building, and use those to create the default
+            //NOTE TO SELF: create a function on the prototype
+
+            //new unit is valid. add to queue for this building
+            players[data.playerId].unitNumber++; 
+            console.log("DOES IT FIND THE BUILDING?", players[data.playerId].buildings[data.buildingId]);
+            players[data.playerId].buildings[data.buildingId].productionQueue.push(new Solider([100, 100], data.playerId, playersplayers[data.playerId].unitNumber));
+            console.log("ADDED TO QUEUE?", players[data.playerId].buildings[data.buildingId].productionQueue);
             var progress = 0;
+            //currently uses setTimeout, but this will likely crowd the event loop 
             function measureProgress(){
                 socket.emit('hireMercenaryResponse', {valid: true, progress: progress});
                 console.log(progress);
@@ -206,6 +220,12 @@ io.on('connection', function (socket) {
                     if (progress < 16) {
                         progress++;
                         measureProgress();
+                    } else {
+                        //add mercenary to player object on server, and send to client
+
+                        //remove the mercenary from the queue (shift)
+                        players[data.playerId].buildings[buildingId].productionQueue.shift();
+                        //if another merc has been added to the queue, do this again
                     }
                 }, 800);
             }
