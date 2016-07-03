@@ -1,7 +1,6 @@
 var socket = io.connect('http://' + ip + ':3030');
 var currentKing;
 
-
 function setupSocket (socket) {
 
     socket.on('otherPlayerJoin', function (otherPlayerData) {
@@ -41,6 +40,12 @@ resources.load([
     'img/soldier-asset.png',
     'img/bar-asset.png',
     'img/king.png',
+    'img/desert1.1.png', 'img/desert1.2.png', 'img/desert1.3.png', 'img/desert1.4.png', 'img/desert1.5.png', 'img/desert1.6.png', 'img/desert1.7.png', 'img/desert1.8.png', 'img/desert1.9.png', 'img/desert1.10.png', 'img/desert1.11.png', 'img/desert1.12.png', 'img/desert1.13.png', 'img/desert1.14.png', 'img/desert1.15.png',
+    'img/ruinbuild1.png',
+    'img/poiseplant.png',
+    'img/tree.png',
+    'img/cactus.png',
+    'img/road.png',
     'img/house-asset.png'
 ]);
 
@@ -63,10 +68,9 @@ function main() {
 
 function init() {
     start();
-    terrainPattern = ctx.createPattern(resources.get('img/terrain.jpg'), 'repeat');
 
     lastTime = Date.now();
-    
+
     socket.on("playersArray", function(playersCollection){
         console.log("all the players", playersCollection)
         otherPlayers = playersCollection;
@@ -140,12 +144,12 @@ var buildMode = {
 }
 
 var gameTime = 0;
-var terrainPattern;
 
 var wealth = 0;
 
 // Update game objects
 function update(dt) {
+
     gameTime += dt;
 
     walk(dt);
@@ -191,18 +195,20 @@ function update(dt) {
 function render() {
 
     renderTerrain(); // terrain in the background
-    
+
+    generateCactuses();
+    // ctx.fillStyle = ctx.drawImage(resources.get('img/cactus.png'), 100, 100);
     renderEntities(moneyBags); // moneybags before units so that units show up in front
-    
+
     renderEntities(player.units, player.id);
 
     for (var key in otherPlayers){
         if (otherPlayers.hasOwnProperty(key))
             renderEntities(otherPlayers[key].units, key);
     }
-    
+
     renderEntities(player.buildings);
-    
+
     renderSelectionBox();
 
     // cameraPan(currentMousePosition);
@@ -241,14 +247,6 @@ function renderSelectionBox(){
     ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
 }
 
-
-function renderTerrain () {
-    ctx.fillStyle = terrainPattern;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
-
-
-
 function getUnitPosByPlayer(player){ 
     var posObj = {}; 
     for (var key in player.units){ 
@@ -263,7 +261,4 @@ function setUnitPosByPlayer(player, posObj){ 
             //player.units[unitId].pos = posObj[unitId].pos; 
         console.log("prev pos=", player.units[unitId].pos, "new position= ", posObj[unitId].pos )
     }
-
  }
-
- 

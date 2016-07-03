@@ -17,12 +17,11 @@
             ctx.beginPath();
 
             ctx.ellipse(this.size[0]/2, this.size[1], this.size[1]/3, this.size[1]/5, 0, 0, Math.PI*2);
-            
+
             if (enemy) {
                 ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
             } else {
                 ctx.fillStyle = this.selected ? "rgba(0, 0, 255, 0.3)" : "rgba(0, 0, 0, 0.3)";
-            
             }
 
             ctx.fill();
