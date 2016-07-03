@@ -1,42 +1,87 @@
 var buildMenuButtons = [
-	{text: "Bar (K)", tagName: "build-bar", clickFunction: buildBarRequest},
-	{text: "Bank (H)", tagName: "build-bank", clickFunction: buildBankRequest},
-	{text: "House (L)", tagName: "build-house", clickFunction: buildHouseRequest}
+	{text: "Bar (K)", tagName: "build-bar", clickFunction: buildBar},
+	{text: "Bank (H)", tagName: "build-bank", clickFunction: buildBank},
+	{text: "House (L)", tagName: "build-house", clickFunction: buildHouse}
 ];
 
-function buildBarRequest(){
+function sendBuildRequest (type){
 	//initiate the request to build a bar
-	var requestObj = {id: player.id, request:1};
-	socket.emit('checkIfPlayerCanBuildBar', requestObj);
+	var requestObj = {id: player.id, request:1, type: type};
+	socket.emit('initialBuildRequest', requestObj);
 }
 
-socket.on('buildBar', function(data){
-	console.log("I TELL YOU WHETHER YOU CAN BUILD!", data);
-	//first check to see if the player has enough money to build a bar
+function buildBar () {
+	sendBuildRequest("bar");
+}
+
+function buildHouse (){
+	sendBuildRequest("house");
+}
+
+function buildBank(){
+	sendBuildRequest("bank");
+}
+
+function submitBuildingLocation (pos) {
+  var requestObj = {pos: pos, id: player.id, request: 2, type: buildMode.type};
+  socket.emit('finalBuildRequest', requestObj);
+}
+
+function buildModeOn (type) {
+	//run submitBuildingLocation on click when in buildMode
+	buildMode.on = true;
+	buildMode.type = type;
+	displayErrorToUserUntimed("BUILD MODE", "Select a location to build, or press Esc to quit.");
+	$("#buttons-list").empty();
+}
+
+function buildModeOff (){
+	buildMode.on = false;
+	buildMode.type = "";
+	turnOffUntimedMessage();
+}
+
+//building a building requires exchanging information with the server twice
+socket.on('initialBuildResponse', function (data){
+	//check to see if the player has enough money to build a bar
 	if (data.request === 1) {
 	//if player doesn't have money...
 		if (data.valid === false) {
 			//tell them they need more money
-			console.log("user cannot build building")
+			displayErrorToUserTimed("You don't have enough money to build that! Make more money!");
+			//reset the menu
+			displayRootMenu();
 		} else {
-		//if player does, cursor changes to be building
-			console.log("user can build building. where?");
-		//check that user still has enough money before approving
-		
+			//if player does, cursor changes to be building
+			//enable build mode: build building where user clicks
+			console.log("BUILD TYPE", data.type)
+			buildModeOn(data.type); 
 		}
-
-	//before user 
-	} else if (data.request === 2) {
-
+	//send another request to create the building object on the server
 	}
 })
 
-function buildBankRequest() {
-	console.log("This button builds a bank!");
-}
-
-function buildHouseRequest() {
-	console.log("This button builds a house!");
-}
+//after second response from the server
+socket.on('finalBuildResponse', function (data) {
+	if (data.request === 2) {
+		//if player ran out of money since placing building, can't build
+		if (data.valid === false && data.error === "lacking resources") {
+			displayErrorToUserTimed("You don't have enough money to build that anymore! Make more!");
+			displayRootMenu();
+		//if the player chooses an invalid location
+		} else if (data.valid === false && data.error === "collision") {
+			displayErrorToUserTimed("You can't build there! There's something in the way!");
+			displayRootMenu();
+		} else {
+		//if building is valid, update the player's buildings object
+		player.buildings[data.name] = data.buildingObj;
+		player.buildings[data.name].sprite = generateSprite(data.buildingObj.type, true);
+		//update the player's wealth
+		player.wealth = data.currentWealth;
+		$("#player-wealth-display").text(player.wealth);
+		console.log(player.buildings);
+		}
+	}
+})
 
 

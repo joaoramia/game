@@ -38,7 +38,9 @@ resources.load([
     'img/terrain.jpg',
     'img/moneybag.png',
     'img/soldier-asset.png',
-    'img/king.png'
+    'img/bar-asset.png',
+    'img/king.png',
+    'img/house-asset.png'
 ]);
 
 
@@ -87,6 +89,8 @@ function init() {
         console.log(gameData);
         currentKing = king;
         player = gameData.playerData;
+        wealth = gameData.playerData.wealth;
+        $("#player-wealth-display").text(wealth);
         for (var unitId in player.units) {
             var unit = player.units[unitId];
             unit.sprite = generateSprite(unit.type, true, player.id);
@@ -128,12 +132,15 @@ var otherPlayers = {};
 
 var currentSelection = [];
 
+var buildMode = {
+    on: false,
+    type: ""
+}
 
 var gameTime = 0;
 var terrainPattern;
 
-var score = 200;
-var scoreEl = $("#player-wealth-display").text(score);
+var wealth = 0;
 
 // Update game objects
 function update(dt) {
@@ -144,8 +151,6 @@ function update(dt) {
     handleInput(dt);
 
     checkCollisions();
-
-    //scoreEl.innerHTML = score;
 
     socket.emit("playerMoves", player);
     //socket.emit("playerMoves", {id: player.id, unitsPos: getUnitPosByPlayer(player)});
@@ -193,9 +198,9 @@ function render() {
         if (otherPlayers.hasOwnProperty(key))
             renderEntities(otherPlayers[key].units, key);
     }
-
-    renderEntities(player.units, player.id);
-
+    
+    renderEntities(player.buildings);
+    
     renderSelectionBox();
 
     // cameraPan(currentMousePosition);
