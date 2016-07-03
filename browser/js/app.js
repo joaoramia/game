@@ -1,7 +1,6 @@
 var socket = io.connect('http://' + ip + ':3030');
 var currentKing;
 
-
 function setupSocket (socket) {
 
     socket.on('otherPlayerJoin', function (otherPlayerData) {
@@ -39,7 +38,13 @@ resources.load([
     'img/moneybag.png',
     'img/soldier-asset.png',
     'img/bar-asset.png',
-    'img/king.png'
+    'img/king.png',
+    'img/desert1.1.png', 'img/desert1.2.png', 'img/desert1.3.png', 'img/desert1.4.png', 'img/desert1.5.png', 'img/desert1.6.png', 'img/desert1.7.png', 'img/desert1.8.png', 'img/desert1.9.png', 'img/desert1.10.png', 'img/desert1.11.png', 'img/desert1.12.png', 'img/desert1.13.png', 'img/desert1.14.png', 'img/desert1.15.png',
+    'img/ruinbuild1.png',
+    'img/poiseplant.png',
+    'img/tree.png',
+    'img/cactus.png',
+    'img/road.png'
 ]);
 
 
@@ -59,11 +64,39 @@ function main() {
     requestAnimFrame(main);
 };
 
-function init() {
-    terrainPattern = ctx.createPattern(resources.get('img/terrain.jpg'), 'repeat');
+var tilesMap = [];
+var brightCactusMap = [];
+var darkCactusMap = [];
 
+function drawTiles (){
+  for (var i = 0; i < canvas.width; i += 64){
+    for (var j = 0; j < canvas.height; j+= 64){
+        tilesMap.push({img: "img/desert1." + (Math.floor(Math.random() * 15) + 1) + ".png", x: i, y: j});
+        if (j % 5 === 0 && Math.random() > 0.9) brightCactusMap.push({x: i, y: j});
+        if (j % 6 === 0 && Math.random() < 0.1) darkCactusMap.push({x: i, y: j});
+    }
+  }
+}
+
+drawTiles();
+
+function init() {
+    // terrainPattern = ctx.createPattern(resources.get('img/desert1.15.png'), 'repeat');
+
+    // terrainPattern = resources.get('img/desert1.13.png');
+
+    // var image = new Image();
+    //
+    // image.src = 'img/desert1.2.png';
+    //
+    // image.onload = function(){
+    //     ctx.drawImage(this, 0, 0, 1000, 1000);
+    // }
+
+    // drawTiles();
+    // ctx.drawTile(resources.get('img/desert1.10.png'), 0,0);
     lastTime = Date.now();
-    
+
     socket.on("playersArray", function(playersCollection){
         console.log("all the players", playersCollection)
         otherPlayers = playersCollection;
@@ -143,6 +176,7 @@ var wealth = 0;
 
 // Update game objects
 function update(dt) {
+
     gameTime += dt;
 
     walk(dt);
@@ -188,18 +222,20 @@ function update(dt) {
 function render() {
 
     renderTerrain(); // terrain in the background
-    
+
+    generateCactuses();
+    // ctx.fillStyle = ctx.drawImage(resources.get('img/cactus.png'), 100, 100);
     renderEntities(moneyBags); // moneybags before units so that units show up in front
-    
+
     renderEntities(player.units, player.id);
 
     for (var key in otherPlayers){
         if (otherPlayers.hasOwnProperty(key))
             renderEntities(otherPlayers[key].units, key);
     }
-    
+
     renderEntities(player.buildings);
-    
+
     renderSelectionBox();
 
     // cameraPan(currentMousePosition);
@@ -240,11 +276,28 @@ function renderSelectionBox(){
 
 
 function renderTerrain () {
-    ctx.fillStyle = terrainPattern;
+    tilesMap.forEach(function(obj, index){
+      ctx.fillStyle = ctx.drawImage(resources.get(obj.img), obj.x, obj.y);
+    })
+
+    darkCactusMap.forEach(function(obj){
+      ctx.drawImage(resources.get('img/cactus.png'), obj.x, obj.y);
+    })
+    // ctx.fillStyle = ctx.drawImage(resources.get('img/cactus.png'), 100, 10);
+    // ctx.fillStyle = ctx.drawImage(resources.get('img/tree.png'), 300, 300);
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
 
-
+function generateCactuses(){
+    brightCactusMap.forEach(function(obj){
+      ctx.drawImage(resources.get('img/cactus.png'), obj.x, obj.y);
+    })
+    // for (var i = 0; i < canvas.width; i += 100){
+    //   for (var j = 0; j < canvas.height; j += 50){
+    //     if (Math.random() > 0.9) ctx.drawImage(resources.get('img/cactus.png'), i, j);
+    //   }
+    // }
+}
 
 function getUnitPosByPlayer(player){ 
     var posObj = {}; 
@@ -260,7 +313,4 @@ function setUnitPosByPlayer(player, posObj){ 
             //player.units[unitId].pos = posObj[unitId].pos; 
         console.log("prev pos=", player.units[unitId].pos, "new position= ", posObj[unitId].pos )
     }
-
  }
-
- 
