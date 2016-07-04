@@ -162,10 +162,10 @@ io.on('connection', function (socket) {
                 players[data.id][players[data.id].buildingNumber] = newBar;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 2000;
-                io.emit('finalBuildResponse', { valid: true, 
-                                                    request: 2, 
-                                                    buildingObj: newBar, 
-                                                    name: players[data.id].buildingNumber, 
+                io.emit('finalBuildResponse', { valid: true,
+                                                    request: 2,
+                                                    buildingObj: newBar,
+                                                    name: players[data.id].buildingNumber,
                                                     currentWealth: players[data.id].wealth});
             }
         } else if (data.request === 2 && data.type === "house") {
@@ -180,12 +180,25 @@ io.on('connection', function (socket) {
                 players[data.id][players[data.id].buildingNumber] = newHouse;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 1000;
-                io.emit('finalBuildResponse', { valid: true, 
-                                                    request: 2, 
-                                                    buildingObj: newHouse, 
-                                                    name: players[data.id].buildingNumber, 
+                io.emit('finalBuildResponse', { valid: true,
+                                                    request: 2,
+                                                    buildingObj: newHouse,
+                                                    name: players[data.id].buildingNumber,
                                                     currentWealth: players[data.id].wealth});
             }
+        }
+    })
+
+    socket.on('hireMercenaryRequest', function (data) {
+        //checks to see if player has enough money to buy a merc
+        if (players[data.playerId].wealth < 400) {
+            socket.emit('hireMercenaryResponse', {valid: false, error: "lacking resources"});
+        //checks to see that would not surpass current max supply by building another unit
+        } else if (players[data.playerId].currentSupply + 1 > players[data.playerId].currentMaxSupply) {
+            socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
+        //else it's a valid request. Start building, and send updates
+        } else {
+
         }
     })
 
@@ -196,21 +209,21 @@ io.on('connection', function (socket) {
 function generateMoneyBags(count){
     moneyBags.count = Object.keys(moneyBags).length - 1 + count;
     if (count === 1) {
-        var keyName = [utils.getRandomNum(2000), utils.getRandomNum(1000)]
+        var keyName = [utils.getRandomNum(2500), utils.getRandomNum(1000)]
         moneyBags[keyName] = {value : utils.getRandomNum(25, 75)};
         return keyName;
 
     } else {
         for (var i = 0; i < count; i++) {
             //values of array represent x and y. later, change this so that x = max x of canvas and y is max y of canvas
-            moneyBags[[utils.getRandomNum(2000), utils.getRandomNum(1000)]] = {value : utils.getRandomNum(25, 75)};
+            moneyBags[[utils.getRandomNum(2500), utils.getRandomNum(1000)]] = {value : utils.getRandomNum(25, 75)};
         }
     }
 }
 
 function addPlayer (playerData) {
     players[playerData.id] = playerData;
-    
+
 }
 
 function addEntities () {

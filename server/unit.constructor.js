@@ -11,6 +11,7 @@ function Unit (pos, type, maxHealth, attack, defense, speed, socketId) {
   this.targetpos = undefined;
   this.vigilant = false;
   this.socketId = socketId;
+  this.lastMovement = {dir: undefined, dir2: undefined}; // helps with the building collision algorithm
 }
 
 function Hero (pos, socketId, unitId){

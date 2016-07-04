@@ -7,6 +7,12 @@ function heroIsSelected (array) {
 	return false;
 }
 
+function buildingSelected (array) {
+	//console.log("IS IT RIGHT?", array[0].type === "building");
+	if (array[0].type === "bar" || array[0].type === "house" || array[0].type === "bank") return true;
+	else false;
+}
+
 function replaceButtonsOnMenu (newButtons) {
 	$("#buttons-list").empty();
 	newButtons.forEach(function(button){
@@ -46,11 +52,14 @@ var nonHeroSelectedButtons = [
 ];
 
 function displayRootMenu (){
-	//currently assumes there are only units
 	if (currentSelection.length === 0) {
 		//if no units selected
-		changeButtonsMessage("No units selected");
+		changeButtonsMessage("Nothing selected");
 		$("#buttons-list").empty();
+	} else if (buildingSelected(currentSelection)) {
+		//if building selected
+		var buildingType = currentSelection[0].type;
+		updateForSelectedBuilding(buildingType);
 	} else if (heroIsSelected(currentSelection)) {
 		//if hero is selected
 		changeButtonsMessage("Hero selected. Build!");
@@ -65,6 +74,17 @@ function displayRootMenu (){
 function updateForBuildMenu (){
 	changeButtonsMessage("Select a building");
 	replaceButtonsOnMenu(buildMenuButtons);
+}
+
+function updateForSelectedBuilding (type) {
+	if (type === "bar") {
+		$("#building-info-panel").show();
+		changeButtonsMessage("Bar selected");
+		replaceButtonsOnMenu(selectedBarMenuButtons);
+	} else if (type === "house") {
+		changeButtonsMessage("House selected");
+		$("#buttons-list").empty();
+	}
 }
 
 

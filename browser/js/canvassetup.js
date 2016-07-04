@@ -20,7 +20,7 @@ canvas.height = 1000;
 var viewCanvas = document.createElement('canvas');
 var ctxV = viewCanvas.getContext('2d');
   viewCanvas.width = window.innerWidth;
-  viewCanvas.height = window.innerHeight * .70;
+  viewCanvas.height = window.innerHeight;
 var vp = {
 	pos: [0,0]
 };
@@ -80,5 +80,5 @@ function cameraPan (e) {
 }
 
 function drawViewport () {
-	ctxV.drawImage(canvas, vp.pos[0], vp.pos[1], viewCanvas.width, viewCanvas.height, 0, 0, viewCanvas.width, viewCanvas.height);
+    ctxV.drawImage(canvas, vp.pos[0], vp.pos[1], viewCanvas.width, viewCanvas.height, 0, 0, viewCanvas.width, viewCanvas.height);
 }

@@ -1,7 +1,6 @@
 var socket = io.connect('http://' + ip + ':3030');
 var currentKing;
 
-
 function setupSocket (socket) {
 
     socket.on('otherPlayerJoin', function (otherPlayerData) {
@@ -27,19 +26,21 @@ socket.on('newKing', function(newKing){
 })
 
 function start(){
-    $( "#game-ui" ).toggleClass( "display-none" );
-    $( "#login-screen" ).toggleClass( "display-none" );
+    //$( "#game-ui" ).toggleClass( "display-none" );
+    //$( "#login-screen" ).toggleClass( "display-none" );
+    $("#building-info-panel").hide();
     socket.emit('respawn', {userName: $( "#nick" ).val()});
 }
 
 resources.load([
-    'img/sprites2.png',
     'img/hero.png',
-    'img/terrain.jpg',
+    'img/hero/hero-0.png', 'img/hero/hero-1.png', 'img/hero/hero-2.png', 'img/hero/hero-3.png', 'img/hero/hero-4.png',
+    'img/hero/king.png',    
     'img/moneybag.png',
     'img/soldier-asset.png',
     'img/bar-asset.png',
-    'img/king.png',
+    'img/background/desert1.1.png', 'img/background/desert1.2.png', 'img/background/desert1.3.png', 'img/background/desert1.4.png', 'img/background/desert1.5.png', 'img/background/desert1.6.png', 'img/background/desert1.7.png', 'img/background/desert1.8.png', 'img/background/desert1.9.png', 'img/background/desert1.10.png', 'img/background/desert1.11.png', 'img/background/desert1.12.png', 'img/background/desert1.13.png', 'img/background/desert1.14.png', 'img/background/desert1.15.png',
+    'img/background/cactus.png',
     'img/house-asset.png'
 ]);
 
@@ -61,10 +62,10 @@ function main() {
 };
 
 function init() {
-    terrainPattern = ctx.createPattern(resources.get('img/terrain.jpg'), 'repeat');
+    start();
 
     lastTime = Date.now();
-    
+
     socket.on("playersArray", function(playersCollection){
         console.log("all the players", playersCollection)
         otherPlayers = playersCollection;
@@ -138,12 +139,12 @@ var buildMode = {
 }
 
 var gameTime = 0;
-var terrainPattern;
 
 var wealth = 0;
 
 // Update game objects
 function update(dt) {
+
     gameTime += dt;
 
     walk(dt);
@@ -184,23 +185,32 @@ function update(dt) {
 //         }
 //     })
 // }
-
 // Draw everything
+
 function render() {
 
-    renderTerrain(); // terrain in the background
-    
+    // the below uses a copy of the canvas (tempCanvas) and if that copy has already been generated, there is no need to render the terrain again, we just assign the original canvas to that copy.
+    if (alreadyRendered){
+        ctx.drawImage(tempCanvas, 0, 0);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    else {
+        renderTerrain();
+    }
+
+    generateCactuses();
+
     renderEntities(moneyBags); // moneybags before units so that units show up in front
-    
+
     renderEntities(player.units, player.id);
 
     for (var key in otherPlayers){
         if (otherPlayers.hasOwnProperty(key))
             renderEntities(otherPlayers[key].units, key);
     }
-    
+
     renderEntities(player.buildings);
-    
+
     renderSelectionBox();
 
     // cameraPan(currentMousePosition);
@@ -239,14 +249,6 @@ function renderSelectionBox(){
     ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
 }
 
-
-function renderTerrain () {
-    ctx.fillStyle = terrainPattern;
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-}
-
-
-
 function getUnitPosByPlayer(player){ 
     var posObj = {}; 
     for (var key in player.units){ 
@@ -261,7 +263,4 @@ function setUnitPosByPlayer(player, posObj){ 
             //player.units[unitId].pos = posObj[unitId].pos; 
         console.log("prev pos=", player.units[unitId].pos, "new position= ", posObj[unitId].pos )
     }
-
  }
-
- 
