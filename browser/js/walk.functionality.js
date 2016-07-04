@@ -11,28 +11,24 @@ function walk(dt){
                     unit.sprite._index += 0.25;
                     switch(detectBuildings(unit, dt)){
                         case 'down':
-                        collision = true;
                         unit.sprite.pos = [0, 0];
                         unit.pos[1] += distance;
                         unit.lastMovement.dir2 = 'down';
                         continue;
 
                         case 'up':
-                        collision = true;
                         unit.sprite.pos = [0, 155];
                         unit.pos[1] -= distance;
                         unit.lastMovement.dir2 = 'up';
                         continue;
                         
                         case 'right':
-                        collision = true;
                         unit.sprite.pos = [0, 105];
                         unit.pos[0] += distance;
                         unit.lastMovement.dir2 = 'right';
                         continue;
                         
                         case 'left':
-                        collision = true;
                         unit.sprite.pos = [0, 53];
                         unit.pos[0] -= distance;
                         unit.lastMovement.dir2 = 'left';

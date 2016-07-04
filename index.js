@@ -181,8 +181,12 @@ io.on('connection', function (socket) {
             if (players[data.id].wealth < 1000) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
             } else if (false) {
-            //make sure the building doesn't collide with another building
-                socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
+            //make sure the new building doesn't collide with another building
+                socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision with building"});
+            //temporarily set to false because we don't have collision set up
+            } else if (false) {
+            //make sure the new building doesn't collide with a unit
+                socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision with unit"});
             //temporarily set to false because we don't have collision set up
             } else {
                 var newHouse = new House(data.pos, data.id, players[data.id].buildingNumber);
