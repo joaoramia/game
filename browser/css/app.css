@@ -67,8 +67,8 @@ canvas {
 #king-box {
     text-align: center;
     font-weight: bold;
-    background-color: rgb(23, 23, 23);
-    border: 1px solid white;
+    background-color: rgba(23, 23, 23, 0.5);
+    border: 1px solid gainsboro;
     border-radius: 5px;
 
 }
@@ -172,12 +172,13 @@ canvas {
 
 .a-button:active {
     /*when clicked*/
-    border: 1px solid white;
+    border: 1px solid gainsboro;
     background-color: rgb(40, 40, 40);
 }
 
 #buttons-message-box {
-    background-color: black;
+    border: 1px solid gainsboro;
+    background-color: rgb(40, 40, 40);
 }
 
 #button-container {
