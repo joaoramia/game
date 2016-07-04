@@ -69,8 +69,11 @@ socket.on('finalBuildResponse', function (data) {
 			displayErrorToUserTimed("You don't have enough money to build that anymore! Make more!");
 			displayRootMenu();
 		//if the player chooses an invalid location
-		} else if (data.valid === false && data.error === "collision") {
-			displayErrorToUserTimed("You can't build there! There's something in the way!");
+		} else if (data.valid === false && data.error === "collision with building") {
+			displayErrorToUserTimed("You can't build there! A building is in the way!");
+			displayRootMenu();
+		} else if (data.valid === false && data.error === "collision with unit") {
+			displayErrorToUserTimed("You can't build there! A unit is in the way!");
 			displayRootMenu();
 		} else {
 		//if building is valid, update the player's buildings object
@@ -79,6 +82,7 @@ socket.on('finalBuildResponse', function (data) {
 		//update the player's wealth
 		player.wealth = data.currentWealth;
 		$("#player-wealth-display").text(player.wealth);
+		playSoundOnEvent(buildingSound);
 		updateSupplyDisplay();
 		if (currentMaxSupply() >= player.absoluteMaxSupply) {
 			displayErrorToUserTimed("Current maximum supply reached. Building more houses will not increase maximum supply.");
