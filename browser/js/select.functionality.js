@@ -38,9 +38,11 @@ function mouseUp(e) {
     select();
   }
   else {
+    var counter = 0; //this is where the selected units will not stack on the top of each other
     for (var unitId in player.units) {
       var unit = player.units[unitId];
-      if (unit.sprite.selected) unit.targetpos = [rightClick.x + 25, rightClick.y + 25]; //this is where the selected units will not stack on the top of each other
+      if (unit.sprite.selected) unit.targetpos = [rightClick.x + counter, rightClick.y + counter];
+      counter += 25;
     }
   }
   drag = false;
@@ -51,7 +53,7 @@ function mouseUp(e) {
 function mouseMove(e) {
   if (drag) {
     rect.w = e.layerX + vp.pos[0] - rect.startX;
-    rect.h = e.layerY + vp.pos[1] - rect.startY ;
+    rect.h = e.layerY + vp.pos[1] - rect.startY;
   }
 
   currentMousePosition = e;
@@ -63,41 +65,41 @@ function mouseMove(e) {
 function select(){
   $("#building-info-panel").hide();
   currentSelection = [];
-  var buildingFound = false;
+  var unitFound = false;
+
+  console.log(vp.pos[0], vp.pos[1]);
 
   var rectEndX = rect.startX + rect.w;
   var rectEndY = rect.startY + rect.h;
 
-  for (var buildingId in player.buildings) {
-    var aBuilding = player.buildings[buildingId];
-    aBuilding.sprite.selected = false;
-    var playerEndX = aBuilding.pos[0] + vp.pos[0] + aBuilding.sprite.size[0];
-    var playerEndY = aBuilding.pos[1] + vp.pos[1] + aBuilding.sprite.size[1];
-    if ( !buildingFound && (inRange(aBuilding.pos[0], playerEndX, rect.startX, rectEndX) 
-                        && inRange(aBuilding.pos[1], playerEndY, rect.startY, rectEndY)) ) {
-      aBuilding.sprite.selected = true;
-      currentSelection.push(aBuilding);
-      lastSelectedBuilding = aBuilding;
-      buildingFound = true;
-    }
-
-  }
-
   for (var unitId in player.units) {
     var unit = player.units[unitId];
     unit.sprite.selected = false;
-    if (!buildingFound) {
-      var playerEndX = unit.pos[0] + vp.pos[0] + unit.sprite.size[0];
-      var playerEndY = unit.pos[1] + vp.pos[1] + unit.sprite.size[1];
+    var playerEndX = unit.pos[0] + vp.pos[0] + unit.sprite.size[0];
+    var playerEndY = unit.pos[1] + vp.pos[1] + unit.sprite.size[1];
 
-      if (inRange(unit.pos[0], playerEndX, rect.startX, rectEndX) && inRange(unit.pos[1], playerEndY, rect.startY, rectEndY)){
-        currentSelection.push(unit);
-        unit.sprite.selected = true;
+    if (inRange(unit.pos[0], playerEndX, rect.startX, rectEndX) && inRange(unit.pos[1], playerEndY, rect.startY, rectEndY)){
+      currentSelection.push(unit);
+      unit.sprite.selected = true;
+      unitFound = true;
+    }
+  }
+
+  if (!unitFound){
+    for (var buildingId in player.buildings) {
+      var aBuilding = player.buildings[buildingId];
+      aBuilding.sprite.selected = false;
+      var buildingEndX = aBuilding.pos[0] + vp.pos[0] + aBuilding.sprite.size[0];
+      var buildingEndY = aBuilding.pos[1] + vp.pos[1] + aBuilding.sprite.size[1];
+      if ( (inRange(aBuilding.pos[0], buildingEndX, rect.startX, rectEndX) 
+                          && inRange(aBuilding.pos[1], buildingEndY, rect.startY, rectEndY)) ) {
+        aBuilding.sprite.selected = true;
+        currentSelection.push(aBuilding);
+        lastSelectedBuilding = aBuilding;
       }
     }
   }
-  //}
+
   rightClick = {};
   drag = false;
-  console.log("SECOND TIME. CONTENTS OF CURRENTSELECTION?", currentSelection);
 }
