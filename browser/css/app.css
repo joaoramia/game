@@ -105,7 +105,7 @@ canvas {
 }
 
 #progress-bar-container {
-    padding: 3px;
+    padding: 2px;
 }
 
 #progress-bar-border {
@@ -114,12 +114,14 @@ canvas {
     max-width: 95%;
     border: 1px solid black;
     border-radius: 3px;
+    min-height: 4px;
 }
 
 #progress-bar {
     width: 0%;
     background-color: red;
     border-radius: 3px;
+    font-size: 6px;
 }
 
 #ui-buttons {
