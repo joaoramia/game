@@ -206,9 +206,8 @@ io.on('connection', function (socket) {
             //get x and y coordinates for the new unit
             var newX = players[data.playerId].buildings[data.buildingId].pos[0] + 140;
             var newY = players[data.playerId].buildings[data.buildingId].pos[1] + 300;
-            console.log("original X:", players[data.playerId].buildings[data.buildingId].pos[0], "NEW X:", newX);
             //building new unit is permitted. add to queue for this building
-            var newUnit = new Soldier([newX, newY], data.playerId, players[data.playerId].unitNumber); 
+            var newUnit = new Soldier([newX, newY], data.playerId, players[data.playerId].unitNumber, [0,0]); 
             players[data.playerId].buildings[data.buildingId].productionQueue.push(newUnit);
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;

@@ -32,6 +32,7 @@ socket.on("hireMercenaryResponse", function (data) {
 		}
 	//if valid but receiving progress updates, unit in process of hiring
 	} else if (data.progress) {
+		//change the text of the infobox so it states what's being built
 		console.log(data);
 		var percent = (data.progress * 100) / 20;
 		if (data.progress < 8) {
@@ -45,7 +46,7 @@ socket.on("hireMercenaryResponse", function (data) {
 	//if complete, erase progress bar
 	} else if (data.newUnit) {
 		$("#progress-bar").css("width", "" + 0 + "%");
-
+		//empty the text field
 		var newUnit = data.newUnit;
 		//only add to player object if id on unit matches id of player 
 		if (player.id === newUnit.socketId) {
@@ -53,13 +54,8 @@ socket.on("hireMercenaryResponse", function (data) {
 			player.units[newUnit.id] = newUnit;
 		//else, add to otherPlayers object
 		} else {
-			console.log("DOES IT EVEN GET HERE?"); //YES 
-			console.log("CAN IT FIND THE PLAYER OBJ?", otherPlayers[newUnit.socketId]) //YES 
-			console.log("CAN IT FIND THE UNITS OBJ?", otherPlayers[newUnit.socketId].units) //YES
 			newUnit.sprite = generateSprite("soldier", false, newUnit.socketId);
 			otherPlayers[newUnit.socketId].units[newUnit.id] = newUnit;
-			console.log("IS THE NEW UNIT ON THE OBJ?", otherPlayers[newUnit.socketId].units[newUnit.id]);
-			console.log("PLAYER OBJ AGAIN", otherPlayers[newUnit.socketId])
 		}
 
 	}
