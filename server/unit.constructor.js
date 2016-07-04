@@ -21,14 +21,14 @@ function Unit (pos, type, maxHealth, attack, defense, speed, socketId, unitId, t
 
 function Hero (pos, socketId, unitId){
   Unit.call(this, pos, 'hero', 100, 5, 1, 50, socketId, unitId);
-  this.rateOfAttack = 1000; // in milliseconds, means 1 attack per second
-  this.range = 5;
+  this.rateOfAttack = 3000; // in milliseconds, means 1 attack per second
+  this.range = 50;
 }
 
 function Soldier (pos, socketId, unitId, targetpos){
   Unit.call(this, pos, 'soldier', 60, 15, 0, 75, socketId, unitId, targetpos);
-  this.rateOfAttack = 500; // twice a second
-  this.range = 20;
+  this.rateOfAttack = 2000; // twice a second
+  this.range = 200;
 }
 
 module.exports = {

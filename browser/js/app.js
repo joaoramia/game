@@ -12,7 +12,8 @@ function setupSocket (socket) {
         for (var unitId in otherPlayerData.units) {
             var unit = otherPlayerData.units[unitId];
             unit.sprite = generateSprite(unit.type, false, otherPlayerData.id);
-            prepForUnitTree(unit);
+
+            toBeAddedToTree.push(prepForUnitTree(unit));
         }
         otherPlayers[otherPlayerData.id] = otherPlayerData;
 
@@ -25,6 +26,12 @@ function setupSocket (socket) {
         removeFromTreeOnDisconnect(socketId);
         
         delete otherPlayers[socketId];
+    });
+
+
+    socket.on('takeThat', function (victim, damageDealt) {
+        console.log(victim);
+        console.log(damageDealt);
     });
 }
 
@@ -107,8 +114,6 @@ function init() {
         wealth = gameData.playerData.wealth;
         $("#player-wealth-display").text(wealth);
 
-        var toBeAddedToTree = [];
-
         for (var unitId in player.units) {
             var unit = player.units[unitId];
             unit.sprite = generateSprite(unit.type, true, player.id);
@@ -176,7 +181,7 @@ function update(dt) {
     //socket.emit("playerMoves", {id: player.id, unitsPos: getUnitPosByPlayer(player)});
 
     socket.on("otherPlayerMoves", function(playerData) {
-        otherPlayers[playerData.id]=playerData;
+        otherPlayers[playerData.id] = Object.assign(otherPlayers[playerData.id], playerData);
         //setUnitPosByPlayer(otherPlayers[playerData.id], playerData.units);
     });
 
@@ -184,27 +189,6 @@ function update(dt) {
 
 };
 
-
-// function checkPlayerBounds() {
-//     // Check bounds
-
-//     player.units.forEach(function(unit){
-//         if(unit.pos[0] < 0) {
-//             unit.pos[0] = 0;
-//         }
-//         else if(unit.pos[0] > canvas.width - unit.sprite.size[0]) {
-//             unit.pos[0] = canvas.width - unit.sprite.size[0];
-//         }
-
-//         if(unit.pos[1] < 0) {
-//             unit.pos[1] = 0;
-//         }
-//         else if(unit.pos[1] > canvas.height - unit.sprite.size[1]) {
-//             unit.pos[1] = canvas.height - unit.sprite.size[1];
-//         }
-//     })
-// }
-// Draw everything
 
 function render() {
 

@@ -77,19 +77,27 @@ function checkCombat () {
 
 		if (!unit.lastAttackTaken || Date.now() - unit.lastAttackTaken >= unit.rateOfAttack) {
 			unit.lastAttackTaken = Date.now();
+			
+			var damageDealt = unit.attack - unit.attackTarget.defense;
+			// send attack damage to server
+			socket.emit('damageDone', {victim: unit.attackTarget, damage: damageDealt});
+
 			unit.attackTarget.currentHealth -= (unit.attack - unit.attackTarget.defense);
 			playSoundOnEvent(attackSound);
+
 		}
 
 		if (unit.attackTarget.currentHealth <= 0) {
 			unit.targetpos = unit.queuedpos;
 			unit.queuedpos = null;
+			tree.remove(unit.attackTarget);
 		}
 
 	})
 
 
 }
+
 
 
 

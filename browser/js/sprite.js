@@ -28,19 +28,6 @@
             ctx.closePath();
         },
 
-        renderHpBar: function (currentHealth, maxHealth) {
-            if (this.url === 'img/moneybag.png') return;
-
-            ctx.strokeStyle = 'black'; // HP Border for maxHealth
-            ctx.strokeRect(0, - 10, this.size[0], 5);
-
-            ctx.beginPath(); // HP Green for currentHealth
-            ctx.rect(0, - 10, currentHealth / maxHealth * this.size[0], 5);
-            ctx.fillStyle = "rgba(0,128,0, 1)";
-            ctx.closePath();
-            ctx.fill();
-        },
-
         render: function(ctx, playerId, type, currentHealth, maxHealth) {
             var frame;
 
@@ -52,7 +39,7 @@
                 this.speed = 10;
             }
             else if(playerId !== currentKing && type === 'hero'){
-                console.log("HERE");
+                // console.log("HERE");
                 this.url = 'img/hero/hero-1.png';
                 this.size = [32, 55];
                 this.pos = [32, 0];
@@ -84,9 +71,9 @@
                 x += frame * this.size[0];
             }
 
-            if (this.selectable) this.renderEllipse();
+            if (this.selectable) this.renderEllipse();  
 
-            if (this.selectable) this.renderHpBar(currentHealth, maxHealth);
+            renderHpBar.call(this, currentHealth, maxHealth);          
 
             if (frame === -1) {
                 ctx.drawImage(resources.get(this.url),
@@ -104,6 +91,19 @@
     window.Sprite = Sprite;
 })()
 
+function renderHpBar (currentHealth, maxHealth) {
+    if (this.url === 'img/moneybag.png') return;
+
+    ctx.strokeStyle = 'black'; // HP Border for maxHealth
+    ctx.strokeRect(0, - 10, this.size[0], 5);
+
+    ctx.beginPath(); // HP Green for currentHealth
+    ctx.rect(0, - 10, currentHealth / maxHealth * this.size[0], 5);
+    ctx.fillStyle = "rgba(0,128,0, 1)";
+    ctx.closePath();
+    ctx.fill();
+}
+
 function generateSprite(type, selectable, playerId){
     selectable = selectable || false;
 
@@ -113,15 +113,15 @@ function generateSprite(type, selectable, playerId){
         }
     }
 
-    if (type === 'hero' && selectable) {
+    if (type === 'hero') {
        return new Sprite('img/hero/hero-1.png', [32, 0], [32, 55], 16, [0, 1, 2], 'horizontal', selectable);
-    } else if (type === 'soldier' && selectable) {
+    } else if (type === 'soldier') {
         return new Sprite('img/soldier-asset.png', [0, 0], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
     } else if (type === 'moneybag') {
         return new Sprite('img/moneybag.png', [0,0], [33,36], 1, [0], false);
-    } else if (type === 'bar' && selectable) {
+    } else if (type === 'bar') {
         return new Sprite('img/bar-asset.png', [0,0], [320, 288], 1, [0], true);
-    } else if (type === 'house' && selectable) {
+    } else if (type === 'house') {
         return new Sprite('img/house-asset.png', [0,0], [96, 160], 1, [0], true);
     }
 }

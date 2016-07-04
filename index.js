@@ -103,6 +103,13 @@ io.on('connection', function (socket) {
         socket.broadcast.emit('otherPlayerMoves', playerData);
     })
 
+    socket.on('damageDone', function (damageData) {
+        var victim = damageData.victim;
+        var damageDealt = damageData.damageDealt;
+        console.log(damageData);
+        socket.broadcast.emit('takeThat', victim, damageDealt);
+    })
+
     socket.on('moneyDiscovered', function (moneyBagData) {
         //increase the wealth of the player
         players[moneyBagData.playerId].wealth += moneyBagData.value;

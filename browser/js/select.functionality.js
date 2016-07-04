@@ -42,7 +42,10 @@ function mouseUp(e) {
       rightClick.x += 25; //this is where the selected units will not stack on the top of each other
       rightClick.y += 25; //this is where the selected units will not stack on the top of each other
       var unit = player.units[unitId];
-      if (unit.sprite.selected) unit.targetpos = [rightClick.x, rightClick.y];
+      if (unit.sprite.selected) {
+        unit.vigilant = false;
+        unit.targetpos = [rightClick.x, rightClick.y];
+      }
     }
   }
   drag = false;
@@ -101,5 +104,5 @@ function select(){
   //}
   rightClick = {};
   drag = false;
-  console.log("SECOND TIME. CONTENTS OF CURRENTSELECTION?", currentSelection);
+ 
 }
