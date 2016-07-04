@@ -39,10 +39,8 @@ function mouseUp(e) {
   }
   else {
     for (var unitId in player.units) {
-      rightClick.x += 25; //this is where the selected units will not stack on the top of each other
-      rightClick.y += 25; //this is where the selected units will not stack on the top of each other
       var unit = player.units[unitId];
-      if (unit.sprite.selected) unit.targetpos = [rightClick.x, rightClick.y];
+      if (unit.sprite.selected) unit.targetpos = [rightClick.x + 25, rightClick.y + 25]; //this is where the selected units will not stack on the top of each other
     }
   }
   drag = false;
