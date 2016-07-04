@@ -68,6 +68,7 @@ function select(){
   var unitFound = false;
 
   console.log(vp.pos[0], vp.pos[1]);
+  console.log(rect);
 
   var rectEndX = rect.startX + rect.w;
   var rectEndY = rect.startY + rect.h;
@@ -75,8 +76,8 @@ function select(){
   for (var unitId in player.units) {
     var unit = player.units[unitId];
     unit.sprite.selected = false;
-    var playerEndX = unit.pos[0] + vp.pos[0] + unit.sprite.size[0];
-    var playerEndY = unit.pos[1] + vp.pos[1] + unit.sprite.size[1];
+    var playerEndX = unit.pos[0] + unit.sprite.size[0];
+    var playerEndY = unit.pos[1] + unit.sprite.size[1];
 
     if (inRange(unit.pos[0], playerEndX, rect.startX, rectEndX) && inRange(unit.pos[1], playerEndY, rect.startY, rectEndY)){
       currentSelection.push(unit);
@@ -89,8 +90,8 @@ function select(){
     for (var buildingId in player.buildings) {
       var aBuilding = player.buildings[buildingId];
       aBuilding.sprite.selected = false;
-      var buildingEndX = aBuilding.pos[0] + vp.pos[0] + aBuilding.sprite.size[0];
-      var buildingEndY = aBuilding.pos[1] + vp.pos[1] + aBuilding.sprite.size[1];
+      var buildingEndX = aBuilding.pos[0] + aBuilding.sprite.size[0];
+      var buildingEndY = aBuilding.pos[1] + aBuilding.sprite.size[1];
       if ( (inRange(aBuilding.pos[0], buildingEndX, rect.startX, rectEndX) 
                           && inRange(aBuilding.pos[1], buildingEndY, rect.startY, rectEndY)) ) {
         aBuilding.sprite.selected = true;
