@@ -40,28 +40,28 @@ function walk(dt){
                         unit.sprite.pos = [0, 0];
                         unit.pos[1] += distance;
                         unit.lastMovement.dir1 = 'down';
-                        continue;
+                        if (unit.lastMovement.dir2) continue;
                     }
                     if ((unit.pos[1] - unit.targetpos[1] > 5) && unit.lastMovement.dir2 !== 'down'){
                         //up
                         unit.sprite.pos = [0, 155];
                         unit.pos[1] -= distance;
                         unit.lastMovement.dir1 = 'up';
-                        continue;
+                        if (unit.lastMovement.dir2) continue;
                     }
                     if ((unit.pos[0] - unit.targetpos[0] < -5) && unit.lastMovement.dir2 !== 'left'){
                         //right
                         unit.sprite.pos = [0, 105];
                         unit.pos[0] += distance;
                         unit.lastMovement.dir1 = 'right';
-                        continue;
+                        if (unit.lastMovement.dir2) continue;
                     }
                     if ((unit.pos[0] - unit.targetpos[0] > 5) && unit.lastMovement.dir2 !== 'right'){
                         //left
                         unit.sprite.pos = [0, 53];
                         unit.pos[0] -= distance;
                         unit.lastMovement.dir1 = 'left';
-                        continue;
+                        if (unit.lastMovement.dir2) continue;
                     }
                 }
 
@@ -100,28 +100,28 @@ function walk(dt){
                         unit.sprite.url = 'img/hero/hero-2.png';
                         unit.pos[1] += distance;
                         unit.lastMovement.dir1 = 'down';
-                        continue;
+                        if (unit.lastMovement.dir2) continue;
                     }
                     if (unit.pos[0] - unit.targetpos[0] < -5 && unit.lastMovement.dir2 !== 'left'){
                         //right
                         unit.sprite.url = 'img/hero/hero-1.png';
                         unit.pos[0] += distance;
                         unit.lastMovement.dir1 = 'right';
-                        continue;
+                        if (unit.lastMovement.dir2) continue;
                     }
                     if (unit.pos[1] - unit.targetpos[1] > 5 && unit.lastMovement.dir2 !== 'down'){
                         //up
                         unit.sprite.url = 'img/hero/hero-0.png';
                         unit.pos[1] -= distance;
                         unit.lastMovement.dir1 = 'up';
-                        continue;
+                        if (unit.lastMovement.dir2) continue;
                     }
                     if (unit.pos[0] - unit.targetpos[0] > 5 && unit.lastMovement.dir2 !== 'right'){
                         //left
                         unit.sprite.url = 'img/hero/hero-3.png';
                         unit.pos[0] -= distance;
                         unit.lastMovement.dir1 = 'left';
-                        continue;
+                        if (unit.lastMovement.dir2) continue;
                     }
                 }
 
@@ -157,27 +157,27 @@ function walk(dt){
                         //down
                         unit.pos[1] += distance;
                         unit.lastMovement.dir1 = 'down';
-                        continue;
+                        if (unit.lastMovement.dir2) continue;
                     }
                     if (unit.pos[1] - unit.targetpos[1] > 5 && unit.lastMovement.dir2 !== 'down'){
                         //up
                         unit.pos[1] -= distance;
                         unit.lastMovement.dir1 = 'up';
-                        continue;
+                        if (unit.lastMovement.dir2) continue;
                     }
                     if (unit.pos[0] - unit.targetpos[0] < -5 && unit.lastMovement.dir2 !== 'left'){
                         //right
                         unit.sprite.pos = [0, 0];
                         unit.pos[0] += distance;
                         unit.lastMovement.dir1 = 'right';
-                        continue;
+                        if (unit.lastMovement.dir2) continue;
                     }
                     if (unit.pos[0] - unit.targetpos[0] > 5 && unit.lastMovement.dir2 !== 'right'){
                         //left
                         unit.sprite.pos = [0, 64];
                         unit.pos[0] -= distance;
                         unit.lastMovement.dir1 = 'left';
-                        continue;
+                        if (unit.lastMovement.dir2) continue;
                     }
                 }
             }

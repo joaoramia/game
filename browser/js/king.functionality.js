@@ -1,13 +1,15 @@
-function changeKing(currentPlayer){
-	for (var unit in currentPlayer.units){
-		if (currentPlayer.units[unit].type === 'hero'){
-            currentPlayer.units[unit].url = 'img/hero/hero-1.png';
-            currentPlayer.units[unit].size = [32, 0];
-            currentPlayer.units[unit].frames = [0, 1, 2];
-            currentPlayer.units[unit].speed = 16;
-		}
-	}
-}
+// function changeKing(currentPlayer){
+// 	for (var unit in currentPlayer.units){
+// 		if (currentPlayer.units[unit].type === 'hero'){
+//             currentPlayer.units[unit].url = 'img/hero/hero-1.png';
+//             currentPlayer.units[unit].size = [32, 0];
+//             currentPlayer.units[unit].frames = [0, 1, 2];
+//             currentPlayer.units[unit].speed = 16;
+// 		}
+// 	}
+// }
+
+
 
 // function becomeKing(newKing){
 // 	if (player.id === newKing){

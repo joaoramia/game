@@ -54,8 +54,8 @@ io.on('connection', function (socket) {
 
         currentPlayer.userName = newPlayerData.userName;
         currentPlayer.id = socket.id;
-        currentPlayer.units[0] = new Hero([200,200], socket.id, 0);
-        currentPlayer.units[1] = new Soldier([300, 300], socket.id, 1);
+        currentPlayer.units[0] = new Hero([200,200], socket.id);
+        currentPlayer.units[1] = new Soldier([300, 300], socket.id);
         currentPlayer.unitNumber = 2;
 
         // emit the current object of players then add your player no the array
@@ -130,7 +130,6 @@ io.on('connection', function (socket) {
     })
 
     socket.on('initialBuildRequest', function (data){
-        //if bar
         if (data.request === 1 && data.type === "bar") {
             if (players[data.id].wealth < 2000) {
                 //denied
@@ -139,7 +138,6 @@ io.on('connection', function (socket) {
                 //approved
                 socket.emit('initialBuildResponse', {valid: true, request: 1, type: "bar"});
             }
-        //if house
         } else if (data.request === 1 && data.type === "house") {
             if (players[data.id].wealth < 1000) {
                 //denied
@@ -154,14 +152,14 @@ io.on('connection', function (socket) {
     socket.on('finalBuildRequest', function (data) {
         if (data.request === 2 && data.type === "bar") {
             if (players[data.id].wealth < 2000) {
-                socket.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
+                io.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
             } else if (false) {
             //make sure the building doesn't collide with another building
-                socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
-            //temporarily set to false because we don't have collision set up
+                io.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
+            //temporarily false because we don't have collision set up
             } else {
-                var newBar = new Bar(data.pos, data.id, players[data.id].buildingNumber);
-                players[data.id].buildings[players[data.id].buildingNumber] = newBar;
+                var newBar = new Bar(data.pos, data.id);
+                players[data.id][players[data.id].buildingNumber] = newBar;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 2000;
                 io.emit('finalBuildResponse', { valid: true,
@@ -172,14 +170,14 @@ io.on('connection', function (socket) {
             }
         } else if (data.request === 2 && data.type === "house") {
             if (players[data.id].wealth < 1000) {
-                socket.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
+                io.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
             } else if (false) {
             //make sure the building doesn't collide with another building
-                socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
-            //temporarily set to false because we don't have collision set up
+                io.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
+            //temporarily false because we don't have collision set up
             } else {
-                var newHouse = new House(data.pos, data.id, players[data.id].buildingNumber);
-                players[data.id].buildings[players[data.id].buildingNumber] = newHouse;
+                var newHouse = new House(data.pos, data.id);
+                players[data.id][players[data.id].buildingNumber] = newHouse;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 1000;
                 io.emit('finalBuildResponse', { valid: true,
@@ -195,69 +193,19 @@ io.on('connection', function (socket) {
         //checks to see if player has enough money to buy a merc
         if (players[data.playerId].wealth < 400) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "lacking resources"});
-        //checks to see that current max supply would not be surpassed by building another unit
-        } else if (players[data.playerId].currentSupply() + 1 > players[data.playerId].currentMaxSupply()) {
+        //checks to see that would not surpass current max supply by building another unit
+        } else if (players[data.playerId].currentSupply + 1 > players[data.playerId].currentMaxSupply) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
-        //else it's a valid request: start building, send updates
+        //else it's a valid request. Start building, and send updates
         } else {
-            console.log("WHAT IS THIS", players[data.playerId]);
-            console.log("CURRENT SUPPLY", players[data.playerId].currentSupply());
-            console.log("CURRENT MAX SUPPLY", players[data.playerId].currentMaxSupply());          
-            //get x and y coordinates for the new unit
-            //add 140 to X, 300 to Y so that unit appears next to door of bar
-            var XSpawn = players[data.playerId].buildings[data.buildingId].pos[0] + 140;
-            var YSpawn = players[data.playerId].buildings[data.buildingId].pos[1] + 300;
-            var spawnLocation = [XSpawn, YSpawn];
 
-            //check to see whether the building has a rendezvous point. If it doesn't, set to undefined
-            var rendezvousPoint = players[data.playerId].buildings[data.buildingId].rendezvousPoint || undefined;
-
-            //add to this building's queue
-            var newUnit = new Soldier(spawnLocation, data.playerId, players[data.playerId].unitNumber, rendezvousPoint); 
-            players[data.playerId].buildings[data.buildingId].productionQueue.push(newUnit);
-            //increment the unit number to generate the id for the player's next unit
-            players[data.playerId].unitNumber++;
-            var progress = 0;
-            //currently uses setTimeout, but this will likely crowd the event loop 
-            function measureProgress(){
-                socket.emit('hireMercenaryResponse', {valid: true, progress: progress});
-                console.log(progress);
-                var again = setTimeout(function(){
-                    if (progress < 20) {
-                        progress++;
-                        measureProgress();
-                    } else {
-                        //remove the mercenary from the production queue
-                        var newUnitForClient = players[data.playerId].buildings[data.buildingId].productionQueue.shift();
-                        //add it to player object on server, and send to client
-                        io.emit('hireMercenaryResponse', {valid: true, newUnit: newUnitForClient});
-                        //if another merc has been added to the queue, do this again
-                        if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 0) {
-                            progress = 0;
-                            measureProgress();
-                        } else {
-                            players[data.playerId].buildings[data.buildingId].currentlyBuilding = false;
-                        }
-                        //else, currentlyBuilding = false;
-                    }
-                }, 800);
-            }
-            //check that currentlyBuilding property is false. if currently building, don't need to invoke measure progress again
-            if (players[data.playerId].buildings[data.buildingId].currentlyBuilding === false) {
-                currentlyBuilding = true;
-                measureProgress();
-            }
         }
-    })
-
-    socket.on('newRendezvousPosition', function (data) {
-        players[data.playerId].buildings[data.buildingId].rendezvousPoint = data.pos;
     })
 
 });
 
 
-//for generating money bags for the moneyBags object on server start
+//initially generate money bags for the moneyBags object
 function generateMoneyBags(count){
     moneyBags.count = Object.keys(moneyBags).length - 1 + count;
     if (count === 1) {
