@@ -100,12 +100,12 @@ io.on('connection', function (socket) {
     });
 
     socket.on('playerMoves', function (playerData) {
-    	socket.broadcast.emit('otherPlayerMoves', playerData);
+        socket.broadcast.emit('otherPlayerMoves', playerData);
     })
 
     socket.on('moneyDiscovered', function (moneyBagData) {
-    	//increase the wealth of the player
-    	players[moneyBagData.playerId].wealth += moneyBagData.value;
+        //increase the wealth of the player
+        players[moneyBagData.playerId].wealth += moneyBagData.value;
 
         //check if this player's wealth becomes higher than the king's
         if (players[moneyBagData.playerId].wealth > players[currentKing].wealth){
@@ -124,9 +124,9 @@ io.on('connection', function (socket) {
         }
         console.log(bagUpdate);
         io.emit('deleteAndUpdateMoneyBags', bagUpdate);
-    	delete moneyBags[moneyBagData.name];
-    	//replenish the moneyBags object
-    	generateMoneyBags(1);
+        delete moneyBags[moneyBagData.name];
+        //replenish the moneyBags object
+        generateMoneyBags(1);
     })
 
     socket.on('initialBuildRequest', function (data){
