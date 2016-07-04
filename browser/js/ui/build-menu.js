@@ -78,7 +78,7 @@ socket.on('finalBuildResponse', function (data) {
 		//update the player's wealth
 		player.wealth = data.currentWealth;
 		$("#player-wealth-display").text(player.wealth);
-		console.log(player.buildings);
+		updateSupplyDisplay();
 		}
 	}
 })
