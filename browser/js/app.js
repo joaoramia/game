@@ -112,15 +112,7 @@ function init() {
         for (var unitId in player.units) {
             var unit = player.units[unitId];
             unit.sprite = generateSprite(unit.type, true, player.id);
-
-            // add unit to an array built to be inserted into r-Tree
-            // better than adding one by one because bulk insert is way faster   
-            toBeAddedToTree.push(prepForCombatTree(unit));
-
         }
-
-        
-        tree.load(toBeAddedToTree);
 
         setupMoneyBags(gameData.moneyBags);
         setupSocket(socket);
@@ -179,6 +171,8 @@ function update(dt) {
     handleInput(dt);
 
     checkCollisions();
+
+    checkCombat();
 
     socket.emit("playerMoves", player);
     //socket.emit("playerMoves", {id: player.id, unitsPos: getUnitPosByPlayer(player)});

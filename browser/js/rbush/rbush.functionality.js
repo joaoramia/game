@@ -6,7 +6,7 @@ function prepForUnitTree (unit) { // for other units
     return unit;
 }
 
-function prepForCombatTree (unit) { // for our own units
+function prepForCombat(unit) { // for our own units
     unit.minX = unit.pos[0] - unit.range;
     unit.minY = unit.pos[1] - unit.range;
     unit.maxX = unit.pos[0] + unit.sprite.size[0] + unit.range;
@@ -20,4 +20,5 @@ function removeFromTreeOnDisconnect (socketId) {
 		tree.remove(unit);
 	}
 }
+
 
