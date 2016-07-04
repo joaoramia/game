@@ -113,15 +113,15 @@ function generateSprite(type, selectable, playerId){
         }
     }
 
-    if (type === 'hero' && selectable) {
+    if (type === 'hero') {
        return new Sprite('img/hero/hero-1.png', [32, 0], [32, 55], 16, [0, 1, 2], 'horizontal', selectable);
-    } else if (type === 'soldier' && selectable) {
+    } else if (type === 'soldier') {
         return new Sprite('img/soldier-asset.png', [0, 0], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
     } else if (type === 'moneybag') {
         return new Sprite('img/moneybag.png', [0,0], [33,36], 1, [0], false);
-    } else if (type === 'bar' && selectable) {
+    } else if (type === 'bar') {
         return new Sprite('img/bar-asset.png', [0,0], [320, 288], 1, [0], true);
-    } else if (type === 'house' && selectable) {
+    } else if (type === 'house') {
         return new Sprite('img/house-asset.png', [0,0], [96, 160], 1, [0], true);
     }
 }
