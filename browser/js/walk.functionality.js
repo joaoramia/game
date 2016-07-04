@@ -26,7 +26,6 @@ function walk(dt){
                         continue;
                         
                         case 'left':
-                        console.log("LEFT COLLIDE");
                         unit.sprite.pos = [0, 53];
                         unit.pos[0] -= distance;
                         unit.lastMovement.dir2 = 'left';
@@ -55,7 +54,6 @@ function walk(dt){
                     }
                     if ((unit.pos[0] - unit.targetpos[0] > 5) && unit.lastMovement.dir2 !== 'right'){
                         //left
-                        console.log("LEFT");
                         unit.sprite.pos = [0, 53];
                         unit.pos[0] -= distance;
                         unit.lastMovement.dir1 = 'left';
