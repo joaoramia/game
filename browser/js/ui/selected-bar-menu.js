@@ -25,7 +25,16 @@ function hireAssault(){
 }
 
 function setRendezvous() {
-	console.log("CAN'T DO THIS YET");
+	displayErrorToUserUntimed("RENDEZVOUS MODE", "Set a rendezvous point for this building's units, or press Esc to quit.");
+	$("#buttons-list").empty();
+	rendezvousMode.on = true;
+}
+
+function submitRendezvousPosition (pos) {
+	displayErrorToUserTimed("New rendezvous point set!");
+	rendezvousMode.on = false;
+	socket.emit('newRendezvousPosition', {pos: pos, playerId: player.id, buildingId: lastSelectedBuilding.id});
+	updateForSelectedBuilding("bar");
 }
 
 socket.on("hireMercenaryResponse", function (data) {

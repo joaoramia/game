@@ -247,6 +247,10 @@ io.on('connection', function (socket) {
         }
     })
 
+    socket.on('newRendezvousPosition', function (data) {
+        players[data.playerId].buildings[data.buildingId].rendezvousPoint = data.pos;
+    })
+
 });
 
 

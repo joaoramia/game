@@ -10,15 +10,17 @@ function mouseDown(e) {
     var tempX = e.layerX + vp.pos[0];
     var tempY = e.layerY + vp.pos[1];
     positionOfNewBuilding = [tempX, tempY];
-    console.log(positionOfNewBuilding);
-  } else if (e.which === 1 && !e.ctrlKey){
+  } else if (rendezvousMode.on && (e.which === 1 && !e.ctrlKey)) {
+    var tempX = e.layerX + vp.pos[0];
+    var tempY = e.layerY + vp.pos[1];
+    rendezvousMode.mostRecentRendezvous = [tempX, tempY];
+  } else if (e.which === 1 && !e.ctrlKey) {
     rect.startX = e.layerX + vp.pos[0];
     rect.startY = e.layerY + vp.pos[1];
     rect.w = 5;
     rect.h = 5;
     drag = true;
-  }
-  else if ( (e.ctrlKey && currentSelection.length) || (e.which === 3 && currentSelection.length) ) {
+  } else if ( (e.ctrlKey && currentSelection.length) || (e.which === 3 && currentSelection.length) ) {
     rightClick.x = e.layerX + vp.pos[0];
     rightClick.y = e.layerY + vp.pos[1];
   }
@@ -28,6 +30,8 @@ function mouseUp(e) {
   if (buildMode.on) {
     submitBuildingLocation(positionOfNewBuilding);
     buildModeOff();
+  } else if (rendezvousMode.on) {
+    submitRendezvousPosition(rendezvousMode.mostRecentRendezvous);
   } else if (attackPending && e.which === 1) { // Attack functionality ('on a-click')
     handleAttackInput(e.layerX + vp.pos[0], e.layerY + vp.pos[1]); // takes in the x and y corresponding to the big canvas
   } else if (e.which === 1 && !e.ctrlKey){ // Regular Click
