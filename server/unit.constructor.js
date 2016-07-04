@@ -11,7 +11,7 @@ function Unit (pos, type, maxHealth, attack, defense, speed, socketId, unitId, t
   this.targetpos = targetpos || undefined;
   this.vigilant = false;
   this.socketId = socketId;
-  this.lastMovement = {dir: undefined, dir2: undefined}; // helps with the building collision algorithm
+  this.lastMovement = {dir1: undefined, dir2: undefined}; // helps with the building collision algorithm
   this.id = unitId;
   this.attackTarget = null;
   this.lastAttackTime = null;

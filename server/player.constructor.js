@@ -23,15 +23,18 @@ Player.prototype.currentSupply = function() {
 };
 
 Player.prototype.currentMaxSupply = function() {
-		var count = 10;
-		for (building in this.buildings) {
-			if (this.buildings.hasOwnProperty(building)) {
-				if (this.buildings[building].type === "house") {
-					count += 10;
+	var count = 10;
+	for (building in this.buildings) {
+		if (this.buildings.hasOwnProperty(building)) {
+			if (this.buildings[building].type === "house") {
+				count += 10;
+				if (count >= this.absoluteMaxSupply) {
+					return count;
 				}
 			}
 		}
-		return count;
-	};
+	}
+	return count;
+};
 
 module.exports = Player;

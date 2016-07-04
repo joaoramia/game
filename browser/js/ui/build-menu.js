@@ -27,6 +27,7 @@ function submitBuildingLocation (pos) {
   socket.emit('finalBuildRequest', requestObj);
 }
 
+
 function buildModeOn (type) {
 	//run submitBuildingLocation on click when in buildMode
 	buildMode.on = true;
@@ -79,6 +80,9 @@ socket.on('finalBuildResponse', function (data) {
 		player.wealth = data.currentWealth;
 		$("#player-wealth-display").text(player.wealth);
 		updateSupplyDisplay();
+		if (currentMaxSupply() >= player.absoluteMaxSupply) {
+			displayErrorToUserTimed("Current maximum supply reached. Building more houses will not increase maximum supply.");
+		}
 		}
 	}
 })

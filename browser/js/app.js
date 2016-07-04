@@ -30,12 +30,12 @@ function setupSocket (socket) {
 
 socket.on('newKing', function(newKing){
     currentKing = newKing;
-})
+});
 
 function start(){
     //$( "#game-ui" ).toggleClass( "display-none" );
     //$( "#login-screen" ).toggleClass( "display-none" );
-    $("#building-info-panel").hide();
+    //$("#building-info-panel").hide();
     socket.emit('respawn', {userName: $( "#nick" ).val()});
 }
 
@@ -116,7 +116,6 @@ function init() {
 
         setupMoneyBags(gameData.moneyBags);
         setupSocket(socket);
-        updateSupplyDisplay();
         drawViewport();
         main();
     })
@@ -150,12 +149,12 @@ var player = {};
 
 var otherPlayers = {};
 
-var currentSelection = [];
-
 var buildMode = {
     on: false,
     type: ""
 }
+
+var currentSelection = [];
 
 var gameTime = 0;
 
@@ -163,7 +162,6 @@ var wealth = 0;
 
 // Update game objects
 function update(dt) {
-
     gameTime += dt;
 
     walk(dt);
@@ -238,15 +236,15 @@ function render() {
 };
 
 function renderEntities(list, playerId) {
-    if (Array.isArray(list)){
-        for(var i=0; i<list.length; i++) {
-            renderEntity(list[i], playerId);
-        }
-    } else if (typeof list === "object") {
+    // if (Array.isArray(list)){
+    //     for(var i=0; i<list.length; i++) {
+    //         renderEntity(list[i], playerId);
+    //     }
+    // } else if (typeof list === "object") {
         for (var item in list) {
             renderEntity(list[item], playerId);
         }
-    }
+    // }
 }
 
 function renderEntity(entity, playerId) {

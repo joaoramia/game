@@ -36,6 +36,9 @@ function currentMaxSupply() {
 			console.log("player.buildings[building].type", player.buildings[building].type)
 			if (player.buildings[building].type === "house") {
 				count += 10;
+				if (count >= player.absoluteMaxSupply) {
+					return count;
+				}
 			}
 		}
 	}

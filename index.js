@@ -100,12 +100,12 @@ io.on('connection', function (socket) {
     });
 
     socket.on('playerMoves', function (playerData) {
-    	socket.broadcast.emit('otherPlayerMoves', playerData);
+        socket.broadcast.emit('otherPlayerMoves', playerData);
     })
 
     socket.on('moneyDiscovered', function (moneyBagData) {
-    	//increase the wealth of the player
-    	players[moneyBagData.playerId].wealth += moneyBagData.value;
+        //increase the wealth of the player
+        players[moneyBagData.playerId].wealth += moneyBagData.value;
 
         //check if this player's wealth becomes higher than the king's
         if (players[moneyBagData.playerId].wealth > players[currentKing].wealth){
@@ -124,9 +124,9 @@ io.on('connection', function (socket) {
         }
         console.log(bagUpdate);
         io.emit('deleteAndUpdateMoneyBags', bagUpdate);
-    	delete moneyBags[moneyBagData.name];
-    	//replenish the moneyBags object
-    	generateMoneyBags(1);
+        delete moneyBags[moneyBagData.name];
+        //replenish the moneyBags object
+        generateMoneyBags(1);
     })
 
     socket.on('initialBuildRequest', function (data){
@@ -193,16 +193,14 @@ io.on('connection', function (socket) {
 
     socket.on('hireMercenaryRequest', function (data) {
         //checks to see if player has enough money to buy a merc
+        console.log("request received");
         if (players[data.playerId].wealth < 400) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "lacking resources"});
         //checks to see that current max supply would not be surpassed by building another unit
         } else if (players[data.playerId].currentSupply() + 1 > players[data.playerId].currentMaxSupply()) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
         //else it's a valid request: start building, send updates
-        } else {
-            console.log("WHAT IS THIS", players[data.playerId]);
-            console.log("CURRENT SUPPLY", players[data.playerId].currentSupply());
-            console.log("CURRENT MAX SUPPLY", players[data.playerId].currentMaxSupply());          
+        } else {        
             //get x and y coordinates for the new unit
             //add 140 to X, 300 to Y so that unit appears next to door of bar
             var XSpawn = players[data.playerId].buildings[data.buildingId].pos[0] + 140;
@@ -219,33 +217,38 @@ io.on('connection', function (socket) {
             players[data.playerId].unitNumber++;
             var progress = 0;
             //currently uses setTimeout, but this will likely crowd the event loop 
-            function measureProgress(){
+            function hireUnit(){
                 socket.emit('hireMercenaryResponse', {valid: true, progress: progress});
                 console.log(progress);
-                var again = setTimeout(function(){
+                //add set timeout to production queue?
+                var hireUnitProgress = setTimeout(function(){
                     if (progress < 20) {
                         progress++;
-                        measureProgress();
+                        hireUnit();
                     } else {
+                        console.log("QUEUE BEFORE SHIFT", players[data.playerId].buildings[data.buildingId].productionQueue);
                         //remove the mercenary from the production queue
                         var newUnitForClient = players[data.playerId].buildings[data.buildingId].productionQueue.shift();
+                        console.log("NEW UNIT AFTER SHIFT", newUnitForClient);
+                        console.log("PRODUCTION QUEUE AFTER SHIFT", players[data.playerId].buildings[data.buildingId].productionQueue);
                         //add it to player object on server, and send to client
                         io.emit('hireMercenaryResponse', {valid: true, newUnit: newUnitForClient});
                         //if another merc has been added to the queue, do this again
                         if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 0) {
                             progress = 0;
-                            measureProgress();
+                            hireUnit();
+                        //otherwise, reset. no longer currently building, progress is 0
                         } else {
                             players[data.playerId].buildings[data.buildingId].currentlyBuilding = false;
+                            progress = 0;
                         }
-                        //else, currentlyBuilding = false;
                     }
-                }, 800);
+                }, 100);
             }
             //check that currentlyBuilding property is false. if currently building, don't need to invoke measure progress again
             if (players[data.playerId].buildings[data.buildingId].currentlyBuilding === false) {
                 currentlyBuilding = true;
-                measureProgress();
+                hireUnit();
             }
         }
     })
