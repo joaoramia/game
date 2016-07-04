@@ -6,6 +6,7 @@ function displayErrorToUserTimed (message) {
 	var hideError = setTimeout(function() {
 		$("#display-error-container").hide();	
 	}, 3500);
+	playSoundOnEvent(cancelSound);
 }
 
 function displayErrorToUserUntimed (capsText, message) {
