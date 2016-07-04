@@ -195,19 +195,22 @@ io.on('connection', function (socket) {
         //checks to see if player has enough money to buy a merc
         if (players[data.playerId].wealth < 400) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "lacking resources"});
-        //checks to see that would not surpass current max supply by building another unit
+        //checks to see that current max supply would not be surpassed by building another unit
         } else if (players[data.playerId].currentSupply + 1 > players[data.playerId].currentMaxSupply) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
-        //else it's a valid request. Start building, and send updates
-        } else {
-            //check to see whether the building has a rendezvous point
-            //if not, get coords for the building, and use those to create the default
-            //NOTE TO SELF: create a function on the prototype that does it
+        //else it's a valid request: start building, send updates
+        } else {            
             //get x and y coordinates for the new unit
-            var newX = players[data.playerId].buildings[data.buildingId].pos[0] + 140;
-            var newY = players[data.playerId].buildings[data.buildingId].pos[1] + 300;
-            //building new unit is permitted. add to queue for this building
-            var newUnit = new Soldier([newX, newY], data.playerId, players[data.playerId].unitNumber, [0,0]); 
+            //add 140 to X, 300 to Y so that unit appears next to door of bar
+            var XSpawn = players[data.playerId].buildings[data.buildingId].pos[0] + 140;
+            var YSpawn = players[data.playerId].buildings[data.buildingId].pos[1] + 300;
+            var spawnLocation = [XSpawn, YSpawn];
+
+            //check to see whether the building has a rendezvous point. If it doesn't, set to undefined
+            var rendezvousPoint = players[data.playerId].buildings[data.buildingId].rendezvousPoint || undefined;
+
+            //add to this building's queue
+            var newUnit = new Soldier(spawnLocation, data.playerId, players[data.playerId].unitNumber, rendezvousPoint); 
             players[data.playerId].buildings[data.buildingId].productionQueue.push(newUnit);
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;

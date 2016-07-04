@@ -5,6 +5,11 @@ var selectedBarMenuButtons = [
 ];
 
 var lastSelectedBuilding; //replace later -- make null if not building not selected on last selection
+var rendezvousMode = {
+	on: false,
+	mostRecentRendezvous: null
+
+}
 
 function hireMercenary(){
 	//need to send building id with each request
