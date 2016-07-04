@@ -71,7 +71,7 @@ socket.on("hireMercenaryResponse", function (data) {
 			newUnit.sprite = generateSprite("soldier", false, newUnit.socketId);
 			otherPlayers[newUnit.socketId].units[newUnit.id] = newUnit;
 		}
-
+		updateSupplyDisplay();
 	}
 })
 
