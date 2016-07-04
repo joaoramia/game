@@ -26,7 +26,7 @@ var vp = {
 };
 
 //append canvas to the DOM
-$("#game-view").append(viewCanvas);
+$("#game-ui").prepend(viewCanvas);
 
 function handleInput(dt) {
     if(input.isDown('DOWN') || input.isDown('s')) {
