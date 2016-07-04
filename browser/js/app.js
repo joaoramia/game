@@ -1,22 +1,29 @@
 var socket = io.connect('http://' + ip + ':3030');
 var currentKing;
+var tree = rbush();
 
 function setupSocket (socket) {
 
     socket.on('otherPlayerJoin', function (otherPlayerData) {
         console.log(otherPlayerData.id + ' has joined!');
 
+        var toBeAddedToTree = [];
         // generate the new players sprites
         for (var unitId in otherPlayerData.units) {
             var unit = otherPlayerData.units[unitId];
             unit.sprite = generateSprite(unit.type, false, otherPlayerData.id);
+            prepForUnitTree(unit);
         }
         otherPlayers[otherPlayerData.id] = otherPlayerData;
 
+        tree.load(toBeAddedToTree);
     });
 
     socket.on('otherPlayerDC', function (socketId) {
         console.log(socketId + ' left!');
+
+        removeFromTreeOnDisconnect(socketId);
+        
         delete otherPlayers[socketId];
     });
 }
@@ -74,6 +81,7 @@ function init() {
         for each of the other players, assign each unit,
         its appropriate sprite
         */
+        var toBeAddedToTree = [];
 
         for (var otherPlayer in otherPlayers){
             if (otherPlayers.hasOwnProperty(otherPlayer)){
@@ -81,9 +89,15 @@ function init() {
                 for (var unitId in otherPlayer.units) {
                     var unit = otherPlayer.units[unitId];
                     unit.sprite = generateSprite(unit.type, false, otherPlayer.id);
+
+                    // add unit to an array built to be inserted into r-Tree
+                    // better than adding one by one because bulk insert is way faster
+                    toBeAddedToTree.push(prepForUnitTree(unit));
+                    
                 }
             }
         }
+        tree.load(toBeAddedToTree);
     });
 
     socket.on("gameReady", function(gameData, king) {
@@ -92,10 +106,22 @@ function init() {
         player = gameData.playerData;
         wealth = gameData.playerData.wealth;
         $("#player-wealth-display").text(wealth);
+
+        var toBeAddedToTree = [];
+
         for (var unitId in player.units) {
             var unit = player.units[unitId];
             unit.sprite = generateSprite(unit.type, true, player.id);
+
+            // add unit to an array built to be inserted into r-Tree
+            // better than adding one by one because bulk insert is way faster   
+            toBeAddedToTree.push(prepForCombatTree(unit));
+
         }
+
+        
+        tree.load(toBeAddedToTree);
+
         setupMoneyBags(gameData.moneyBags);
         setupSocket(socket);
         drawViewport();
