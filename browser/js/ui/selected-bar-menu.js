@@ -52,9 +52,9 @@ socket.on("hireMercenaryResponse", function (data) {
 		if (data.progress < 8) {
 			$("#progress-bar").css("background-color", "red");
 		} else if (data.progress < 17) {
-			$("#progress-bar").css("background-color", "yellow");
+			$("#progress-bar").css("background-color", "#FFD700");
 		} else {
-			$("#progress-bar").css("background-color", "green");
+			$("#progress-bar").css("background-color", "#00FF00");
 		}
 		$("#progress-bar").css("width", "" + percent + "%");
 	//if complete, erase progress bar
