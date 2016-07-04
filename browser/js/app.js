@@ -132,12 +132,12 @@ var player = {};
 
 var otherPlayers = {};
 
-var currentSelection = [];
-
 var buildMode = {
     on: false,
     type: ""
 }
+
+var currentSelection = [];
 
 var gameTime = 0;
 

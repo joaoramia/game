@@ -1,7 +1,7 @@
 var selectedBarMenuButtons = [
 	{text: "Hire Mercenary (M)", tagName: "hire-mercenary", clickFunction: hireMercenary},
 	{text: "Hire Assault (L)", tagName: "hire-assault", clickFunction: hireAssault},
-	{text: "Set Rendezvous (O)", tagName: "set-rendezvous", clickFunction: setRendezvous}
+	{text: "Set Rally Point (O)", tagName: "set-rendezvous", clickFunction: setRendezvous}
 ];
 
 var lastSelectedBuilding; //replace later -- make null if not building not selected on last selection
@@ -25,7 +25,7 @@ function hireAssault(){
 }
 
 function setRendezvous() {
-	displayErrorToUserUntimed("RENDEZVOUS MODE", "Set a rendezvous point for this building's units, or press Esc to quit.");
+	displayErrorToUserUntimed("RENDEZVOUS MODE", "Set a rally point for this building's units, or press Esc to quit.");
 	$("#buttons-list").empty();
 	rendezvousMode.on = true;
 }

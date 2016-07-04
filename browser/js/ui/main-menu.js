@@ -27,7 +27,7 @@ function changeButtonsMessage (message) {
 	} else if (message === 1) {
 		$("#buttons-message-content").text("1 unit selected");
 	} else {
-		$("#buttons-message-content").text("" + message.length + " units selected");
+		$("#buttons-message-content").text("" + message + " units selected");
 	}
 }
 
@@ -77,6 +77,9 @@ function updateForBuildMenu (){
 }
 
 function updateForSelectedBuilding (type) {
+	//first check if selected building is another player's building
+
+	//must be current player's buliding. check for type
 	if (type === "bar") {
 		$("#building-info-panel").show();
 		changeButtonsMessage("Bar selected");
