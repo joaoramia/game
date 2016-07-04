@@ -22,8 +22,12 @@ function setupSocket (socket) {
 }
 
 socket.on('newKing', function(newKing){
+    // for (var id in otherPlayers){
+    //     changeKing(otherPlayers[id]);
+    // }
+    // changeKing(player);
     currentKing = newKing;
-})
+});
 
 function start(){
     //$( "#game-ui" ).toggleClass( "display-none" );

@@ -128,7 +128,6 @@ function walk(dt){
 
 
                 if (unit.type === 'soldier'){
-                    console.log(unit.lastMovement);
                     unit.sprite._index += 0.25;
                     switch(detectBuildings(unit, dt)){
                         case 'down':
