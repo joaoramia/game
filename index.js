@@ -196,10 +196,13 @@ io.on('connection', function (socket) {
         if (players[data.playerId].wealth < 400) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "lacking resources"});
         //checks to see that current max supply would not be surpassed by building another unit
-        } else if (players[data.playerId].currentSupply + 1 > players[data.playerId].currentMaxSupply) {
+        } else if (players[data.playerId].currentSupply() + 1 > players[data.playerId].currentMaxSupply()) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
         //else it's a valid request: start building, send updates
-        } else {            
+        } else {
+            console.log("WHAT IS THIS", players[data.playerId]);
+            console.log("CURRENT SUPPLY", players[data.playerId].currentSupply());
+            console.log("CURRENT MAX SUPPLY", players[data.playerId].currentMaxSupply());          
             //get x and y coordinates for the new unit
             //add 140 to X, 300 to Y so that unit appears next to door of bar
             var XSpawn = players[data.playerId].buildings[data.buildingId].pos[0] + 140;
