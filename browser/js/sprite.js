@@ -112,7 +112,7 @@ function generateSprite(type, selectable, playerId){
 
     if (type === 'hero' && selectable) {
        return new Sprite('img/hero.png', [0, 0], [46, 81], 16, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
-    } else if (type === 'soldier' && selectable) {
+    } else if (type === 'soldier') {
         return new Sprite('img/soldier-asset.png', [0, 0], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
     } else if (type === 'moneybag') {
         return new Sprite('img/moneybag.png', [0,0], [33,36], 1, [0], false);

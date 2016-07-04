@@ -47,17 +47,19 @@ socket.on("hireMercenaryResponse", function (data) {
 		$("#progress-bar").css("width", "" + 0 + "%");
 
 		var newUnit = data.newUnit;
-		newUnit.sprite = generateSprite("soldier", true);
 		//only add to player object if id on unit matches id of player 
 		if (player.id === newUnit.socketId) {
+			newUnit.sprite = generateSprite("soldier", true, newUnit.socketId);
 			player.units[newUnit.id] = newUnit;
 		//else, add to otherPlayers object
 		} else {
 			console.log("DOES IT EVEN GET HERE?"); //YES 
 			console.log("CAN IT FIND THE PLAYER OBJ?", otherPlayers[newUnit.socketId]) //YES 
 			console.log("CAN IT FIND THE UNITS OBJ?", otherPlayers[newUnit.socketId].units) //YES
+			newUnit.sprite = generateSprite("soldier", false, newUnit.socketId);
 			otherPlayers[newUnit.socketId].units[newUnit.id] = newUnit;
 			console.log("IS THE NEW UNIT ON THE OBJ?", otherPlayers[newUnit.socketId].units[newUnit.id]);
+			console.log("PLAYER OBJ AGAIN", otherPlayers[newUnit.socketId])
 		}
 
 	}

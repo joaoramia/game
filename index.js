@@ -154,11 +154,11 @@ io.on('connection', function (socket) {
     socket.on('finalBuildRequest', function (data) {
         if (data.request === 2 && data.type === "bar") {
             if (players[data.id].wealth < 2000) {
-                io.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
+                socket.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
             } else if (false) {
             //make sure the building doesn't collide with another building
-                io.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
-            //temporarily false because we don't have collision set up
+                socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
+            //temporarily set to false because we don't have collision set up
             } else {
                 var newBar = new Bar(data.pos, data.id, players[data.id].buildingNumber);
                 players[data.id].buildings[players[data.id].buildingNumber] = newBar;
@@ -172,11 +172,11 @@ io.on('connection', function (socket) {
             }
         } else if (data.request === 2 && data.type === "house") {
             if (players[data.id].wealth < 1000) {
-                io.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
+                socket.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
             } else if (false) {
             //make sure the building doesn't collide with another building
-                io.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
-            //temporarily false because we don't have collision set up
+                socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
+            //temporarily set to false because we don't have collision set up
             } else {
                 var newHouse = new House(data.pos, data.id, players[data.id].buildingNumber);
                 players[data.id].buildings[players[data.id].buildingNumber] = newHouse;
@@ -201,11 +201,13 @@ io.on('connection', function (socket) {
         //else it's a valid request. Start building, and send updates
         } else {
             //check to see whether the building has a rendezvous point
-
             //if not, get coords for the building, and use those to create the default
             //NOTE TO SELF: create a function on the prototype that does it
+            //get x and y coordinates for the new unit
+            var newX = players[data.playerId].buildings[data.buildingId].pos[0] + 140;
+            var newY = players[data.playerId].buildings[data.buildingId].pos[1] + 300;
             //building new unit is permitted. add to queue for this building
-            var newUnit = new Soldier([50, 50], data.playerId, players[data.playerId].unitNumber); 
+            var newUnit = new Soldier([newX, newY], data.playerId, players[data.playerId].unitNumber); 
             players[data.playerId].buildings[data.buildingId].productionQueue.push(newUnit);
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;
