@@ -33,20 +33,14 @@ function start(){
 }
 
 resources.load([
-    'img/sprites2.png',
     'img/hero.png',
-    'img/terrain.jpg',
+    'img/hero/hero-0.png', 'img/hero/hero-1.png', 'img/hero/hero-2.png', 'img/hero/hero-3.png', 'img/hero/hero-4.png',
+    'img/hero/king.png',    
     'img/moneybag.png',
     'img/soldier-asset.png',
     'img/bar-asset.png',
-    'img/king.png',
     'img/background/desert1.1.png', 'img/background/desert1.2.png', 'img/background/desert1.3.png', 'img/background/desert1.4.png', 'img/background/desert1.5.png', 'img/background/desert1.6.png', 'img/background/desert1.7.png', 'img/background/desert1.8.png', 'img/background/desert1.9.png', 'img/background/desert1.10.png', 'img/background/desert1.11.png', 'img/background/desert1.12.png', 'img/background/desert1.13.png', 'img/background/desert1.14.png', 'img/background/desert1.15.png',
-    'img/ruinbuild1.png',
-    'img/test.png',
-    'img/poiseplant.png',
-    'img/tree.png',
     'img/background/cactus.png',
-    'img/road.png',
     'img/house-asset.png'
 ]);
 
