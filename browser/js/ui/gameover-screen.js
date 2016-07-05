@@ -10,7 +10,7 @@ function gameOver(){
 	player.units = {};
 	player.building = {};
 	moneyBags = {};
-	//can still see other players moving
+	//but can still see other players moving -- intended
 }
 
 function checkIfGameOver() {
