@@ -1,6 +1,6 @@
-function Player(id, userName) {
+function Player(id, username) {
 	this.id = id; // socket.id
-	this.userName = userName || "";
+	this.username = username || "New player";
 	this.numberOfSessions = 0;
 	this.wealth = 20000;
 	this.units = {}; // obj of Unit objects
@@ -9,7 +9,6 @@ function Player(id, userName) {
 	this.buildingNumber = 0;
 	this.isKing = false;
 	this.absoluteMaxSupply = 50;
-
 }
 
 Player.prototype.currentSupply = function() {
