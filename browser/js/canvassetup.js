@@ -14,15 +14,15 @@ var requestAnimFrame = (function(){
 // Create the canvas
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
-canvas.width = 3000;
-canvas.height = 3000;
+canvas.width = 3000; //Remember to adjust the back end size any time this changes
+canvas.height = 3000; //Remember to adjust the back end size any time this changes
 
 var viewCanvas = document.createElement('canvas');
 var ctxV = viewCanvas.getContext('2d');
   viewCanvas.width = window.innerWidth;
   viewCanvas.height = window.innerHeight;
 var vp = {
-	pos: [0,0]
+	pos: [0, 0]
 };
 
 //append canvas to the DOM
@@ -81,4 +81,51 @@ function cameraPan (e) {
 
 function drawViewport () {
     ctxV.drawImage(canvas, vp.pos[0], vp.pos[1], viewCanvas.width, viewCanvas.height, 0, 0, viewCanvas.width, viewCanvas.height);
+}
+
+function adjustVPOnGameReady (location) {
+
+    if (location[0] - viewCanvas.width/2 < 0 && location[1] - viewCanvas.height/2 < 0) {
+      vp.pos[0] = 0;
+      vp.pos[1] = 0;
+      return;
+    }
+    else if (location[1] - viewCanvas.height/2 < 0 && location[0] + viewCanvas.width/2 > canvas.width) {
+      vp.pos[1] = 0;
+      vp.pos[0] = canvas.width - viewCanvas.width;
+      return;
+    }
+    else if (location[0] - viewCanvas.width/2 < 0 && location[1] + viewCanvas.height/2 > canvas.height){
+      vp.pos[0] = 0;
+      vp.pos[1] = canvas.height - viewCanvas.height;
+      return;
+    }
+    else if (location[0] + viewCanvas.width/2 > canvas.width && location[1] + viewCanvas.height/2 > canvas.height) {
+      vp.pos[0] = canvas.width - viewCanvas.width;
+      vp.pos[1] = canvas.height - viewCanvas.height;
+      return;
+    }
+    else if (location[0] - viewCanvas.width/2 < 0) {
+      vp.pos[0] = 0;
+      vp.pos[1] = location[1] - viewCanvas.height/2;
+      return;
+    }
+    else if (location[1] - viewCanvas.height/2 < 0) {
+      vp.pos[1] = 0;
+      vp.pos[0] = location[0] - viewCanvas.width/2;
+      return;
+    }
+    else if (location[1] + viewCanvas.height/2 > canvas.height){
+      vp.pos[1] = canvas.height - viewCanvas.height;
+      vp.pos[0] = location[0] - viewCanvas.width/2;
+      return;
+    }
+    else if (location[0] + viewCanvas.width/2 > canvas.width) {
+      vp.pos[0] = canvas.width - viewCanvas.width;
+      vp.pos[1] = location[1] - viewCanvas.height/2;
+      return;
+    }
+    console.log("HERE");
+    vp.pos[0] = location[0] - viewCanvas.width/2;
+    vp.pos[1] = location[1] - viewCanvas.height/2;
 }
