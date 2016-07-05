@@ -18,6 +18,14 @@ function attackModeOff (){
 	turnOffUntimedMessage();
 }
 
+function defenseModeOn () {
+	displayErrorToUserUntimed("DEFENSE MODE", "Your selected units are now vigilant for attackers");
+	currentSelection.forEach(function (elem) {
+		elem.targetpos = null;
+		elem.vigilant = true;
+	});
+}
+
 function checkForTarget (x, y) { 
 	// for enemy players
 	var targets = tree.search({

@@ -41,13 +41,13 @@ function placeholderFunction(){
 var heroSelectedButtons = [
 	{text: "Build (B)", tagName: "build-button", clickFunction: updateForBuildMenu},
 	{text: "Attack (A)", tagName: "attack-button", clickFunction: attackModeOn},
-	{text: "Defend (D)", tagName: "defend-button", clickFunction: placeholderFunction},
+	{text: "Defend (D)", tagName: "defend-button", clickFunction: defenseModeOn},
 	{text: "Move (M)", tagName: "move-button", clickFunction: placeholderFunction}
 ]
 
 var nonHeroSelectedButtons = [
 	{text: "Attack (A)", clickFunction: attackModeOn},
-	{text: "Defend (D)", clickFunction: placeholderFunction},
+	{text: "Defend (D)", clickFunction: defenseModeOn},
 	{text: "Move (M)", clickFunction: placeholderFunction}
 ];
 
