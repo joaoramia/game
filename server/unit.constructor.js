@@ -14,6 +14,7 @@ function Unit (pos, type, maxHealth, attack, defense, speed, socketId, unitId, t
   this.lastMovement = {dir1: undefined, dir2: undefined}; // helps with the building collision algorithm
   this.id = unitId;
   this.attackTarget = null;
+  this.hit = null;
   this.lastAttackTime = null;
 }
 
@@ -26,9 +27,9 @@ function Hero (pos, socketId, unitId){
 }
 
 function Soldier (pos, socketId, unitId, targetpos){
-  Unit.call(this, pos, 'soldier', 60, 15, 0, 75, socketId, unitId, targetpos);
+  Unit.call(this, pos, 'soldier', 60, 10, 0, 75, socketId, unitId, targetpos);
   this.rateOfAttack = 2000; // twice a second
-  this.range = 200;
+  this.range = 150;
 }
 
 module.exports = {

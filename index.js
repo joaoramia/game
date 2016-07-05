@@ -105,9 +105,9 @@ io.on('connection', function (socket) {
 
     socket.on('damageDone', function (damageData) {
         var victim = damageData.victim;
-        var damageDealt = damageData.damageDealt;
+        var damage = damageData.damage;
         console.log(damageData);
-        socket.broadcast.emit('takeThat', victim, damageDealt);
+        socket.broadcast.emit('takeThat', victim, damage);
     })
 
     socket.on('moneyDiscovered', function (moneyBagData) {

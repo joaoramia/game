@@ -71,6 +71,8 @@ function attachTargets () {
 function checkCombat () {
 	var attackingUnits = attachTargets();
 
+	checkIfBeingHit(); 
+
 	attackingUnits.forEach(function (unit) {
 		unit.queuedpos = unit.queuedpos || unit.targetpos;
 		unit.targetpos = unit.pos;
@@ -94,8 +96,24 @@ function checkCombat () {
 		}
 
 	})
+}
+
+function checkIfBeingHit () {
+	for (var unitId in player.units) {
+		var unit = player.units[unitId];
+		if (unit.hit) {
+			unit.vigilant = true;
+		}
+	}
+}
 
 
+function removeDeadUnits () {
+	for (var unitId in player.units) {
+		if (player.units[unitId].currentHealth <= 0) {
+			delete player.units[unitId];
+		}
+	}
 }
 
 

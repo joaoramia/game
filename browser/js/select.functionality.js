@@ -41,15 +41,14 @@ function mouseUp(e) {
     var counter = 0; //this is where the selected units will not stack on the top of each other
     for (var unitId in player.units) {
       var unit = player.units[unitId];
-<<<<<<< HEAD
+
       if (unit.sprite.selected) {
+        
         unit.vigilant = false;
-        unit.targetpos = [rightClick.x, rightClick.y];
+        unit.hit = false;
+        unit.targetpos = [rightClick.x + counter, rightClick.y];
+        counter += 25;
       }
-=======
-      if (unit.sprite.selected) unit.targetpos = [rightClick.x + counter, rightClick.y + counter];
-      counter += 25;
->>>>>>> 47a5b92a25facc8994a29f05df9495d53d4448b9
     }
   }
   drag = false;
@@ -74,8 +73,6 @@ function select(){
   currentSelection = [];
   var unitFound = false;
 
-  console.log(vp.pos[0], vp.pos[1]);
-  console.log(rect);
 
   var rectEndX = rect.startX + rect.w;
   var rectEndY = rect.startY + rect.h;

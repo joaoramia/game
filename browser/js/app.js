@@ -29,9 +29,14 @@ function setupSocket (socket) {
     });
 
 
-    socket.on('takeThat', function (victim, damageDealt) {
-        console.log(victim);
-        console.log(damageDealt);
+    socket.on('takeThat', function (victim, damage) {
+        console.log(victim, damage);
+        if (player.id === victim.socketId) {
+            player.units[victim.id].currentHealth -= damage;
+            player.units[victim.id].hit = true;
+        } else {
+            otherPlayers[victim.socketId].units[victim.id].currentHealth -= damage;
+        }
     });
 }
 
@@ -93,8 +98,8 @@ function init() {
         for (var otherPlayer in otherPlayers){
             if (otherPlayers.hasOwnProperty(otherPlayer)){
                 //for each player assign each unit its appropriate sprint
-                for (var unitId in otherPlayer.units) {
-                    var unit = otherPlayer.units[unitId];
+                for (var unitId in otherPlayers[otherPlayer].units) {
+                    var unit = otherPlayers[otherPlayer].units[unitId];
                     unit.sprite = generateSprite(unit.type, false, otherPlayer.id);
 
                     // add unit to an array built to be inserted into r-Tree
@@ -177,11 +182,14 @@ function update(dt) {
 
     checkCombat();
 
+    removeDeadUnits();
+
     socket.emit("playerMoves", player);
     //socket.emit("playerMoves", {id: player.id, unitsPos: getUnitPosByPlayer(player)});
 
     socket.on("otherPlayerMoves", function(playerData) {
-        otherPlayers[playerData.id] = Object.assign(otherPlayers[playerData.id], playerData);
+        // otherPlayers[playerData.id] = Object.assign(otherPlayers[playerData.id], playerData);
+        otherPlayers[playerData.id] = playerData;
         //setUnitPosByPlayer(otherPlayers[playerData.id], playerData.units);
     });
 
