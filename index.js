@@ -228,6 +228,7 @@ io.on('connection', function (socket) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
         //else it's a valid request: start building, send updates
         } else {        
+            //to make the code more readable
             var currentBuilding = players[data.playerId].buildings[data.buildingId]; 
             //get x and y coordinates for the new unit
             //add 140 to X, 300 to Y so that unit appears next to door of bar
@@ -243,13 +244,12 @@ io.on('connection', function (socket) {
             currentBuilding.productionQueue.push(newUnit);
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;
-            var progress = 0;
-            //uses setTimeout and sends progress to the client 
             function hireUnit(){
-                socket.emit('hireMercenaryResponse', {valid: true, progress: progress});
-                var hireUnitProgress = setTimeout(function(){
-                    if (progress < 20) {
-                        progress++;
+                socket.emit('hireMercenaryResponse', {valid: true, progress: currentBuilding.progress});
+                 //uses setTimeout and sends progress to the client 
+                 var hireUnitProgress = setTimeout(function(){
+                    if (currentBuilding.progress < 20) {
+                        currentBuilding.progress++;
                         hireUnit();
                     } else {
                         //remove the mercenary from the production queue
@@ -258,12 +258,12 @@ io.on('connection', function (socket) {
                         io.emit('hireMercenaryResponse', {valid: true, newUnit: newUnitForClient});
                         //if another merc has been added to the queue, do this again
                         if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 0) {
-                            progress = 0;
+                            currentBuilding.progress = 0;
                             hireUnit();
                         //otherwise, reset. no longer currently building, progress is 0
                         } else {
                             players[data.playerId].buildings[data.buildingId].currentlyBuilding = false;
-                            progress = 0;
+                            currentBuilding.progress = 0;
                         }
                     }
                 }, 1000);
