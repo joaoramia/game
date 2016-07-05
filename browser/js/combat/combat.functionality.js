@@ -5,7 +5,17 @@ function handleAttackInput (x, y) {
     } else {
       setVigilantAttackMove([x, y]);
     }
-    attackPending = false;
+    attackModeOff();
+}
+
+function attackModeOn () {
+	attackPending = true;
+	displayErrorToUserUntimed("ATTACK MODE", "Select a location to attack, or press Q to quit.");
+}
+
+function attackModeOff (){
+	attackPending = false;
+	turnOffUntimedMessage();
 }
 
 function checkForTarget (x, y) { 

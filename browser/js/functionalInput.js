@@ -11,9 +11,9 @@ document.addEventListener('keypress', function (e) {
     	key = 'QUIT'; break;
     }
     if (key === 'ATTACK') {
-    	attackPending = true;
+    	attackModeOn();
     } else if (key === 'QUIT') {
-    	if (attackPending) attackPending = false;
+    	if (attackPending) attackModeOff();
     }
 
 });
