@@ -164,7 +164,7 @@ io.on('connection', function (socket) {
             }
         //if house
         } else if (data.request === 1 && data.type === "house") {
-            if (players[data.id] && nplayers[data.id].wealth < 1000) {
+            if (players[data.id] && players[data.id].wealth < 1000) {
                 //denied
                 socket.emit('initialBuildResponse', {valid: false, request: 1, type: "house"});
             } else {
