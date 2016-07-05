@@ -1,4 +1,5 @@
 function gameOver(){
+	console.log("The game over function says hello");
 	//make appropriate changes to GUI
 	$("#gameover-overlay").show();
 	$("#world-wealth-display").hide();
@@ -13,7 +14,8 @@ function gameOver(){
 }
 
 function checkIfGameOver() {
-	if (player.units[0].currentHealth < 1) {
+	if (!player.units[0]) {
+		//announce to the world that someone died
 		gameOver();
 	}
 }
