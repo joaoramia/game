@@ -14,8 +14,8 @@ var requestAnimFrame = (function(){
 // Create the canvas
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
-canvas.width = 2500;
-canvas.height = 1000;
+canvas.width = 3000;
+canvas.height = 3000;
 
 var viewCanvas = document.createElement('canvas');
 var ctxV = viewCanvas.getContext('2d');

@@ -8,6 +8,9 @@ function setupSocket (socket) {
         console.log(otherPlayerData.id + ' has joined!');
 
         var toBeAddedToTree = [];
+
+        newPlayerJoinsAlert(otherPlayerData.username);
+
         // generate the new players sprites
         for (var unitId in otherPlayerData.units) {
             var unit = otherPlayerData.units[unitId];
@@ -23,8 +26,12 @@ function setupSocket (socket) {
     socket.on('otherPlayerDC', function (socketId) {
         console.log(socketId + ' left!');
 
+
         removeFromTreeOnDisconnect(socketId);
-        
+
+        var departingUserUsername = otherPlayers[socketId].username;
+        newPlayerLeavesAlert(departingUserUsername);
+
         delete otherPlayers[socketId];
     });
 

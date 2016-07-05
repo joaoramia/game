@@ -9,6 +9,28 @@ function displayErrorToUserTimed (message) {
 	playSoundOnEvent(cancelSound);
 }
 
+function newPlayerJoinsAlert (playerName) {
+	//uses setTimeout -- fix? change?
+	$("#display-error-container").show();
+	$("#display-error-content").text(playerName + " has joined the game.");
+	$("#display-error-content").prepend('<span>NEW PLAYER:</span> ');
+	var hideError = setTimeout(function() {
+		$("#display-error-container").hide();	
+	}, 2500);
+	playSoundOnEvent(cancelSound);
+}
+
+function newPlayerLeavesAlert (playerName) {
+	//uses setTimeout -- fix? change?
+	$("#display-error-container").show();
+	$("#display-error-content").text(playerName + " has left the game.");
+	//$("#display-error-content").prepend('<span>NEW PLAYER:</span> ');
+	var hideError = setTimeout(function() {
+		$("#display-error-container").hide();	
+	}, 2500);
+	playSoundOnEvent(cancelSound);
+}
+
 function displayErrorToUserUntimed (capsText, message) {
 	$("#display-error-container").show();
 	$("#display-error-content").text(message);
