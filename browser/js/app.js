@@ -5,7 +5,7 @@ function setupSocket (socket) {
 
     socket.on('otherPlayerJoin', function (otherPlayerData) {
         console.log(otherPlayerData.id + ' has joined!');
-
+        newPlayerJoinsAlert(otherPlayerData.username);
         // generate the new players sprites
         for (var unitId in otherPlayerData.units) {
             var unit = otherPlayerData.units[unitId];
@@ -17,6 +17,8 @@ function setupSocket (socket) {
 
     socket.on('otherPlayerDC', function (socketId) {
         console.log(socketId + ' left!');
+        var departingUserUsername = otherPlayers[socketId].username;
+        newPlayerLeavesAlert(departingUserUsername);
         delete otherPlayers[socketId];
     });
 }

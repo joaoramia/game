@@ -52,7 +52,6 @@
                 this.speed = 10;
             }
             else if(playerId !== currentKing && type === 'hero'){
-                console.log("HERE");
                 this.url = 'img/hero/hero-1.png';
                 this.size = [32, 55];
                 // this.pos = [32, 0];
