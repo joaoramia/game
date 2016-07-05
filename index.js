@@ -106,7 +106,7 @@ io.on('connection', function (socket) {
     socket.on('damageDone', function (damageData) {
         var victim = damageData.victim;
         var damage = damageData.damage;
-        console.log(damageData);
+        // console.log(damageData);
         socket.broadcast.emit('takeThat', victim, damage);
     })
 
@@ -129,7 +129,7 @@ io.on('connection', function (socket) {
             newBagName: newBagKeyName.join(","),
             newBagValue: moneyBags[newBagKeyName]
         }
-        console.log(bagUpdate);
+        // console.log(bagUpdate);
         io.emit('deleteAndUpdateMoneyBags', bagUpdate);
         delete moneyBags[moneyBagData.name];
         //replenish the moneyBags object

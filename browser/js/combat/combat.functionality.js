@@ -94,7 +94,6 @@ function checkCombat () {
 			unit.queuedpos = null;
 			tree.remove(unit.attackTarget);
 		}
-
 	})
 }
 
@@ -106,7 +105,6 @@ function checkIfBeingHit () {
 		}
 	}
 }
-
 
 function removeDeadUnits () {
 	for (var unitId in player.units) {

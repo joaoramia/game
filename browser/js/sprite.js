@@ -89,7 +89,7 @@
     };
 
     window.Sprite = Sprite;
-})()
+})();
 
 function renderHpBar (currentHealth, maxHealth) {
     if (this.url === 'img/moneybag.png') return;
