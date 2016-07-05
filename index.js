@@ -228,18 +228,19 @@ io.on('connection', function (socket) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
         //else it's a valid request: start building, send updates
         } else {        
+            var currentBuilding = players[data.playerId].buildings[data.buildingId]; 
             //get x and y coordinates for the new unit
             //add 140 to X, 300 to Y so that unit appears next to door of bar
-            var XSpawn = players[data.playerId].buildings[data.buildingId].pos[0] + 140;
-            var YSpawn = players[data.playerId].buildings[data.buildingId].pos[1] + 300;
+            var XSpawn = currentBuilding.pos[0] + 140;
+            var YSpawn = currentBuilding.pos[1] + 300;
             var spawnLocation = [XSpawn, YSpawn];
 
             //check to see whether the building has a rendezvous point. If it doesn't, set to undefined
-            var rendezvousPoint = players[data.playerId].buildings[data.buildingId].rendezvousPoint || undefined;
+            var rendezvousPoint = currentBuilding.rendezvousPoint || undefined;
 
             //add to this building's queue
             var newUnit = new Soldier(spawnLocation, data.playerId, players[data.playerId].unitNumber, rendezvousPoint); 
-            players[data.playerId].buildings[data.buildingId].productionQueue.push(newUnit);
+            currentBuilding.productionQueue.push(newUnit);
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;
             var progress = 0;
@@ -268,8 +269,8 @@ io.on('connection', function (socket) {
                 }, 1000);
             }
             //check that currentlyBuilding property is false. if currently building, don't need to invoke measure progress again
-            if (players[data.playerId].buildings[data.buildingId].currentlyBuilding === false) {
-                players[data.playerId].buildings[data.buildingId].currentlyBuilding = true;
+            if (currentBuilding.currentlyBuilding === false) {
+                currentBuilding.currentlyBuilding = true;
                 hireUnit();
             }
         }
