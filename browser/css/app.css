@@ -3,7 +3,7 @@ html, body {
     padding: 0;
     /*background-color: #151515;*/
     font-family: 'Work Sans', sans-serif;
-    background-image: url("../img/green-bg.jpg");
+    /*background-image: url("../img/green-bg.jpg");*/
     background-attachment: fixed;
     /* Center the background image */
     background-position: center;
@@ -20,6 +20,53 @@ p {
 
 canvas {
     margin: 0;
+}
+
+#gameover-overlay {
+    position: fixed;
+    top: 0;
+    min-height: 100vh;
+    min-width: 100vw;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: none;
+}
+
+#game-over-message-box {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid black;
+    border-radius: 5px;
+    position: absolute;
+    left: 20%;
+    top: 35%;
+    color: gainsboro;
+    font-size: 42px;
+    font-weight: bold;
+    min-width: 60%;
+    text-align: center;
+}
+
+#game-over-message-box button {
+    display: inline;
+    text-align: center;
+    background-color: #4CAF50;
+    border: 1px solid gainsboro;
+    border-radius: 8px;
+    padding: 10px;
+    color: white;
+    font-size: 16px;
+    margin: 6px;
+}
+
+#game-over-message-box button:hover {
+    background-color: #008B00;
+}
+
+#game-over-message-box button:active {
+    background-color: #006400;
+}
+
+#game-over-message-box button:focus {
+    outline: 0;
 }
 
 #game-ui {

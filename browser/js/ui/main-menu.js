@@ -8,7 +8,6 @@ function heroIsSelected (array) {
 }
 
 function buildingSelected (array) {
-	//console.log("IS IT RIGHT?", array[0].type === "building");
 	if (array[0].type === "bar" || array[0].type === "house" || array[0].type === "bank") return true;
 	else false;
 }
@@ -33,6 +32,7 @@ function changeButtonsMessage (message) {
 
 function placeholderFunction(){
 	console.log("This button doesn't do anything yet");
+	gameOver();
 }
 
 //add Patrol?

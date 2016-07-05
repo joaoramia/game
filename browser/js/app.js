@@ -230,7 +230,7 @@ function render() {
     renderEntities(player.buildings);
 
     renderSelectionBox();
-
+    checkIfGameOver();
     // cameraPan(currentMousePosition);
 };
 
