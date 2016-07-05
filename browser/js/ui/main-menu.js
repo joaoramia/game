@@ -32,6 +32,7 @@ function changeButtonsMessage (message) {
 
 function placeholderFunction(){
 	console.log("This button doesn't do anything yet");
+	gameOver();
 }
 
 //add Patrol?

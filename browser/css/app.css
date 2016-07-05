@@ -28,7 +28,7 @@ canvas {
     min-height: 100vh;
     min-width: 100vw;
     background-color: rgba(0, 0, 0, 0.5);
-    display: block;
+    display: none;
 }
 
 #game-over-message-box {
