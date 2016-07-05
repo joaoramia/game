@@ -15,11 +15,17 @@ function gameOver(){
 
 function checkIfGameOver() {
 	if (!player.units[0]) {
+		console.log(player.username);
 		//announce to the world that someone died
+		socket.emit("playerDied", {username: player.username});
 		gameOver();
 	}
 }
 
-function restartGame(){
+function restartGame () {
 
 }
+
+// socket.on("notificationPlayerDied", function(data){
+// 	displayNotificationPlayerDied(data.username);
+// })

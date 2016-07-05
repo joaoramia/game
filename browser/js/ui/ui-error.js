@@ -31,6 +31,16 @@ function newPlayerLeavesAlert (playerName) {
 	playSoundOnEvent(cancelSound);
 }
 
+function displayNotificationPlayerDied (playerName) {
+	$("#display-error-container").show();
+	$("#display-error-content").text(playerName + " has been eliminated!");
+	var hideError = setTimeout(function() {
+		$("#display-error-container").hide();	
+	}, 3000);
+	//change sound later
+	playSoundOnEvent(cancelSound);
+}
+
 function displayErrorToUserUntimed (capsText, message) {
 	$("#display-error-container").show();
 	$("#display-error-content").text(message);
@@ -52,7 +62,6 @@ function currentSupply() {
 }
 
 function currentMaxSupply() {
-	console.log("PLAYER BUILDINGS", player.buildings);
 	var count = 10;
 	for (building in player.buildings) {
 		if (player.buildings.hasOwnProperty(building)) {
