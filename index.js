@@ -23,6 +23,13 @@ var gameConfig = require('./config.json');
 // rBush
 var tree = require('rbush')();
 
+var spriteSizes = {
+    "hero": [34, 50],
+    "soldier": [64, 64],
+    "moneybag": [33, 36],
+    "bar": [320, 288],
+    "house": [96, 160]
+}
 
 // all the objects on the canvas
 var players = {};
@@ -162,7 +169,7 @@ io.on('connection', function (socket) {
         if (data.request === 2 && data.type === "bar") {
             if (players[data.id].wealth < 2000) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
-            } else if (false) {
+            } else if (checkCollisions(data.pos, data.type)) {
             //make sure the building doesn't collide with another building
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
             //temporarily set to false because we don't have collision set up
@@ -305,4 +312,37 @@ function changeKing (newKing, previousKing){
     if(previousKing) players[previousKing].isKing = false;
     players[newKing].isKing = true;
     currentKing = newKing;
+}
+
+function inRange (num1, num2, num3, num4){
+    var temp = num3;
+    if (num3 > num4) {
+      num3 = num4;
+      num4 = temp;
+    }
+
+    for (var i = num1; i <= num2; i++){
+      if (i >= num3 && i <= num4){
+        return true;
+      }
+    }
+    return false;
+}
+
+function checkCollisions (position, type){
+    var collision = false;
+    for (var id in players){
+        for (var unit in players[id].units){
+            if (inRange(players[id].units[unit].pos[0], players[id].units[unit].pos[0] + spriteSizes[players[id].units[unit].type][0], position[0], position[0] + spriteSizes[type][0])
+                && inRange(players[id].units[unit].pos[1], players[id].units[unit].pos[1] + spriteSizes[players[id].units[unit].type][1], position[1], position[1] + spriteSizes[type][1])){
+                collision = true;
+            }
+        }
+        for (var building in players[id].buildings){
+            if (inRange(players[id].buildings[building].pos[0], players[id].buildings[building].pos[0] + spriteSizes[players[id].buildings[building].type][0], position[0], position[0] + spriteSizes[type][0]) && inRange(players[id].buildings[building].pos[1], players[id].buildings[building].pos[1] + spriteSizes[players[id].buildings[building].type][1], position[1], position[1] + spriteSizes[type][1])){
+                collision = true;
+            }
+        }
+    }
+    return collision;
 }
