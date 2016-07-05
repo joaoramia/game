@@ -118,8 +118,8 @@ io.on('connection', function (socket) {
     })
 
     socket.on('playerDied', function (playerData) {
-        
-    }
+
+    });
 
     socket.on('moneyDiscovered', function (moneyBagData) {
         //increase the wealth of the player
