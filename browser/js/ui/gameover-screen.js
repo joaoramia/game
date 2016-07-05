@@ -3,7 +3,7 @@ function gameOver(){
 	//make appropriate changes to GUI
 	$("#gameover-overlay").show();
 	$("#world-wealth-display").hide();
-	$("#ui-buttons").hide();
+	$("#game-controls").hide();
 	//canvas should no longer be scrollable
 
 	//destroy the player's representation of its moneybags and its buildings/units
