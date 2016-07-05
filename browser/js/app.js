@@ -120,6 +120,7 @@ function init() {
     });
 
     socket.on("gameReady", function(gameData, king) {
+        adjustVPOnGameReady(gameData.playerData.units[0].pos);
         console.log(gameData);
         currentKing = king;
         player = gameData.playerData;
