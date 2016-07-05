@@ -17,6 +17,7 @@ function hireMercenary(){
 	var buildingId = lastSelectedBuilding.id.toString(); //needs to be a string
 	var playerId = player.id;
 	var unit = "mercenary";
+	console.log("EMITTING ONLY ONCE? HIRE MERCENARY");
 	socket.emit('hireMercenaryRequest', {buildingId: buildingId, playerId: playerId, unit: unit});
 }
 
@@ -47,7 +48,6 @@ socket.on("hireMercenaryResponse", function (data) {
 	//if valid but receiving progress updates, unit in process of hiring
 	} else if (data.progress) {
 		//change the text of the infobox so it states what's being built
-		console.log(data);
 		var percent = (data.progress * 100) / 20;
 		if (data.progress < 8) {
 			$("#progress-bar").css("background-color", "red");

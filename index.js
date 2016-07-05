@@ -122,8 +122,8 @@ io.on('connection', function (socket) {
         socket.broadcast.emit('takeThat', victim, damage);
     })
 
-    socket.on('playerDied', function (playerData) {
-
+    socket.on('playerDied', function (data) {
+        socket.broadcast.emit("notificationPlayerDied", {username: data.username});
     });
 
     socket.on('moneyDiscovered', function (moneyBagData) {
@@ -243,21 +243,16 @@ io.on('connection', function (socket) {
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;
             var progress = 0;
-            //currently uses setTimeout, but this will likely crowd the event loop 
+            //uses setTimeout and sends progress to the client 
             function hireUnit(){
                 socket.emit('hireMercenaryResponse', {valid: true, progress: progress});
-                console.log(progress);
-                //add set timeout to production queue?
                 var hireUnitProgress = setTimeout(function(){
                     if (progress < 20) {
                         progress++;
                         hireUnit();
                     } else {
-                        console.log("QUEUE BEFORE SHIFT", players[data.playerId].buildings[data.buildingId].productionQueue);
                         //remove the mercenary from the production queue
                         var newUnitForClient = players[data.playerId].buildings[data.buildingId].productionQueue.shift();
-                        console.log("NEW UNIT AFTER SHIFT", newUnitForClient);
-                        console.log("PRODUCTION QUEUE AFTER SHIFT", players[data.playerId].buildings[data.buildingId].productionQueue);
                         //add it to player object on server, and send to client
                         io.emit('hireMercenaryResponse', {valid: true, newUnit: newUnitForClient});
                         //if another merc has been added to the queue, do this again
@@ -270,11 +265,11 @@ io.on('connection', function (socket) {
                             progress = 0;
                         }
                     }
-                }, 100);
+                }, 1000);
             }
             //check that currentlyBuilding property is false. if currently building, don't need to invoke measure progress again
             if (players[data.playerId].buildings[data.buildingId].currentlyBuilding === false) {
-                currentlyBuilding = true;
+                players[data.playerId].buildings[data.buildingId].currentlyBuilding = true;
                 hireUnit();
             }
         }
