@@ -21,8 +21,6 @@ socket.on("leaderboardUpdate", function(playersData){
             $("#king-wealth-display").text(commaSeparator(otherPlayers[currentKing].wealth));
         }
     }
-    
-    console.log(leaders);
 
     for (var i = 1; i < leaders.length; i++){
     	if (leaders[i] && i > 0) {
