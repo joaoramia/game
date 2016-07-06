@@ -1,6 +1,7 @@
 var socket = io.connect('http://' + ip + ':3030');
 var currentKing;
 var tree = rbush();
+var moneyTree = rbush();
 
 function setupSocket (socket) {
 
