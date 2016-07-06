@@ -16,6 +16,7 @@ function Bar (pos, socketId, id) {
 	this.productionQueue = [];
 	this.currentlyBuilding = false;
 	this.rendezvousPoint = null;
+	this.progress = 0;
 }
 
 function House (pos, socketId, id) {
