@@ -15,7 +15,7 @@ function buildingSelected (array) {
 function replaceButtonsOnMenu (newButtons) {
 	$("#buttons-list").empty();
 	newButtons.forEach(function(button){
-		$("#buttons-list").append('<li id="' + button.tagName + '" class="a-button">' + button.text + '</li>');
+		$("#buttons-list").append('<div id="' + button.tagName + '" class="a-button">' + button.text + '</div>');
 		$("#buttons-list").on("click", "#" + button.tagName, button.clickFunction);
 	})
 }
@@ -30,6 +30,8 @@ function changeButtonsMessage (message) {
 	}
 }
 
+
+
 function placeholderFunction(){
 	console.log("This button doesn't do anything yet");
 }
@@ -41,13 +43,13 @@ var heroSelectedButtons = [
 	{text: "Build (B)", tagName: "build-button", clickFunction: updateForBuildMenu},
 	{text: "Attack (A)", tagName: "attack-button", clickFunction: attackModeOn},
 	{text: "Defend (D)", tagName: "defend-button", clickFunction: defenseModeOn},
-	{text: "Move (M)", tagName: "move-button", clickFunction: placeholderFunction}
+	//{text: "Move (M)", tagName: "move-button", clickFunction: placeholderFunction}
 ]
 
 var nonHeroSelectedButtons = [
 	{text: "Attack (A)", clickFunction: attackModeOn},
 	{text: "Defend (D)", clickFunction: defenseModeOn},
-	{text: "Move (M)", clickFunction: placeholderFunction}
+	//{text: "Move (M)", clickFunction: placeholderFunction}
 ];
 
 function displayRootMenu (){

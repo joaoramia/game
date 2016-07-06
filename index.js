@@ -41,7 +41,7 @@ var units = {};
 var buiildings = {};
 var moneyBags = {count: 0};
 var currentKing;
-generateMoneyBags(100);
+generateMoneyBags(450);
 
 app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));
@@ -193,7 +193,8 @@ io.on('connection', function (socket) {
                                                     request: 2,
                                                     buildingObj: newBar,
                                                     name: players[data.id].buildingNumber,
-                                                    currentWealth: players[data.id].wealth});
+                                                    currentWealth: players[data.id].wealth,
+                                                    socketId: data.id});
             }
         } else if (data.request === 2 && data.type === "house") {
             if (players[data.id].wealth < 1000) {
@@ -215,7 +216,8 @@ io.on('connection', function (socket) {
                                                     request: 2,
                                                     buildingObj: newHouse,
                                                     name: players[data.id].buildingNumber,
-                                                    currentWealth: players[data.id].wealth});
+                                                    currentWealth: players[data.id].wealth,
+                                                    socketId: data.id});
             }
         }
     })
@@ -247,7 +249,7 @@ io.on('connection', function (socket) {
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;
             function hireUnit(){
-                socket.emit('hireMercenaryResponse', {valid: true, progress: currentBuilding.progress});
+                socket.emit('hireMercenaryResponse', {valid: true, progress: currentBuilding.progress, buildingId: currentBuilding.id});
                  //uses setTimeout and sends progress to the client 
                  var hireUnitProgress = setTimeout(function(){
                     if (currentBuilding.progress < 20) {
@@ -270,7 +272,7 @@ io.on('connection', function (socket) {
                             currentBuilding.progress = 0;
                         }
                     }
-                }, 1000);
+                }, 500);
             }
             //check that currentlyBuilding property is false. if currently building, don't need to invoke measure progress again
             if (currentBuilding.currentlyBuilding === false) {

@@ -18,7 +18,7 @@ function buildHouse (){
 	sendBuildRequest("house");
 }
 
-function buildBank(){
+function buildBank () {
 	sendBuildRequest("bank");
 }
 
@@ -63,8 +63,7 @@ socket.on('initialBuildResponse', function (data){
 
 //after second response from the server
 socket.on('finalBuildResponse', function (data) {
-	console.log(data);
-	if (data.valid && data.request === 2) {
+	if (data.request === 2) {
 		//if player ran out of money since placing building, can't build
 		if (data.valid === false && data.error === "lacking resources") {
 			displayErrorToUserTimed("You don't have enough money to build that anymore! Make more!");
@@ -76,10 +75,16 @@ socket.on('finalBuildResponse', function (data) {
 		} else if (data.valid === false && data.error === "collision with unit") {
 			displayErrorToUserTimed("You can't build there! A unit is in the way!");
 			displayRootMenu();
-		} else {
 		//if building is valid, update the player's buildings object
-		player.buildings[data.name] = data.buildingObj;
-		player.buildings[data.name].sprite = generateSprite(data.buildingObj.type, true);
+		} else {
+		//check if building is current player's building
+		if (data.socketId === player.id) {
+			player.buildings[data.name] = data.buildingObj;
+			player.buildings[data.name].sprite = generateSprite(data.buildingObj.type, true);
+		} else {
+			otherPlayers[data.socketId].buildings[data.name] = data.buildingObj;
+			otherPlayers[data.socketId].buildings[data.name].sprite = generateSprite(data.buildingObj.type, false);
+		}
 		//update the player's wealth
 		player.wealth = data.currentWealth;
 		$("#player-wealth-display").text(player.wealth);
