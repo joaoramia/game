@@ -223,7 +223,7 @@ var gameTime = 0;
 
 var wealth = 0;
 
-var colorArray = ["magenda", "indigo", "blue", "green", "black"];
+var colorArray = ["magenda", "indigo", "blue", "green", "black", "aqua", "crimson", "deeppink"];
 
 // Update game objects
 function update(dt) {
