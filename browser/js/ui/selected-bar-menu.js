@@ -47,20 +47,16 @@ socket.on("hireMercenaryResponse", function (data) {
 		}
 	//if valid but receiving progress updates, unit in process of hiring
 	} else if (data.progress) {
-		//update queue to feature length
-
 		//change the text of the infobox so it states what's being built
-		player.buildings[data.buildingId].progress = (data.progress * 100) / 20;
+		var percent = (data.progress * 100) / 20;
 		if (data.progress < 8) {
 			$("#progress-bar").css("background-color", "red");
-			$("#progress-bar").css("width", "" + player.buildings[data.buildingId].progress + "%");
 		} else if (data.progress < 17) {
 			$("#progress-bar").css("background-color", "#FFD700");
-			$("#progress-bar").css("width", "" + player.buildings[data.buildingId].progress + "%");
 		} else {
 			$("#progress-bar").css("background-color", "#00FF00");
-			$("#progress-bar").css("width", "" + player.buildings[data.buildingId].progress + "%");
-		} 
+		}
+		$("#progress-bar").css("width", "" + percent + "%");
 	//if complete, erase progress bar
 	} else if (data.newUnit) {
 		$("#progress-bar").css("width", "" + 0 + "%");
