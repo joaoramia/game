@@ -6,7 +6,7 @@ function Player(id, username) {
 	this.units = {}; // obj of Unit objects
 	this.unitNumber = 0;
 	this.buildings = {}; // obj of building objects
-	this.buildingNumber = 0;
+	this.buildingNumber = 1;
 	this.isKing = false;
 	this.absoluteMaxSupply = 50;
 }
