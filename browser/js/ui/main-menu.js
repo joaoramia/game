@@ -16,8 +16,6 @@ function replaceButtonsOnMenu (newButtons) {
 	$("#buttons-list").empty();
 	newButtons.forEach(function(button){
 		$("#buttons-list").append('<div id="' + button.tagName + '" class="a-button">' + button.text + '</div>');
-		console.log("REGISTERING CLICK EVENT");
-		//
 		$('#' + button.tagName).on("click", button.clickFunction);
 	})
 }
@@ -85,8 +83,9 @@ function updateForSelectedBuilding (type) {
 	//must be current player's buliding. check for type
 	if (type === "bar") {
 		$("#building-info-panel").show();
+		var currentBuilding = currentSelection[0];
+		updateProductionQueueDisplay(currentBuilding);
 		changeButtonsMessage("Bar selected");
-		console.log("IN UPDATE FOR SELECTED BUILDING");
 		replaceButtonsOnMenu(selectedBarMenuButtons);
 	} else if (type === "house") {
 		changeButtonsMessage("House selected");
