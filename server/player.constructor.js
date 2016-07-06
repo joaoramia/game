@@ -1,6 +1,8 @@
+var Utils = require('./utils.js');
+
 function Player(id, username) {
 	this.id = id; // socket.id
-	this.username = username || "New player";
+	this.username = username || randomName();
 	this.numberOfSessions = 0;
 	this.wealth = 20000;
 	this.units = {}; // obj of Unit objects
@@ -9,6 +11,11 @@ function Player(id, username) {
 	this.buildingNumber = 1;
 	this.isKing = false;
 	this.absoluteMaxSupply = 50;
+}
+
+function randomName(){
+	var names = ['BillyElliot', 'Bennedict', 'Franklin', 'Joseph', 'OmriBear', 'Jansenski', 'Batter']
+	return names[Utils.getRandomNum(names.length -1)];
 }
 
 Player.prototype.currentSupply = function() {
