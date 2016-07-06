@@ -1,6 +1,6 @@
 function Player(id, username) {
 	this.id = id; // socket.id
-	this.username = username || "New player";
+	this.username = username || "New player" + id;
 	this.numberOfSessions = 0;
 	this.wealth = 20000;
 	this.units = {}; // obj of Unit objects

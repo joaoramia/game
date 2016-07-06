@@ -121,11 +121,9 @@ function init() {
 
     socket.on("gameReady", function(gameData, king) {
         adjustVPOnGameReady(gameData.playerData.units[0].pos);
-        console.log(gameData);
         currentKing = king;
         player = gameData.playerData;
         wealth = gameData.playerData.wealth;
-        $("#player-wealth-display").text(wealth);
 
         for (var unitId in player.units) {
             var unit = player.units[unitId];
@@ -202,6 +200,8 @@ function update(dt) {
     });
 
     drawViewport();
+
+
 
 };
 
