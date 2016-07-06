@@ -32,7 +32,6 @@ function changeButtonsMessage (message) {
 
 function placeholderFunction(){
 	console.log("This button doesn't do anything yet");
-	gameOver();
 }
 
 //add Patrol?
@@ -83,6 +82,7 @@ function updateForSelectedBuilding (type) {
 	if (type === "bar") {
 		$("#building-info-panel").show();
 		changeButtonsMessage("Bar selected");
+		console.log("IN UPDATE FOR SELECTED BUILDING");
 		replaceButtonsOnMenu(selectedBarMenuButtons);
 	} else if (type === "house") {
 		changeButtonsMessage("House selected");

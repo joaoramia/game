@@ -10,16 +10,22 @@ function gameOver(){
 	player.units = {};
 	player.building = {};
 	moneyBags = {};
-	//can still see other players moving
+	//but can still see other players moving -- intended
 }
 
 function checkIfGameOver() {
 	if (!player.units[0]) {
+		console.log(player.username);
 		//announce to the world that someone died
+		socket.emit("playerDied", {username: player.username});
 		gameOver();
 	}
 }
 
-function restartGame(){
+function restartGame () {
 
 }
+
+// socket.on("notificationPlayerDied", function(data){
+// 	displayNotificationPlayerDied(data.username);
+// })

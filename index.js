@@ -28,8 +28,11 @@ var spriteSizes = {
     "soldier": [64, 64],
     "moneybag": [33, 36],
     "bar": [320, 288],
-    "house": [96, 160]
+    "house": [96, 160],
+    "hero_soldier": [108, 114] //this is for the random location function to put soldiers 10 pixels next to heros
 }
+
+var CANVAS_SIZE = [3000, 3000]; //Remember to adjust the front end size any time this changes
 
 // all the objects on the canvas
 var players = {};
@@ -58,11 +61,13 @@ io.on('connection', function (socket) {
 
     // when the new user joins!
     socket.on('respawn', function (newPlayerData) {
-
+        var locations = getRandomLocation();
+        var heroLocation = locations["hero"];
+        var soldierLocation = locations["soldier"];
         currentPlayer.userName = newPlayerData.userName;
         currentPlayer.id = socket.id;
-        currentPlayer.units[0] = new Hero([200,200], socket.id, 0);
-        currentPlayer.units[1] = new Soldier([300, 300], socket.id, 1);
+        currentPlayer.units[0] = new Hero(heroLocation, socket.id, 0);
+        currentPlayer.units[1] = new Soldier(soldierLocation, socket.id, 1);
         currentPlayer.unitNumber = 2;
 
         // emit the current object of players then add your player no the array
@@ -117,8 +122,8 @@ io.on('connection', function (socket) {
         socket.broadcast.emit('takeThat', victim, damage);
     })
 
-    socket.on('playerDied', function (playerData) {
-
+    socket.on('playerDied', function (data) {
+        socket.broadcast.emit("notificationPlayerDied", {username: data.username});
     });
 
     socket.on('moneyDiscovered', function (moneyBagData) {
@@ -159,7 +164,7 @@ io.on('connection', function (socket) {
             }
         //if house
         } else if (data.request === 1 && data.type === "house") {
-            if (players[data.id].wealth < 1000) {
+            if (players[data.id] && nplayers[data.id].wealth < 1000) {
                 //denied
                 socket.emit('initialBuildResponse', {valid: false, request: 1, type: "house"});
             } else {
@@ -238,21 +243,16 @@ io.on('connection', function (socket) {
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;
             var progress = 0;
-            //currently uses setTimeout, but this will likely crowd the event loop 
+            //uses setTimeout and sends progress to the client 
             function hireUnit(){
                 socket.emit('hireMercenaryResponse', {valid: true, progress: progress});
-                console.log(progress);
-                //add set timeout to production queue?
                 var hireUnitProgress = setTimeout(function(){
                     if (progress < 20) {
                         progress++;
                         hireUnit();
                     } else {
-                        console.log("QUEUE BEFORE SHIFT", players[data.playerId].buildings[data.buildingId].productionQueue);
                         //remove the mercenary from the production queue
                         var newUnitForClient = players[data.playerId].buildings[data.buildingId].productionQueue.shift();
-                        console.log("NEW UNIT AFTER SHIFT", newUnitForClient);
-                        console.log("PRODUCTION QUEUE AFTER SHIFT", players[data.playerId].buildings[data.buildingId].productionQueue);
                         //add it to player object on server, and send to client
                         io.emit('hireMercenaryResponse', {valid: true, newUnit: newUnitForClient});
                         //if another merc has been added to the queue, do this again
@@ -265,11 +265,11 @@ io.on('connection', function (socket) {
                             progress = 0;
                         }
                     }
-                }, 100);
+                }, 1000);
             }
             //check that currentlyBuilding property is false. if currently building, don't need to invoke measure progress again
             if (players[data.playerId].buildings[data.buildingId].currentlyBuilding === false) {
-                currentlyBuilding = true;
+                players[data.playerId].buildings[data.buildingId].currentlyBuilding = true;
                 hireUnit();
             }
         }
@@ -286,14 +286,14 @@ io.on('connection', function (socket) {
 function generateMoneyBags(count){
     moneyBags.count = Object.keys(moneyBags).length - 1 + count;
     if (count === 1) {
-        var keyName = [utils.getRandomNum(2500), utils.getRandomNum(1000)]
+        var keyName = [utils.getRandomNum(CANVAS_SIZE[0]), utils.getRandomNum(CANVAS_SIZE[1])]
         moneyBags[keyName] = {value : utils.getRandomNum(25, 75)};
         return keyName;
 
     } else {
         for (var i = 0; i < count; i++) {
             //values of array represent x and y. later, change this so that x = max x of canvas and y is max y of canvas
-            moneyBags[[utils.getRandomNum(2500), utils.getRandomNum(1000)]] = {value : utils.getRandomNum(25, 75)};
+            moneyBags[[utils.getRandomNum(CANVAS_SIZE[0]), utils.getRandomNum(CANVAS_SIZE[1])]] = {value : utils.getRandomNum(25, 75)};
         }
     }
 }
@@ -349,4 +349,23 @@ function checkCollisions (position, type){
         }
     }
     return collision;
+}
+
+function getRandomLocation (){
+    var heroX = utils.getRandomNum(0, CANVAS_SIZE[0] - spriteSizes['hero'][0] - spriteSizes['soldier'][0] - 10);
+    var heroY = utils.getRandomNum(0, CANVAS_SIZE[1] - spriteSizes['hero'][1] - spriteSizes['soldier'][1] - 10);
+    var soldierX = heroX + spriteSizes['hero'][0] + 10;
+    var soldierY = heroY;
+    
+    while(checkCollisions([heroX, heroY], 'hero_soldier')){
+        heroX = utils.getRandomNum(0, CANVAS_SIZE[0] - spriteSizes['hero'][0]);
+        heroY = utils.getRandomNum(0, CANVAS_SIZE[1] - spriteSizes['hero'][1]);
+        soldierX = heroX + spriteSizes['hero'][0] + 10;
+        soldierY = heroY;
+    }
+    
+    return {
+        "hero": [heroX, heroY],
+        "soldier": [soldierX, soldierY]
+    }
 }
