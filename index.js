@@ -373,15 +373,16 @@ function checkCollisions (position, type){
     return collision;
 }
 
+//FOR NOW WE ARE ADDING -400 BELOW SO THEY WON'T SHOW UP ON THE UI.
 function getRandomLocation (){
-    var heroX = utils.getRandomNum(0, CANVAS_SIZE[0] - spriteSizes['hero'][0] - spriteSizes['soldier'][0] - 10);
-    var heroY = utils.getRandomNum(0, CANVAS_SIZE[1] - spriteSizes['hero'][1] - spriteSizes['soldier'][1] - 10);
+    var heroX = utils.getRandomNum(0, CANVAS_SIZE[0] - spriteSizes['hero'][0] - spriteSizes['soldier'][0] - 10 -400);
+    var heroY = utils.getRandomNum(0, CANVAS_SIZE[1] - spriteSizes['hero'][1] - spriteSizes['soldier'][1] - 10 -400);
     var soldierX = heroX + spriteSizes['hero'][0] + 10;
     var soldierY = heroY;
     
     while(checkCollisions([heroX, heroY], 'hero_soldier')){
-        heroX = utils.getRandomNum(0, CANVAS_SIZE[0] - spriteSizes['hero'][0]);
-        heroY = utils.getRandomNum(0, CANVAS_SIZE[1] - spriteSizes['hero'][1]);
+        heroX = utils.getRandomNum(0, CANVAS_SIZE[0] - spriteSizes['hero'][0] -400);
+        heroY = utils.getRandomNum(0, CANVAS_SIZE[1] - spriteSizes['hero'][1] -400);
         soldierX = heroX + spriteSizes['hero'][0] + 10;
         soldierY = heroY;
     }

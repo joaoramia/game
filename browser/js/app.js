@@ -68,8 +68,8 @@ socket.on('newKing', function(newKing){
 
 //start page
 function start(){
-    //$( "#game-ui" ).toggleClass( "display-none" );
-    //$( "#login-screen" ).toggleClass( "display-none" );
+    // $( "#game-ui" ).toggleClass( "display-none" );
+    // $( "#login-screen" ).toggleClass( "display-none" );
     $("#building-info-panel").hide();
     socket.emit('respawn', {userName: $( "#nick" ).val()});
 }
@@ -125,13 +125,14 @@ function init() {
     lastTime = Date.now();
 
     socket.on("playersArray", function(playersCollection){
-        console.log("all the players", playersCollection)
+        
         otherPlayers = playersCollection;
 
         /*
         for each of the other players, assign each unit,
         its appropriate sprite
         */
+        
         var toBeAddedToTree = [];
 
         for (var otherPlayer in otherPlayers){
