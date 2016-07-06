@@ -29,25 +29,25 @@ var vp = {
 $("#game-ui").prepend(viewCanvas);
 
 function handleInput(dt) {
-    if(input.isDown('DOWN') || input.isDown('s')) {
+    if(input.isDown('DOWN')) {
         if (vp.pos[1] < canvas.height - viewCanvas.height - 10) {
             vp.pos[1] += 10;
         }
     }
 
-    if(input.isDown('UP') || input.isDown('w')) {
+    if(input.isDown('UP')) {
         if (vp.pos[1] > 10) {
             vp.pos[1] -= 10;
         }
     }
 
-    if(input.isDown('LEFT') || input.isDown('a')) {
+    if(input.isDown('LEFT')) {
         if (vp.pos[0] > 10) {
             vp.pos[0] -= 10;
         }
     }
 
-    if(input.isDown('RIGHT') || input.isDown('d')) {
+    if(input.isDown('RIGHT')) {
         if (vp.pos[0] < canvas.width - viewCanvas.width - 10) {
             vp.pos[0] += 10;
         }

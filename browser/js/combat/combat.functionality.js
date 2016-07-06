@@ -5,7 +5,25 @@ function handleAttackInput (x, y) {
     } else {
       setVigilantAttackMove([x, y]);
     }
-    attackPending = false;
+    attackModeOff();
+}
+
+function attackModeOn () {
+	attackPending = true;
+	displayErrorToUserUntimed("ATTACK MODE", "Select a location to attack, or press Q to quit.");
+}
+
+function attackModeOff (){
+	attackPending = false;
+	turnOffUntimedMessage();
+}
+
+function defenseModeOn () {
+	displayErrorToUserUntimed("DEFENSE MODE", "Your selected units are now vigilant for attackers");
+	currentSelection.forEach(function (elem) {
+		elem.targetpos = null;
+		elem.vigilant = true;
+	});
 }
 
 function checkForTarget (x, y) { 
