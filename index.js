@@ -84,6 +84,7 @@ io.on('connection', function (socket) {
 
         socket.emit('gameReady', {playerData: currentPlayer, moneyBags: moneyBags}, currentKing);
         socket.broadcast.emit('otherPlayerJoin', currentPlayer);
+        io.emit('leaderboardUpdate', players);
     });
 
     socket.on('disconnect', function () {
@@ -111,6 +112,7 @@ io.on('connection', function (socket) {
         }
         socket.broadcast.emit('otherPlayerDC', socket.id);
         socket.disconnect();
+        io.emit('leaderboardUpdate', players);
     });
 
     socket.on('playerMoves', function (playerData) {
@@ -122,10 +124,12 @@ io.on('connection', function (socket) {
         var damage = damageData.damage;
         // console.log(damageData);
         socket.broadcast.emit('takeThat', victim, damage);
+        io.emit('leaderboardUpdate', players);
     })
 
     socket.on('playerDied', function (data) {
         socket.broadcast.emit("notificationPlayerDied", {username: data.username});
+        io.emit('leaderboardUpdate', players);
     });
 
     socket.on('moneyDiscovered', function (moneyBagData) {
@@ -152,6 +156,7 @@ io.on('connection', function (socket) {
         delete moneyBags[moneyBagData.name];
         //replenish the moneyBags object
         generateMoneyBags(1);
+        io.emit('leaderboardUpdate', players);
     })
 
     socket.on('initialBuildRequest', function (data){
@@ -174,6 +179,7 @@ io.on('connection', function (socket) {
                 socket.emit('initialBuildResponse', {valid: true, request: 1, type: "house"});
             }
         }
+        io.emit('leaderboardUpdate', players);
     });
 
     socket.on('finalBuildRequest', function (data) {
@@ -220,6 +226,7 @@ io.on('connection', function (socket) {
                                                     socketId: data.id});
             }
         }
+        io.emit('leaderboardUpdate', players);
     })
 
     socket.on('hireMercenaryRequest', function (data) {
@@ -277,6 +284,7 @@ io.on('connection', function (socket) {
                 hireUnit();
             }
         }
+        io.emit('leaderboardUpdate', players);
     })
 
     socket.on('newRendezvousPosition', function (data) {

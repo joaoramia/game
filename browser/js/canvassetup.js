@@ -125,7 +125,6 @@ function adjustVPOnGameReady (location) {
       vp.pos[1] = location[1] - viewCanvas.height/2;
       return;
     }
-    console.log("HERE");
     vp.pos[0] = location[0] - viewCanvas.width/2;
     vp.pos[1] = location[1] - viewCanvas.height/2;
 }
