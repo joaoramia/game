@@ -16,7 +16,9 @@ function replaceButtonsOnMenu (newButtons) {
 	$("#buttons-list").empty();
 	newButtons.forEach(function(button){
 		$("#buttons-list").append('<div id="' + button.tagName + '" class="a-button">' + button.text + '</div>');
-		$("#buttons-list").on("click", "#" + button.tagName, button.clickFunction);
+		console.log("REGISTERING CLICK EVENT");
+		//
+		$('#' + button.tagName).on("click", button.clickFunction);
 	})
 }
 
