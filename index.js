@@ -381,8 +381,8 @@ function getRandomLocation (){
     var soldierY = heroY;
     
     while(checkCollisions([heroX, heroY], 'hero_soldier')){
-        heroX = utils.getRandomNum(0, CANVAS_SIZE[0] - spriteSizes['hero'][0] -200);
-        heroY = utils.getRandomNum(0, CANVAS_SIZE[1] - spriteSizes['hero'][1] -200);
+        heroX = utils.getRandomNum(0, CANVAS_SIZE[0] - spriteSizes['hero'][0] -400);
+        heroY = utils.getRandomNum(0, CANVAS_SIZE[1] - spriteSizes['hero'][1] -400);
         soldierX = heroX + spriteSizes['hero'][0] + 10;
         soldierY = heroY;
     }
