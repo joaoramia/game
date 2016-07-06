@@ -232,51 +232,48 @@ io.on('connection', function (socket) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
         //else it's a valid request: start building, send updates
         } else {        
-            //to make the code more readable
-            var currentBuilding = players[data.playerId].buildings[data.buildingId]; 
             //get x and y coordinates for the new unit
             //add 140 to X, 300 to Y so that unit appears next to door of bar
-            var XSpawn = currentBuilding.pos[0] + 140;
-            var YSpawn = currentBuilding.pos[1] + 300;
+            var XSpawn = players[data.playerId].buildings[data.buildingId].pos[0] + 140;
+            var YSpawn = players[data.playerId].buildings[data.buildingId].pos[1] + 300;
             var spawnLocation = [XSpawn, YSpawn];
 
             //check to see whether the building has a rendezvous point. If it doesn't, set to undefined
-            var rendezvousPoint = currentBuilding.rendezvousPoint || undefined;
+            var rendezvousPoint = players[data.playerId].buildings[data.buildingId].rendezvousPoint || undefined;
 
             //add to this building's queue
             var newUnit = new Soldier(spawnLocation, data.playerId, players[data.playerId].unitNumber, rendezvousPoint); 
-            currentBuilding.productionQueue.push(newUnit);
+            players[data.playerId].buildings[data.buildingId].productionQueue.push(newUnit);
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;
+            var progress = 0;
+            //uses setTimeout and sends progress to the client 
             function hireUnit(){
-                socket.emit('hireMercenaryResponse', {valid: true, progress: currentBuilding.progress, buildingId: currentBuilding.id});
-                 //uses setTimeout and sends progress to the client 
-                 var hireUnitProgress = setTimeout(function(){
-                    if (currentBuilding.progress < 20) {
-                        currentBuilding.progress++;
+                socket.emit('hireMercenaryResponse', {valid: true, progress: progress});
+                var hireUnitProgress = setTimeout(function(){
+                    if (progress < 20) {
+                        progress++;
                         hireUnit();
                     } else {
                         //remove the mercenary from the production queue
-                        if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 1) {
-                            var newUnitForClient = players[data.playerId].buildings[data.buildingId].productionQueue.shift();
-                        }
+                        var newUnitForClient = players[data.playerId].buildings[data.buildingId].productionQueue.shift();
                         //add it to player object on server, and send to client
                         io.emit('hireMercenaryResponse', {valid: true, newUnit: newUnitForClient});
                         //if another merc has been added to the queue, do this again
                         if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 0) {
-                            currentBuilding.progress = 0;
+                            progress = 0;
                             hireUnit();
                         //otherwise, reset. no longer currently building, progress is 0
                         } else {
                             players[data.playerId].buildings[data.buildingId].currentlyBuilding = false;
-                            currentBuilding.progress = 0;
+                            progress = 0;
                         }
                     }
                 }, 500);
             }
             //check that currentlyBuilding property is false. if currently building, don't need to invoke measure progress again
-            if (currentBuilding.currentlyBuilding === false) {
-                currentBuilding.currentlyBuilding = true;
+            if (players[data.playerId].buildings[data.buildingId].currentlyBuilding === false) {
+                players[data.playerId].buildings[data.buildingId].currentlyBuilding = true;
                 hireUnit();
             }
         }
