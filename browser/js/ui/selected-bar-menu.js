@@ -13,8 +13,16 @@ var rendezvousMode = {
 
 function updateProductionQueueDisplay (currentBuilding) {
 	$("#unit-thumbnail-container").empty();
+	if (currentBuilding.productionQueue.length === 0) {
+		$("#building-status").text("Currently inactive");
+		$("#building-panel-unit-name").html("&nbsp;");
+	} else {
+		$("#building-status").text("Hiring...");
+		var unitType = currentBuilding.productionQueue[0];
+		$("#building-panel-unit-name").text("Mercenary");
+	}
 	currentBuilding.productionQueue.forEach(function (item) {
-		$("#unit-thumbnail-container").append("<p>HIHIHI</p>"); //'<img src="img/soldier-button.jpg">');
+		$("#unit-thumbnail-container").append('<img src="img/soldier-button.jpg">');
 	})
 }
 
@@ -72,6 +80,9 @@ socket.on("hireMercenaryResponse", function (data) {
 	} else if (data.newUnit) {
 		$("#progress-bar").css("width", "" + 0 + "%");
 		//empty the text field
+		var currentBuilding = currentSelection[0];
+		currentBuilding.productionQueue.shift();
+		updateProductionQueueDisplay(currentBuilding);
 		var newUnit = data.newUnit;
 		//only add to player object if id on unit matches id of player 
 		if (player.id === newUnit.socketId) {
@@ -87,10 +98,9 @@ socket.on("hireMercenaryResponse", function (data) {
 })
 
 socket.on('addToQueue', function (data) {
-	console.log("PLAYER ID", player);
-	console.log("THE QUEUE OBJ", data);
 	var buildingId = parseInt(data.buildingId);
 	player.buildings[buildingId].productionQueue.push(data.type);
+	var currentBuilding = currentSelection[0];
 	updateProductionQueueDisplay(currentBuilding);
 });
 

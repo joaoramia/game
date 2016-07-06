@@ -189,6 +189,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('finalBuildRequest', function (data) {
+        console.log("DOES IT RUN?");
         if (data.request === 2 && data.type === "bar") {
             if (players[data.id].wealth < 2000) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
@@ -197,14 +198,15 @@ io.on('connection', function (socket) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
             //temporarily set to false because we don't have collision set up
             } else {
-                var newBar = new Bar(data.pos, data.id, players[data.id].buildingNumber);
-                players[data.id].buildings[players[data.id].buildingNumber] = newBar;
+                var newBuildingNumber = players[data.id].buildingNumber;
+                var newBar = new Bar(data.pos, data.id, newBuildingNumber);
+                players[data.id].buildings[newBuildingNumber] = newBar;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 2000;
                 io.emit('finalBuildResponse', { valid: true,
                                                     request: 2,
                                                     buildingObj: newBar,
-                                                    name: players[data.id].buildingNumber,
+                                                    name: newBuildingNumber,
                                                     currentWealth: players[data.id].wealth,
                                                     socketId: data.id});
             }
@@ -221,13 +223,14 @@ io.on('connection', function (socket) {
             //temporarily set to false because we don't have collision set up
             } else {
                 var newHouse = new House(data.pos, data.id, players[data.id].buildingNumber);
+                var newBuildingNumber = players[data.id].buildingNumber;
                 players[data.id].buildings[players[data.id].buildingNumber] = newHouse;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 1000;
                 io.emit('finalBuildResponse', { valid: true,
                                                     request: 2,
                                                     buildingObj: newHouse,
-                                                    name: players[data.id].buildingNumber,
+                                                    name: newBuildingNumber,
                                                     currentWealth: players[data.id].wealth,
                                                     socketId: data.id});
             }
