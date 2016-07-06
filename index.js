@@ -237,6 +237,9 @@ io.on('connection', function (socket) {
         //checks to see that current max supply would not be surpassed by building another unit
         } else if (players[data.playerId].currentSupply() + 1 > players[data.playerId].currentMaxSupply()) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
+        //else if queue is full
+        } else if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 3) {
+            socket.emit('hireMercenaryResponse', {valid: false, error: "queue full"});
         //else it's a valid request: start building, send updates
         } else {        
             //get x and y coordinates for the new unit
@@ -247,9 +250,10 @@ io.on('connection', function (socket) {
 
             //check to see whether the building has a rendezvous point. If it doesn't, set to undefined
             var rendezvousPoint = players[data.playerId].buildings[data.buildingId].rendezvousPoint || undefined;
-
             //add to this building's queue
             var newUnit = new Soldier(spawnLocation, data.playerId, players[data.playerId].unitNumber, rendezvousPoint); 
+
+            socket.emit('addToQueue', {buildingId: data.buildingId, type: "soldier"});
             players[data.playerId].buildings[data.buildingId].productionQueue.push(newUnit);
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;
