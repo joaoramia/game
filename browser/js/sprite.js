@@ -73,6 +73,8 @@
             if (this.selectable) this.renderEllipse(); 
 
             renderHpBar.call(this, currentHealth, maxHealth);
+            if (player.id === playerId) renderName.call(this, player.username);
+            if (otherPlayers[playerId]) renderName.call(this, otherPlayers[playerId].username);
 
             if (frame === -1) {
                 ctx.drawImage(resources.get(this.url),
@@ -101,6 +103,19 @@ function renderHpBar (currentHealth, maxHealth) {
     ctx.fillStyle = "rgba(0,128,0, 1)";
     ctx.closePath();
     ctx.fill();
+}
+
+function renderName (userName) {
+
+    var textMeasure = ctx.measureText(userName);
+    var xLocation;
+
+    if (this.size[0] < textMeasure.width) xLocation = (this.size[0] - textMeasure.width);
+    if (this.size[0] > textMeasure.width) xLocation = this.pos[0];
+    
+    ctx.font = '15px Arial';
+    ctx.strokeText(userName, xLocation, -20);
+
 }
 
 function generateSprite(type, selectable, playerId){

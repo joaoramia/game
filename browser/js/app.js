@@ -107,13 +107,14 @@ function init() {
     lastTime = Date.now();
 
     socket.on("playersArray", function(playersCollection){
-        console.log("all the players", playersCollection)
+        
         otherPlayers = playersCollection;
 
         /*
         for each of the other players, assign each unit,
         its appropriate sprite
         */
+        
         var toBeAddedToTree = [];
 
         for (var otherPlayer in otherPlayers){
