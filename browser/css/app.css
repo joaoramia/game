@@ -273,3 +273,33 @@ canvas {
 .display-none {
     display: none;
 }
+
+#chat-client{
+    background-color: rgba(23, 23, 23, 0.3);
+    margin-top: 10px;
+    padding: 5px;
+    color: beige;
+    font-size: small;
+    text-align: left;
+}
+
+#chat-client .message-panel{
+    max-height: 100px;
+    min-height: 20px;
+    overflow: scroll;
+}
+
+#chat-client ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#chat-client input {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    width: 96%;
+    color: inherit;
+}
