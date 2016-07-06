@@ -162,6 +162,12 @@ canvas {
     font-size: 1px;
 }
 
+#unit-thumbnail-container img {
+    height: 36px;
+    width: 36px;
+}
+
+
 #progress-bar-container {
     padding: 2px;
 }

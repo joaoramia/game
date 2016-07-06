@@ -18,6 +18,10 @@ function setupSocket (socket) {
 
             toBeAddedToTree.push(prepForUnitTree(unit));
         }
+        for (var id in otherPlayerData.buildings) {
+            var building = otherPlayerData.building[id];
+            building.sprite = generateSprite(building.type, false, otherPlayerData.id);
+        }
         otherPlayers[otherPlayerData.id] = otherPlayerData;
 
         tree.load(toBeAddedToTree);
@@ -48,14 +52,24 @@ function setupSocket (socket) {
 }
 
 socket.on('newKing', function(newKing){
+    var previousKing = currentKing;
     currentKing = newKing;
+    if (player.id === currentKing) {
+        player.units[0].sprite = generateSprite(player.units[0].type, true, player.id);
+        if(otherPlayers[previousKing]) otherPlayers[previousKing].units[0].sprite = generateSprite(otherPlayers[previousKing].units[0].type, false, previousKing);
+    }
+    else if (otherPlayers[currentKing]){
+        otherPlayers[currentKing].units[0].sprite = generateSprite(otherPlayers[currentKing].units[0].type, false, currentKing);
+        if (otherPlayers[previousKing]) otherPlayers[previousKing].units[0].sprite = generateSprite(otherPlayers[previousKing].units[0].type, false, previousKing);
+        if (player.id === previousKing) player.units[0].sprite = generateSprite(player.units[0].type, true, player.id);
+    }
 });
 
 
 //start page
 function start(){
-    //$( "#game-ui" ).toggleClass( "display-none" );
-    //$( "#login-screen" ).toggleClass( "display-none" );
+    // $( "#game-ui" ).toggleClass( "display-none" );
+    // $( "#login-screen" ).toggleClass( "display-none" );
     $("#building-info-panel").hide();
     socket.emit('respawn', {userName: $( "#nick" ).val()});
 }
@@ -111,13 +125,14 @@ function init() {
     lastTime = Date.now();
 
     socket.on("playersArray", function(playersCollection){
-        console.log("all the players", playersCollection)
+        
         otherPlayers = playersCollection;
 
         /*
         for each of the other players, assign each unit,
         its appropriate sprite
         */
+        
         var toBeAddedToTree = [];
 
         for (var otherPlayer in otherPlayers){
@@ -132,6 +147,10 @@ function init() {
                     toBeAddedToTree.push(prepForUnitTree(unit));
                     
                 }
+                for (var id in otherPlayers[otherPlayer].buildings) {
+                    var building = otherPlayers[otherPlayer].buildings[id];
+                    building.sprite = generateSprite(building.type, false, otherPlayer.id);
+                }
             }
         }
         tree.load(toBeAddedToTree);
@@ -143,13 +162,19 @@ function init() {
         player = gameData.playerData;
         wealth = gameData.playerData.wealth;
 
+        // set a color for the chat
+        player.color = colorArray[getRandomNum(colorArray.length - 1)];
+
         for (var unitId in player.units) {
             var unit = player.units[unitId];
             unit.sprite = generateSprite(unit.type, true, player.id);
         }
 
-        // set a color for the chat
-        player.color = colorArray[getRandomNum(colorArray.length - 1)];
+        for (var id in player.buildings) {
+            var building = player.buildings[id];
+            building.sprite = generateSprite(building.type, true, player.id);
+        }
+
 
         setupMoneyBags(gameData.moneyBags);
         setupSocket(socket);
@@ -252,6 +277,11 @@ function render() {
     }
 
     renderEntities(player.buildings);
+
+    for (var key in otherPlayers){
+        if (otherPlayers.hasOwnProperty(key))
+            renderEntities(otherPlayers[key].buildings, key);
+    }
 
     renderSelectionBox();
     checkIfGameOver();

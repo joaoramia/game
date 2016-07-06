@@ -189,6 +189,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('finalBuildRequest', function (data) {
+        console.log("DOES IT RUN?");
         if (data.request === 2 && data.type === "bar") {
             if (players[data.id].wealth < 2000) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
@@ -197,14 +198,15 @@ io.on('connection', function (socket) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
             //temporarily set to false because we don't have collision set up
             } else {
-                var newBar = new Bar(data.pos, data.id, players[data.id].buildingNumber);
-                players[data.id].buildings[players[data.id].buildingNumber] = newBar;
+                var newBuildingNumber = players[data.id].buildingNumber;
+                var newBar = new Bar(data.pos, data.id, newBuildingNumber);
+                players[data.id].buildings[newBuildingNumber] = newBar;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 2000;
                 io.emit('finalBuildResponse', { valid: true,
                                                     request: 2,
                                                     buildingObj: newBar,
-                                                    name: players[data.id].buildingNumber,
+                                                    name: newBuildingNumber,
                                                     currentWealth: players[data.id].wealth,
                                                     socketId: data.id});
             }
@@ -221,13 +223,14 @@ io.on('connection', function (socket) {
             //temporarily set to false because we don't have collision set up
             } else {
                 var newHouse = new House(data.pos, data.id, players[data.id].buildingNumber);
+                var newBuildingNumber = players[data.id].buildingNumber;
                 players[data.id].buildings[players[data.id].buildingNumber] = newHouse;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 1000;
                 io.emit('finalBuildResponse', { valid: true,
                                                     request: 2,
                                                     buildingObj: newHouse,
-                                                    name: players[data.id].buildingNumber,
+                                                    name: newBuildingNumber,
                                                     currentWealth: players[data.id].wealth,
                                                     socketId: data.id});
             }
@@ -243,6 +246,9 @@ io.on('connection', function (socket) {
         //checks to see that current max supply would not be surpassed by building another unit
         } else if (players[data.playerId].currentSupply() + 1 > players[data.playerId].currentMaxSupply()) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "surpasses cap"});
+        //else if queue is full
+        } else if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 3) {
+            socket.emit('hireMercenaryResponse', {valid: false, error: "queue full"});
         //else it's a valid request: start building, send updates
         } else {        
             //get x and y coordinates for the new unit
@@ -253,9 +259,10 @@ io.on('connection', function (socket) {
 
             //check to see whether the building has a rendezvous point. If it doesn't, set to undefined
             var rendezvousPoint = players[data.playerId].buildings[data.buildingId].rendezvousPoint || undefined;
-
             //add to this building's queue
             var newUnit = new Soldier(spawnLocation, data.playerId, players[data.playerId].unitNumber, rendezvousPoint); 
+
+            socket.emit('addToQueue', {buildingId: data.buildingId, type: "soldier"});
             players[data.playerId].buildings[data.buildingId].productionQueue.push(newUnit);
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;
@@ -369,15 +376,16 @@ function checkCollisions (position, type){
     return collision;
 }
 
+//FOR NOW WE ARE ADDING -400 BELOW SO THEY WON'T SHOW UP ON THE UI.
 function getRandomLocation (){
-    var heroX = utils.getRandomNum(0, CANVAS_SIZE[0] - spriteSizes['hero'][0] - spriteSizes['soldier'][0] - 10);
-    var heroY = utils.getRandomNum(0, CANVAS_SIZE[1] - spriteSizes['hero'][1] - spriteSizes['soldier'][1] - 10);
+    var heroX = utils.getRandomNum(0, CANVAS_SIZE[0] - spriteSizes['hero'][0] - spriteSizes['soldier'][0] - 10 -400);
+    var heroY = utils.getRandomNum(0, CANVAS_SIZE[1] - spriteSizes['hero'][1] - spriteSizes['soldier'][1] - 10 -400);
     var soldierX = heroX + spriteSizes['hero'][0] + 10;
     var soldierY = heroY;
     
     while(checkCollisions([heroX, heroY], 'hero_soldier')){
-        heroX = utils.getRandomNum(0, CANVAS_SIZE[0] - spriteSizes['hero'][0]);
-        heroY = utils.getRandomNum(0, CANVAS_SIZE[1] - spriteSizes['hero'][1]);
+        heroX = utils.getRandomNum(0, CANVAS_SIZE[0] - spriteSizes['hero'][0] -400);
+        heroY = utils.getRandomNum(0, CANVAS_SIZE[1] - spriteSizes['hero'][1] -400);
         soldierX = heroX + spriteSizes['hero'][0] + 10;
         soldierY = heroY;
     }

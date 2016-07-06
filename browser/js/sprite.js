@@ -31,21 +31,20 @@
         render: function(ctx, playerId, type, currentHealth, maxHealth) {
             var frame;
 
-            if(playerId === currentKing && type === 'hero') {
-                this.url = 'img/hero/king.png';
-                this.size = [34, 50];
-                // this.pos = [0, 105];
-                this.frames = [0, 1, 2, 3];
-                this.speed = 10;
-            }
-            else if(playerId !== currentKing && type === 'hero'){
-
-                this.url = 'img/hero/hero-1.png';
-                this.size = [32, 55];
-                // this.pos = [32, 0];
-                this.frames = [0, 1, 2];
-                this.speed = 16;
-            }
+            // if(playerId === currentKing && type === 'hero') {
+            //     this.url = 'img/hero/king.png';
+            //     this.size = [34, 50];
+            //     this.pos = [0, 105]; //set on generate sprite
+            //     this.frames = [0, 1, 2, 3];
+            //     this.speed = 10;
+            // }
+            // else if(playerId !== currentKing && type === 'hero'){
+            //     this.url = 'img/hero/hero-1.png';
+            //     this.size = [32, 55];
+            //     this.pos = [32, 0];
+            //     this.frames = [0, 1, 2];
+            //     this.speed = 16;
+            // }
 
             if(this.speed > 0) {
                 var max = this.frames.length;
@@ -71,9 +70,11 @@
                 x += frame * this.size[0];
             }
 
-            if (this.selectable) this.renderEllipse();  
+            if (this.selectable) this.renderEllipse(); 
 
-            renderHpBar.call(this, currentHealth, maxHealth);          
+            renderHpBar.call(this, currentHealth, maxHealth);
+            if (player.id === playerId) renderName.call(this, player.username);
+            if (otherPlayers[playerId]) renderName.call(this, otherPlayers[playerId].username);
 
             if (frame === -1) {
                 ctx.drawImage(resources.get(this.url),
@@ -102,6 +103,20 @@ function renderHpBar (currentHealth, maxHealth) {
     ctx.fillStyle = "rgba(0,128,0, 1)";
     ctx.closePath();
     ctx.fill();
+}
+
+function renderName (userName) {
+
+    var textMeasure = ctx.measureText(userName);
+    var xLocation;
+
+    if (this.size[0] < textMeasure.width) xLocation = (this.size[0] - textMeasure.width);
+    if (this.size[0] > textMeasure.width) xLocation = this.pos[0];
+    
+    ctx.font = '12px Arial';
+    ctx.fillStyle = 'white';
+    ctx.strokeText(userName, xLocation, -20);
+    ctx.fillText(userName, xLocation, -20);
 }
 
 function generateSprite(type, selectable, playerId){
