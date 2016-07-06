@@ -61,6 +61,8 @@ io.on('connection', function (socket) {
 
     // when the new user joins!
     socket.on('respawn', function (newPlayerData) {
+        currentPlayer.units = {};
+        currentPlayer.buildings = {};
         var locations = getRandomLocation();
         var heroLocation = locations["hero"];
         var soldierLocation = locations["soldier"];
@@ -253,7 +255,9 @@ io.on('connection', function (socket) {
                         hireUnit();
                     } else {
                         //remove the mercenary from the production queue
-                        var newUnitForClient = players[data.playerId].buildings[data.buildingId].productionQueue.shift();
+                        if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 1) {
+                            var newUnitForClient = players[data.playerId].buildings[data.buildingId].productionQueue.shift();
+                        }
                         //add it to player object on server, and send to client
                         io.emit('hireMercenaryResponse', {valid: true, newUnit: newUnitForClient});
                         //if another merc has been added to the queue, do this again

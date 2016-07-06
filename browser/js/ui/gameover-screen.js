@@ -1,5 +1,4 @@
 function gameOver(){
-	console.log("The game over function says hello");
 	//make appropriate changes to GUI
 	$("#gameover-overlay").show();
 	$("#world-wealth-display").hide();
@@ -17,7 +16,6 @@ function gameOver(){
 
 function checkIfGameOver() {
 	if (!player.units[0]) {
-		console.log(player.username);
 		gameOver();
 	}
 }
@@ -27,9 +25,12 @@ $("#game-over-message-box button").click(function(){
 })
 
 function restartGame () {
-	
+	socket.emit("respawn", {username: player.username});
+	$("#gameover-overlay").hide();
+	$("#world-wealth-display").show();
+	$("#game-controls").show();
 }
 
-// socket.on("notificationPlayerDied", function(data){
-// 	displayNotificationPlayerDied(data.username);
-// })
+socket.on("notificationPlayerDied", function(data){
+ 	displayNotificationPlayerDied(data.username);
+})
