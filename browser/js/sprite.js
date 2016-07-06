@@ -113,9 +113,10 @@ function renderName (userName) {
     if (this.size[0] < textMeasure.width) xLocation = (this.size[0] - textMeasure.width);
     if (this.size[0] > textMeasure.width) xLocation = this.pos[0];
     
-    ctx.font = '15px Arial';
+    ctx.font = '12px Arial';
+    ctx.fillStyle = 'white';
     ctx.strokeText(userName, xLocation, -20);
-
+    ctx.fillText(userName, xLocation, -20);
 }
 
 function generateSprite(type, selectable, playerId){
