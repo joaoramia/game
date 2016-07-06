@@ -287,7 +287,7 @@ function render() {
 
     renderSelectionBox();
     checkIfGameOver();
-    // cameraPan(currentMousePosition);
+    cameraPan(currentMousePosition);
 };
 
 function renderEntities(list, playerId) {
