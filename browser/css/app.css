@@ -286,7 +286,7 @@ canvas {
 #chat-client .message-panel{
     max-height: 100px;
     min-height: 20px;
-    overflow: scroll;
+    overflow: auto;
 }
 
 #chat-client ul {
