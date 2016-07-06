@@ -65,12 +65,30 @@ socket.on('newKing', function(newKing){
     }
 });
 
+
+//start page
 function start(){
     // $( "#game-ui" ).toggleClass( "display-none" );
     // $( "#login-screen" ).toggleClass( "display-none" );
     $("#building-info-panel").hide();
     socket.emit('respawn', {userName: $( "#nick" ).val()});
 }
+
+
+// chat-client
+$('form').submit(function(){
+    socket.emit('chat message', { username: player.username, text: $('#m').val(), msgcolor: "red"});
+    $('#m').val('');
+    return false;
+});
+
+socket.on('chat message', function(msgObj){
+    //$('#messages').append($('<li>').text(msgObj.username + " says "+ msgObj.text));
+    $('#messages').append($('<li>').text(msgObj.username + " says "+ msgObj.text));
+    $('#chat-client .message-panel')[0].scrollTop = 10000;
+});
+
+
 
 resources.load([
     'img/hero.png',

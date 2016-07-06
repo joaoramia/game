@@ -87,6 +87,12 @@ io.on('connection', function (socket) {
         io.emit('leaderboardUpdate', players);
     });
 
+
+
+    socket.on('chat message', function(msg){
+        io.emit('chat message', msg);
+    });
+
     socket.on('disconnect', function () {
         console.log("User with ID", socket.id, "has disconnected.")
         removePlayer(socket); // removes them from players AND sockets collections
