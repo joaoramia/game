@@ -63,14 +63,14 @@ function start(){
 
 // chat-client
 $('form').submit(function(){
-    socket.emit('chat message', { username: player.username, text: $('#m').val(), msgcolor: "red"});
+    socket.emit('chat message', { username: player.username, text: $('#m').val(), msgcolor: player.color});
     $('#m').val('');
     return false;
 });
 
 socket.on('chat message', function(msgObj){
     //$('#messages').append($('<li>').text(msgObj.username + " says "+ msgObj.text));
-    $('#messages').append($('<li>').text(msgObj.username + " says "+ msgObj.text));
+    $('#messages').append('<li>' + '<span style="color: '+ msgObj.msgcolor +'">' + msgObj.username + '</span> says "' + msgObj.text +'" </li>');
     $('#chat-client .message-panel')[0].scrollTop = 10000;
 });
 
@@ -148,6 +148,9 @@ function init() {
             unit.sprite = generateSprite(unit.type, true, player.id);
         }
 
+        // set a color for the chat
+        player.color = colorArray[getRandomNum(colorArray.length - 1)];
+
         setupMoneyBags(gameData.moneyBags);
         setupSocket(socket);
         drawViewport();
@@ -193,6 +196,8 @@ var currentSelection = [];
 var gameTime = 0;
 
 var wealth = 0;
+
+var colorArray = ["magenda", "indigo", "blue", "green", "black"];
 
 // Update game objects
 function update(dt) {
@@ -301,3 +306,10 @@ function setUnitPosByPlayer(player, posObj){ 
         console.log("prev pos=", player.units[unitId].pos, "new position= ", posObj[unitId].pos )
     }
  }
+
+function getRandomNum(min, max) {
+    //if only one argument is given, argument will be max, min will be 0
+    max = max || min;
+    if (max === min) min = 0;
+    return (min + Math.floor((Math.random() * max) + 1 - min ));
+}
