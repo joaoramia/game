@@ -86,6 +86,7 @@ $('form').submit(function(){
 socket.on('chat message', function(msgObj){
     //$('#messages').append($('<li>').text(msgObj.username + " says "+ msgObj.text));
     $('#messages').append('<li>' + '<span style="color: '+ msgObj.msgcolor +'">' + msgObj.username + '</span> says "' + msgObj.text +'" </li>');
+    $('#chat-client').removeClass('display-none');
     $('#chat-client .message-panel')[0].scrollTop = 10000;
 });
 
@@ -165,7 +166,6 @@ function init() {
 
         // set a color for the chat
         player.color = colorArray[getRandomNum(colorArray.length - 1)];
-        console.log("player color", player.color)
 
         for (var unitId in player.units) {
             var unit = player.units[unitId];
@@ -224,7 +224,7 @@ var gameTime = 0;
 
 var wealth = 0;
 
-var colorArray = ["magenda", "indigo", "blue", "green", "black", "aqua", "crimson", "deeppink"];
+var colorArray = ["mediumspringgreen", "chartreuse", "black", "aqua", "crimson", "deeppink"];
 
 // Update game objects
 function update(dt) {
