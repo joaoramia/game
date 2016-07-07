@@ -9,6 +9,10 @@ document.addEventListener('keypress', function (e) {
         key = 'DEFENSE'; break;
     case 113: 
     	key = 'QUIT'; break;
+
+      case 96:
+      key = 'CHAT'; break;
+
     }
     if (key === 'ATTACK') {
     	attackModeOn();
@@ -16,6 +20,8 @@ document.addEventListener('keypress', function (e) {
         defenseModeOn();
     } else if (key === 'QUIT') {
     	if (attackPending) attackModeOff();
+    }else if ( key === 'CHAT'){
+        $('#chat-client').toggleClass('display-none');
     }
 
 });
