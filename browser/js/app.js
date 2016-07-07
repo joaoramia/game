@@ -116,7 +116,7 @@ function main() {
 
     update(dt);
     render();
-
+    calculateFPS();
     lastTime = now;
     requestAnimFrame(main);
 };
