@@ -224,7 +224,7 @@ var gameTime = 0;
 
 var wealth = 0;
 
-var colorArray = ["mediumspringgreen", "lime", "chartreuse", "black", "aqua", "crimson", "deeppink"];
+var colorArray = ["mediumspringgreen", "chartreuse", "black", "aqua", "crimson", "deeppink"];
 
 // Update game objects
 function update(dt) {
