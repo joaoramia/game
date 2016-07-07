@@ -13,6 +13,10 @@ html, body {
     background-size: cover;
 }
 
+body {
+    overflow: hidden;
+}
+
 p {
     margin: 0;
     padding: 0;
@@ -304,7 +308,7 @@ canvas {
     color: inherit;
 }
 
-
+/*
 ::-webkit-scrollbar {
     width: 12px;
 }
@@ -317,4 +321,4 @@ canvas {
 ::-webkit-scrollbar-thumb {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-}
+}*/
