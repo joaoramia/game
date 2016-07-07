@@ -14,17 +14,17 @@ function inRange(num1, num2, num3, num4){
 }
 
 function xMinLimit (e) {
-  return (e.layerX < 15 && vp.pos[0] > 15);
+  return (e.layerX < 30 && vp.pos[0] > 30);
 }
 
 function xMaxLimit (e) {
-  return (e.layerX >= viewCanvas.width - 15 && vp.pos[0] < canvas.width - viewCanvas.width - 15);
+  return (e.layerX >= viewCanvas.width - 30 && vp.pos[0] < canvas.width - viewCanvas.width - 30);
 }
 
 function yMinLimit (e) {
-  return (e.layerY < 15 && vp.pos[1] > 15);
+  return (e.layerY < 30 && vp.pos[1] > 30);
 }
 
 function yMaxLimit (e) {
-  return (e.layerY >= viewCanvas.height - 15 && vp.pos[1] < canvas.height - viewCanvas.height - 15);
+  return (e.layerY >= viewCanvas.height - 30 && vp.pos[1] < canvas.height - viewCanvas.height - 30);
 }
