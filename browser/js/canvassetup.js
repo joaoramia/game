@@ -69,13 +69,13 @@ function cameraPan (e) {
       vp.pos[0] += 10;
       vp.pos[1] += 10;
     } else if (xMinLimit(e)) {
-      vp.pos[0] -= 15;
+      vp.pos[0] -= 10;
     } else if (xMaxLimit(e)) {
-      vp.pos[0] += 15;
+      vp.pos[0] += 10;
     } else if (yMinLimit(e)) {
-      vp.pos[1] -= 15;
+      vp.pos[1] -= 10;
     } else if (yMaxLimit(e)) {
-      vp.pos[1] += 15;
+      vp.pos[1] += 10;
     }
 }
 
