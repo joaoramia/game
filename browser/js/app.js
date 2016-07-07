@@ -165,7 +165,6 @@ function init() {
 
         // set a color for the chat
         player.color = colorArray[getRandomNum(colorArray.length - 1)];
-        console.log("player color", player.color)
 
         for (var unitId in player.units) {
             var unit = player.units[unitId];
