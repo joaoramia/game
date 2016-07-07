@@ -13,6 +13,10 @@ html, body {
     background-size: cover;
 }
 
+body {
+    overflow: hidden;
+}
+
 p {
     margin: 0;
     padding: 0;
@@ -302,11 +306,6 @@ canvas {
     border-radius: 5px;
     width: 96%;
     color: inherit;
-}
-
-
-#chat-client ::-webkit-scrollbar {
-    width: 12px;
 }
 
 #chat-client ::-webkit-scrollbar-track {

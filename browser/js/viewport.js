@@ -12,9 +12,11 @@ function resizeViewport () {
 	
 	//viewCanvas.style.width = width+'px';
 	//viewCanvas.style.height = height+'px';
-	viewCanvas.width = window.innerWidth;
-	viewCanvas.height = window.innerHeight; //height;
 	//draw viewport function in render
+	viewCanvas.setAttribute('width', window.innerWidth);
+	viewCanvas.setAttribute('height', window.innerHeight);
+	viewCanvas.width = window.innerWidth;
+	viewCanvas.height = window.innerHeight;
 }
 
 	
