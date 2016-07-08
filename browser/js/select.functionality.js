@@ -2,6 +2,7 @@ var rect = {};
 var drag = false;
 var rightClick = {};
 var positionOfNewBuilding;
+var moveIndicator;
 
 var currentMousePosition;
 
@@ -114,4 +115,22 @@ function select(){
   rightClick = {};
   drag = false;
 
+}
+
+function renderIndicator () {
+  currentSelection.forEach(function (unit) {
+    if (unit.targetpos) {
+      ctx.beginPath();
+      ctx.ellipse(unit.targetpos[0], unit.targetpos[1], 20, 10, 0, 0, Math.PI*2);
+      ctx.strokeStyle = (unit.vigilant? 'rgba(255, 0, 0, 1)' : 'rgba(0, 255, 0, 0.7)');
+      ctx.closePath();
+      ctx.stroke();
+      
+      ctx.fillStyle = ctx.strokeStyle;
+      ctx.beginPath();
+      ctx.ellipse(unit.targetpos[0], unit.targetpos[1], 2, 1, 0, 0, Math.PI*2);
+      ctx.closePath();
+      ctx.fill();
+    }
+  });
 }

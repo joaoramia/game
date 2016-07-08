@@ -94,14 +94,12 @@
 
 function renderHpBar (currentHealth, maxHealth) {
     if (this.url === 'img/moneybag.png') return;
-
+    ctx.beginPath(); // HP Green for currentHealth
     ctx.strokeStyle = 'black'; // HP Border for maxHealth
     ctx.strokeRect(0, - 10, this.size[0], 5);
-
-    ctx.beginPath(); // HP Green for currentHealth
+    ctx.closePath(); 
     ctx.rect(0, - 10, currentHealth / maxHealth * this.size[0], 5);
     ctx.fillStyle = "rgba(0,128,0, 1)";
-    ctx.closePath();
     ctx.fill();
 }
 

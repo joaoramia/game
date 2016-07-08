@@ -254,7 +254,10 @@ function update(dt) {
 
     drawViewport();
 
-};
+
+
+}
+
 
 
 function render() {
@@ -291,12 +294,14 @@ function render() {
     if (buildMode.on) {
         renderBuildLocation();
     }
+    renderIndicator();
     
     renderSelectionBox();
 
+    
     checkIfGameOver();
     cameraPan(currentMousePosition);
-};
+}
 
 function renderEntities(list, playerId) {
     // if (Array.isArray(list)){
@@ -331,25 +336,18 @@ function renderSelectionBox(){
     ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
 }
 
-function getUnitPosByPlayer(player){ 
-    var posObj = {}; 
-    for (var key in player.units){ 
-        posObj[key] = player.units[key].pos; 
-    } 
-    return posObj; 
-}
+// function getUnitPosByPlayer(player){ 
+//     var posObj = {}; 
+//     for (var key in player.units){ 
+//         posObj[key] = player.units[key].pos; 
+//     } 
+//     return posObj; 
+// }
 
-function setUnitPosByPlayer(player, posObj){ 
-    for (var unitId in player.units ){ 
-        if (posObj[unitId]) 
-            //player.units[unitId].pos = posObj[unitId].pos; 
-        console.log("prev pos=", player.units[unitId].pos, "new position= ", posObj[unitId].pos )
-    }
- }
-
-function getRandomNum(min, max) {
-    //if only one argument is given, argument will be max, min will be 0
-    max = max || min;
-    if (max === min) min = 0;
-    return (min + Math.floor((Math.random() * max) + 1 - min ));
-}
+// function setUnitPosByPlayer(player, posObj){ 
+//     for (var unitId in player.units){ 
+//         if (posObj[unitId])  {
+//             player.units[unitId].pos = posObj[unitId].pos; 
+//         }
+//     }
+//  }

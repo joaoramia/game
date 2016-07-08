@@ -23,30 +23,6 @@ function checkCollisionWithMoneyBag() {
             $("#player-wealth-display").text(wealth);
         }
     }
-
-
-    // for (var moneyBag in moneyBags) {
-    //     var moneyPos = moneyBags[moneyBag].pos;
-    //     var moneySize = moneyBags[moneyBag].sprite.size;
-
-    //     for (var unitId in player.units) {
-    //         var unit = player.units[unitId];
-    //         if (moneyBags[moneyBag]){
-    //             if (boxCollides(unit.pos, unit.sprite.size, moneyBags[moneyBag].pos, moneyBags[moneyBag].sprite.size)) {
-    //                 var moneyBagData = {
-    //                     playerId: player.id,
-    //                     name: moneyBag,
-    //                     value: moneyBags[moneyBag].value
-    //                 }
-    //                 delete moneyBags[moneyBag];
-    //                 playSoundOnEvent(moneyFoundSound);
-    //                 socket.emit('moneyDiscovered', moneyBagData);
-    //                 wealth += moneyBagData.value;
-    //                 $("#player-wealth-display").text(wealth);
-    //             }
-    //         }
-    //     }  
-    // }
 }
 
 
