@@ -28,3 +28,10 @@ function yMinLimit (e) {
 function yMaxLimit (e) {
   return (e.layerY >= viewCanvas.height - 30 && vp.pos[1] < canvas.height - viewCanvas.height - 30);
 }
+
+function getRandomNum(min, max) {
+    //if only one argument is given, argument will be max, min will be 0
+    max = max || min;
+    if (max === min) min = 0;
+    return (min + Math.floor((Math.random() * max) + 1 - min ));
+}

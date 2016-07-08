@@ -2,6 +2,7 @@ var rect = {};
 var drag = false;
 var rightClick = {};
 var positionOfNewBuilding;
+var moveIndicator;
 
 var currentMousePosition;
 
@@ -34,6 +35,7 @@ function mouseUp(e) {
     submitRendezvousPosition(rendezvousMode.mostRecentRendezvous);
   } else if (attackPending && e.which === 1) { // Attack functionality ('on a-click')
     handleAttackInput(e.layerX + vp.pos[0], e.layerY + vp.pos[1]); // takes in the x and y corresponding to the big canvas
+    moveIndicator = [rightClick.x, rightClick.y, 'attack'];
   } else if (e.which === 1 && !e.ctrlKey){ // Regular Click
     select();
   }
@@ -47,6 +49,7 @@ function mouseUp(e) {
         unit.vigilant = false;
         unit.hit = false;
         unit.targetpos = [rightClick.x + counter, rightClick.y];
+        moveIndicator = [rightClick.x, rightClick.y, 'move'];
         counter += 25;
       }
     }
@@ -108,4 +111,13 @@ function select(){
   rightClick = {};
   drag = false;
 
+}
+
+function renderIndicator () {
+  if (moveIndicator) {
+    ctx.ellipse(moveIndicator[0], moveIndicator[1], 20, 10, 0, 0, Math.PI*2);
+    ctx.strokeStyle = 'rgba(0, 255, 0, 1)';
+    ctx.closePath();
+    ctx.stroke();
+  }
 }
