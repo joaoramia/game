@@ -11,6 +11,7 @@ function mouseDown(e) {
     var tempX = e.layerX + vp.pos[0];
     var tempY = e.layerY + vp.pos[1];
     positionOfNewBuilding = [tempX, tempY];
+    buildMouseLocation = undefined;
   } else if (rendezvousMode.on && (e.which === 1 && !e.ctrlKey)) {
     var tempX = e.layerX + vp.pos[0];
     var tempY = e.layerY + vp.pos[1];
@@ -66,6 +67,11 @@ function mouseMove(e) {
   }
 
   currentMousePosition = e;
+
+  if (buildMode.on){
+    buildPositioner(e);
+  }
+  
   // for scrolling without clicking
   // diagonal movement check
 }

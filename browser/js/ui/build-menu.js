@@ -63,7 +63,7 @@ socket.on('initialBuildResponse', function (data){
 
 //after second response from the server
 socket.on('finalBuildResponse', function (data) {
-	if (data.request === 2) {
+	if (data.request === 2 && data.socketId) {
 		//if player ran out of money since placing building, can't build
 		if (data.valid === false && data.error === "lacking resources") {
 			displayErrorToUserTimed("You don't have enough money to build that anymore! Make more!");
@@ -96,5 +96,3 @@ socket.on('finalBuildResponse', function (data) {
 		}
 	}
 })
-
-
