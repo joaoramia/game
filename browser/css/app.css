@@ -349,3 +349,11 @@ canvas {
     border-radius: 10px;
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
+
+#fps {
+    position: fixed;
+    top: 5px;
+    left: 5px;
+    color: white;
+    font-size: 10px;
+}

@@ -140,7 +140,7 @@ function main() {
 
     update(dt);
     render();
-
+    calculateFPS();
     lastTime = now;
     requestAnimFrame(main);
 };
@@ -213,7 +213,6 @@ function init() {
     viewCanvas.addEventListener('mouseup', mouseUp, false);
     viewCanvas.addEventListener('mousemove', mouseMove, false);
 
-
     socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
         setupMoneyBags(moneyBagsFromServer);
     })
@@ -227,8 +226,12 @@ socket.on('deleteAndUpdateMoneyBags', function (bagUpdate) {
     var coords = bagUpdate.newBagName.split(",");
     coords[0] = parseInt(coords[0]);
     coords[1] = parseInt(coords[1]);
-    moneyBags[bagUpdate.newBagName].pos = coords;
-    moneyBags[bagUpdate.newBagName].sprite = generateSprite("moneybag");
+    var thisMoneyBag = moneyBags[bagUpdate.newBagName];
+    thisMoneyBag.pos = coords;
+    thisMoneyBag.sprite = generateSprite("moneybag");
+    
+    moneyTree.insert(prepForMoneyTree(thisMoneyBag));
+
 })
 
 
@@ -260,7 +263,8 @@ function update(dt) {
 
 
 
-};
+}
+
 
 
 function render() {
@@ -268,11 +272,13 @@ function render() {
     // the below uses a copy of the canvas (tempCanvas) and if that copy has already been generated, there is no need to render the terrain again, we just assign the original canvas to that copy.
     if (alreadyRendered){
         ctx.drawImage(tempCanvas, 0, 0);
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
     else {
         renderTerrain();
     }
+    
+
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     generateCactuses();
 
@@ -294,10 +300,15 @@ function render() {
             renderEntities(otherPlayers[key].buildings, key);
     }
 
+    if (buildMode.on) {
+        renderBuildLocation();
+    }
+    renderIndicator();
+    
     renderSelectionBox();
-    //if (gameOver === false) {
+    if (gameOver === false) {
         checkIfGameOver();
-   // }
+   }
     //cameraPan(currentMousePosition);
 };
 
@@ -334,25 +345,18 @@ function renderSelectionBox(){
     ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
 }
 
-function getUnitPosByPlayer(player){ 
-    var posObj = {}; 
-    for (var key in player.units){ 
-        posObj[key] = player.units[key].pos; 
-    } 
-    return posObj; 
-}
+// function getUnitPosByPlayer(player){ 
+//     var posObj = {}; 
+//     for (var key in player.units){ 
+//         posObj[key] = player.units[key].pos; 
+//     } 
+//     return posObj; 
+// }
 
-function setUnitPosByPlayer(player, posObj){ 
-    for (var unitId in player.units ){ 
-        if (posObj[unitId]) 
-            //player.units[unitId].pos = posObj[unitId].pos; 
-        console.log("prev pos=", player.units[unitId].pos, "new position= ", posObj[unitId].pos )
-    }
- }
-
-function getRandomNum(min, max) {
-    //if only one argument is given, argument will be max, min will be 0
-    max = max || min;
-    if (max === min) min = 0;
-    return (min + Math.floor((Math.random() * max) + 1 - min ));
-}
+// function setUnitPosByPlayer(player, posObj){ 
+//     for (var unitId in player.units){ 
+//         if (posObj[unitId])  {
+//             player.units[unitId].pos = posObj[unitId].pos; 
+//         }
+//     }
+//  }

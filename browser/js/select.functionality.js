@@ -2,6 +2,7 @@ var rect = {};
 var drag = false;
 var rightClick = {};
 var positionOfNewBuilding;
+var moveIndicator;
 
 var currentMousePosition;
 
@@ -10,6 +11,7 @@ function mouseDown(e) {
     var tempX = e.layerX + vp.pos[0];
     var tempY = e.layerY + vp.pos[1];
     positionOfNewBuilding = [tempX, tempY];
+    buildMouseLocation = undefined;
   } else if (rendezvousMode.on && (e.which === 1 && !e.ctrlKey)) {
     var tempX = e.layerX + vp.pos[0];
     var tempY = e.layerY + vp.pos[1];
@@ -63,6 +65,11 @@ function mouseMove(e) {
   }
 
   currentMousePosition = e;
+
+  if (buildMode.on){
+    buildPositioner(e);
+  }
+  
   // for scrolling without clicking
   // diagonal movement check
 }
@@ -108,4 +115,29 @@ function select(){
   rightClick = {};
   drag = false;
 
+}
+
+function renderIndicator () {
+  currentSelection.forEach(function (unit) {
+    if (unit.targetpos) {
+      ctx.beginPath();
+      ctx.ellipse(unit.targetpos[0], unit.targetpos[1], 20, 10, 0, 0, Math.PI*2);
+      ctx.strokeStyle = (unit.vigilant? 'rgba(255, 0, 0, 1)' : 'rgba(0, 255, 0, 0.7)');
+      ctx.closePath();
+      ctx.stroke();
+      
+      ctx.beginPath();
+      ctx.moveTo(unit.pos[0] + unit.sprite.size[0] / 2, unit.pos[1] + unit.sprite.size[1]);
+      ctx.lineTo(unit.targetpos[0], unit.targetpos[1]);
+      ctx.strokeStyle = (unit.vigilant? 'rgba(255, 0, 0, 1)' : 'rgba(0, 255, 0, 0.4)');
+      ctx.closePath();
+      ctx.stroke();
+
+      ctx.fillStyle = ctx.strokeStyle;
+      ctx.beginPath();
+      ctx.ellipse(unit.targetpos[0], unit.targetpos[1], 2, 1, 0, 0, Math.PI*2);
+      ctx.closePath();
+      ctx.fill();
+    }
+  });
 }
