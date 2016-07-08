@@ -34,10 +34,6 @@ function buildModeOn (type) {
 	buildMode.type = type;
 	displayErrorToUserUntimed("BUILD MODE", "Select a location to build, or press Esc to quit.");
 	$("#buttons-list").empty();
-	$("canvas").css('cursor', "url(http://w17.snunit.k12.il/images/big_arrdow.png),auto")
-	// ("cursor", function(type){
-	// 	return "url(img/bar-asset.png)";
-	// })
 }
 
 function buildModeOff (){
@@ -67,7 +63,7 @@ socket.on('initialBuildResponse', function (data){
 
 //after second response from the server
 socket.on('finalBuildResponse', function (data) {
-	if (data.request === 2) {
+	if (data.request === 2 && data.socketId) {
 		//if player ran out of money since placing building, can't build
 		if (data.valid === false && data.error === "lacking resources") {
 			displayErrorToUserTimed("You don't have enough money to build that anymore! Make more!");
@@ -100,5 +96,3 @@ socket.on('finalBuildResponse', function (data) {
 		}
 	}
 })
-
-
