@@ -34,6 +34,10 @@ function buildModeOn (type) {
 	buildMode.type = type;
 	displayErrorToUserUntimed("BUILD MODE", "Select a location to build, or press Esc to quit.");
 	$("#buttons-list").empty();
+	$("canvas").css('cursor', "url(http://w17.snunit.k12.il/images/big_arrdow.png),auto")
+	// ("cursor", function(type){
+	// 	return "url(img/bar-asset.png)";
+	// })
 }
 
 function buildModeOff (){
