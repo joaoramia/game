@@ -3,6 +3,20 @@ var currentKing;
 var tree = rbush();
 var moneyTree = rbush();
 
+// Defines some initial global variables that're overwritten when game loads
+var moneyBags = {};
+var player = {};
+var otherPlayers = {};
+var buildMode = {
+    on: false,
+    type: ""
+}
+var currentSelection = [];
+var gameTime = 0;
+var wealth = 0;
+var gameOver = false;
+var colorArray = ["mediumspringgreen", "chartreuse", "black", "aqua", "crimson", "deeppink"];
+
 function setupSocket (socket) {
 
     socket.on('otherPlayerJoin', function (otherPlayerData) {
@@ -66,13 +80,25 @@ socket.on('newKing', function(newKing){
     }
 });
 
-//start page
+var displayCurrentPlayersUnits = false;
+
+//get initial background
+
+//start game on user press Play button
 function startGame(){
-    socket.emit('respawn', {userName: $( "#nick" ).val()});
+    $("#fullscreen-overlay").hide();
+    $("#world-wealth-display").show();
+    $("#game-controls").show();
+    displayCurrentPlayersUnits = true;
 }
 
+//assigns a click event to the button on the load screen
+$("#login-box button").click(function(){
+    startGame();
+});
 
-// chat-client
+
+//chat-client
 $('form').submit(function(){
     socket.emit('chat message', { username: player.username, text: $('#m').val(), msgcolor: player.color});
     $('#m').val('');
@@ -118,7 +144,8 @@ function main() {
 };
 
 function init() {
-    start();
+
+    socket.emit('respawn', {userName: $( "#nick" ).val()});
 
     lastTime = Date.now();
 
@@ -155,6 +182,7 @@ function init() {
     });
 
     socket.on("gameReady", function(gameData, king) {
+        console.log("GAME READY DATA", gameData);
         adjustVPOnGameReady(gameData.playerData.units[0].pos);
         currentKing = king;
         player = gameData.playerData;
@@ -202,25 +230,7 @@ socket.on('deleteAndUpdateMoneyBags', function (bagUpdate) {
     moneyBags[bagUpdate.newBagName].sprite = generateSprite("moneybag");
 })
 
-// Defines some initial global variables that're overwritten when game loads
-var moneyBags = {};
 
-var player = {};
-
-var otherPlayers = {};
-
-var buildMode = {
-    on: false,
-    type: ""
-}
-
-var currentSelection = [];
-
-var gameTime = 0;
-
-var wealth = 0;
-
-var colorArray = ["mediumspringgreen", "chartreuse", "black", "aqua", "crimson", "deeppink"];
 
 // Update game objects
 function update(dt) {
@@ -267,7 +277,9 @@ function render() {
 
     renderEntities(moneyBags); // moneybags before units so that units show up in front
 
-    renderEntities(player.units, player.id);
+    if (displayCurrentPlayersUnits) {
+        renderEntities(player.units, player.id);
+    }
 
     for (var key in otherPlayers){
         if (otherPlayers.hasOwnProperty(key))
@@ -282,8 +294,10 @@ function render() {
     }
 
     renderSelectionBox();
-    checkIfGameOver();
-    cameraPan(currentMousePosition);
+    //if (gameOver === false) {
+        checkIfGameOver();
+   // }
+    //cameraPan(currentMousePosition);
 };
 
 function renderEntities(list, playerId) {

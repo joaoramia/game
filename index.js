@@ -38,7 +38,7 @@ var CANVAS_SIZE = [3000, 3000]; //Remember to adjust the front end size any time
 var players = {};
 var sockets = {};
 var units = {};
-var buiildings = {};
+var buildings = {};
 var moneyBags = {count: 0};
 var currentKing;
 generateMoneyBags(450);
@@ -66,7 +66,7 @@ io.on('connection', function (socket) {
         var locations = getRandomLocation();
         var heroLocation = locations["hero"];
         var soldierLocation = locations["soldier"];
-        currentPlayer.userName = newPlayerData.userName;
+        //currentPlayer.userName = randomName();
         currentPlayer.id = socket.id;
         currentPlayer.units[0] = new Hero(heroLocation, socket.id, 0);
         currentPlayer.units[1] = new Soldier(soldierLocation, socket.id, 1);
@@ -81,7 +81,7 @@ io.on('connection', function (socket) {
         if (Object.keys(players).length < 2) {
             changeKing(currentPlayer.id);
         }
-
+        console.log("CURRENT PLAYER", currentPlayer);
         socket.emit('gameReady', {playerData: currentPlayer, moneyBags: moneyBags}, currentKing);
         socket.broadcast.emit('otherPlayerJoin', currentPlayer);
         io.emit('leaderboardUpdate', players);
