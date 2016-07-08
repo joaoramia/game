@@ -87,7 +87,9 @@ io.on('connection', function (socket) {
         io.emit('leaderboardUpdate', players);
     });
 
-
+    socket.on('renameUser', function(data) {
+        players[data.id].username = data.username;
+    })
 
     socket.on('chat message', function(msg){
         io.emit('chat message', msg);

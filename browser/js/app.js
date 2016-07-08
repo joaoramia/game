@@ -94,6 +94,8 @@ function startGame(){
 
 //assigns a click event to the button on the load screen
 $("#login-box button").click(function(){
+    socket.emit('renameUser', {userName: $( "#nick" ).val(), id: player.id});
+    player.username = $( "#nick" ).val();
     startGame();
 });
 
@@ -112,7 +114,7 @@ socket.on('chat message', function(msgObj){
     $('#chat-client .message-panel')[0].scrollTop = 10000;
 });
 
-
+socket.emit('respawn', {userName: $( "#nick" ).val()});
 
 resources.load([
     'img/hero.png',
@@ -145,7 +147,6 @@ function main() {
 
 function init() {
 
-    socket.emit('respawn', {userName: $( "#nick" ).val()});
 
     lastTime = Date.now();
 

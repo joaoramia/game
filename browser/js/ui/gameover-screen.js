@@ -30,7 +30,7 @@ $("#game-over-message-box button").click(function(){
 
 function restartGame () {
 	socket.emit("respawn", {username: player.username});
-	$("#gameover-overlay").hide();
+	$("#fullscreen-overlay").hide();
 	$("#world-wealth-display").show();
 	$("#game-controls").show();
 }
