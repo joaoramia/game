@@ -22,6 +22,7 @@ function buildPositioner(e){
 
 function renderBuildLocation(){
 	if (buildMouseLocation){
+		$('canvas').css('cursor', 'none');
 		var imageObj = resources.get('img/' + buildMode.type + '-asset.png');
 		if (buildCollisions(buildMouseLocation, buildMode.type))forbiddenRange(buildMouseLocation[0], buildMouseLocation[1], imageObj.width, imageObj.height);
 		ctx.globalAlpha = 0.3;

@@ -4,7 +4,7 @@ function Player(id, username) {
 	this.id = id; // socket.id
 	this.username = username || randomName();
 	this.numberOfSessions = 0;
-	this.wealth = 200;
+	this.wealth = 2000;
 	this.units = {}; // obj of Unit objects
 	this.unitNumber = 0;
 	this.buildings = {}; // obj of building objects

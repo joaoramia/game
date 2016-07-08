@@ -31,21 +31,6 @@
         render: function(ctx, playerId, type, currentHealth, maxHealth) {
             var frame;
 
-            // if(playerId === currentKing && type === 'hero') {
-            //     this.url = 'img/hero/king.png';
-            //     this.size = [34, 50];
-            //     this.pos = [0, 105]; //set on generate sprite
-            //     this.frames = [0, 1, 2, 3];
-            //     this.speed = 10;
-            // }
-            // else if(playerId !== currentKing && type === 'hero'){
-            //     this.url = 'img/hero/hero-1.png';
-            //     this.size = [32, 55];
-            //     this.pos = [32, 0];
-            //     this.frames = [0, 1, 2];
-            //     this.speed = 16;
-            // }
-
             if(this.speed > 0) {
                 var max = this.frames.length;
                 var idx = Math.floor(this._index);
@@ -109,7 +94,7 @@ function renderName (userName) {
     var xLocation;
 
     if (this.size[0] < textMeasure.width) xLocation = (this.size[0] - textMeasure.width);
-    if (this.size[0] > textMeasure.width) xLocation = this.pos[0];
+    if (this.size[0] > textMeasure.width) xLocation = 0;
     
     ctx.font = '12px Arial';
     ctx.fillStyle = 'white';

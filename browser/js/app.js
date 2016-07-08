@@ -114,7 +114,7 @@ socket.on('chat message', function(msgObj){
     $('#chat-client .message-panel')[0].scrollTop = 10000;
 });
 
-socket.emit('respawn', {userName: $( "#nick" ).val()});
+socket.emit('respawn', {userName: player.username});
 
 resources.load([
     'img/hero.png',

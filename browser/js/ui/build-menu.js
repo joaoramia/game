@@ -95,4 +95,5 @@ socket.on('finalBuildResponse', function (data) {
 		}
 		}
 	}
+	$('canvas').css('cursor', 'auto');
 })
