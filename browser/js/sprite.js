@@ -100,7 +100,6 @@ function renderHpBar (currentHealth, maxHealth) {
     ctx.closePath(); 
     ctx.rect(0, - 10, currentHealth / maxHealth * this.size[0], 5);
     ctx.fillStyle = "rgba(0,128,0, 1)";
-    
     ctx.fill();
 }
 

@@ -294,10 +294,11 @@ function render() {
     if (buildMode.on) {
         renderBuildLocation();
     }
+    renderIndicator();
     
     renderSelectionBox();
 
-    renderIndicator();
+    
     checkIfGameOver();
     cameraPan(currentMousePosition);
 }
