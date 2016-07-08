@@ -188,7 +188,6 @@ function init() {
     viewCanvas.addEventListener('mouseup', mouseUp, false);
     viewCanvas.addEventListener('mousemove', mouseMove, false);
 
-
     socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
         setupMoneyBags(moneyBagsFromServer);
     })
@@ -255,8 +254,6 @@ function update(dt) {
 
     drawViewport();
 
-
-
 };
 
 
@@ -265,11 +262,13 @@ function render() {
     // the below uses a copy of the canvas (tempCanvas) and if that copy has already been generated, there is no need to render the terrain again, we just assign the original canvas to that copy.
     if (alreadyRendered){
         ctx.drawImage(tempCanvas, 0, 0);
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
     else {
         renderTerrain();
     }
+    
+
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     generateCactuses();
 
@@ -289,7 +288,12 @@ function render() {
             renderEntities(otherPlayers[key].buildings, key);
     }
 
+    if (buildMode.on) {
+        renderBuildLocation();
+    }
+    
     renderSelectionBox();
+
     checkIfGameOver();
     cameraPan(currentMousePosition);
 };

@@ -38,7 +38,7 @@ var CANVAS_SIZE = [3000, 3000]; //Remember to adjust the front end size any time
 var players = {};
 var sockets = {};
 var units = {};
-var buiildings = {};
+// var buiildings = {};
 var moneyBags = {count: 0};
 var currentKing;
 generateMoneyBags(450);
