@@ -38,7 +38,7 @@ var CANVAS_SIZE = [3000, 3000]; //Remember to adjust the front end size any time
 var players = {};
 var sockets = {};
 var units = {};
-var buiildings = {};
+var buildings = {};
 var moneyBags = {count: 0};
 var currentKing;
 generateMoneyBags(450);
@@ -66,7 +66,7 @@ io.on('connection', function (socket) {
         var locations = getRandomLocation();
         var heroLocation = locations["hero"];
         var soldierLocation = locations["soldier"];
-        currentPlayer.userName = newPlayerData.userName;
+        //currentPlayer.userName = randomName();
         currentPlayer.id = socket.id;
         currentPlayer.units[0] = new Hero(heroLocation, socket.id, 0);
         currentPlayer.units[1] = new Soldier(soldierLocation, socket.id, 1);
@@ -81,13 +81,15 @@ io.on('connection', function (socket) {
         if (Object.keys(players).length < 2) {
             changeKing(currentPlayer.id);
         }
-
+        console.log("CURRENT PLAYER", currentPlayer);
         socket.emit('gameReady', {playerData: currentPlayer, moneyBags: moneyBags}, currentKing);
         socket.broadcast.emit('otherPlayerJoin', currentPlayer);
         io.emit('leaderboardUpdate', players);
     });
 
-
+    socket.on('renameUser', function(data) {
+        players[data.id].username = data.username;
+    })
 
     socket.on('chat message', function(msg){
         io.emit('chat message', msg);
@@ -189,7 +191,6 @@ io.on('connection', function (socket) {
     });
 
     socket.on('finalBuildRequest', function (data) {
-        console.log("DOES IT RUN?");
         if (data.request === 2 && data.type === "bar") {
             if (players[data.id].wealth < 2000) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
@@ -276,7 +277,9 @@ io.on('connection', function (socket) {
                         hireUnit();
                     } else {
                         //remove the mercenary from the production queue
-                        var newUnitForClient = players[data.playerId].buildings[data.buildingId].productionQueue.shift();
+                        if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 0) {
+                            var newUnitForClient = players[data.playerId].buildings[data.buildingId].productionQueue.shift();
+                        }
                         //add it to player object on server, and send to client
                         io.emit('hireMercenaryResponse', {valid: true, newUnit: newUnitForClient});
                         //if another merc has been added to the queue, do this again

@@ -4,7 +4,7 @@ function Player(id, username) {
 	this.id = id; // socket.id
 	this.username = username || randomName();
 	this.numberOfSessions = 0;
-	this.wealth = 20000;
+	this.wealth = 200;
 	this.units = {}; // obj of Unit objects
 	this.unitNumber = 0;
 	this.buildings = {}; // obj of building objects
@@ -14,7 +14,7 @@ function Player(id, username) {
 }
 
 function randomName(){
-	var names = ['BillyElliot', 'Bennedict', 'Franklin', 'Joseph', 'OmriBear', 'Jansenski', 'Batter']
+	var names = ['Billy Elliot', 'Bennedict', 'Franklin', 'Joseph', 'OmriBear', 'Jansenski', 'Batter']
 	return names[Utils.getRandomNum(names.length -1)];
 }
 

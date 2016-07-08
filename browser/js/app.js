@@ -3,6 +3,20 @@ var currentKing;
 var tree = rbush();
 var moneyTree = rbush();
 
+// Defines some initial global variables that're overwritten when game loads
+var moneyBags = {};
+var player = {};
+var otherPlayers = {};
+var buildMode = {
+    on: false,
+    type: ""
+}
+var currentSelection = [];
+var gameTime = 0;
+var wealth = 0;
+var gameOver = false;
+var colorArray = ["mediumspringgreen", "chartreuse", "black", "aqua", "crimson", "deeppink"];
+
 function setupSocket (socket) {
 
     socket.on('otherPlayerJoin', function (otherPlayerData) {
@@ -66,17 +80,27 @@ socket.on('newKing', function(newKing){
     }
 });
 
+var displayCurrentPlayersUnits = false;
 
-//start page
-function start(){
-    // $( "#game-ui" ).toggleClass( "display-none" );
-    // $( "#login-screen" ).toggleClass( "display-none" );
-    $("#building-info-panel").hide();
-    socket.emit('respawn', {userName: $( "#nick" ).val()});
+//get initial background
+
+//start game on user press Play button
+function startGame(){
+    $("#fullscreen-overlay").hide();
+    $("#world-wealth-display").show();
+    $("#game-controls").show();
+    displayCurrentPlayersUnits = true;
 }
 
+//assigns a click event to the button on the load screen
+$("#login-box button").click(function(){
+    socket.emit('renameUser', {userName: $( "#nick" ).val(), id: player.id});
+    player.username = $( "#nick" ).val();
+    startGame();
+});
 
-// chat-client
+
+//chat-client
 $('form').submit(function(){
     socket.emit('chat message', { username: player.username, text: $('#m').val(), msgcolor: player.color});
     $('#m').val('');
@@ -85,12 +109,12 @@ $('form').submit(function(){
 
 socket.on('chat message', function(msgObj){
     //$('#messages').append($('<li>').text(msgObj.username + " says "+ msgObj.text));
-    $('#messages').append('<li>' + '<span style="color: '+ msgObj.msgcolor +'">' + msgObj.username + '</span> says "' + msgObj.text +'" </li>');
+    $('#messages').append('<li>' + '<span style="color: '+ msgObj.msgcolor +'">' + msgObj.username + '</span> says, "' + msgObj.text +'" </li>');
     $('#chat-client').removeClass('display-none');
     $('#chat-client .message-panel')[0].scrollTop = 10000;
 });
 
-
+socket.emit('respawn', {userName: $( "#nick" ).val()});
 
 resources.load([
     'img/hero.png',
@@ -122,7 +146,7 @@ function main() {
 };
 
 function init() {
-    start();
+
 
     lastTime = Date.now();
 
@@ -159,6 +183,7 @@ function init() {
     });
 
     socket.on("gameReady", function(gameData, king) {
+        console.log("GAME READY DATA", gameData);
         adjustVPOnGameReady(gameData.playerData.units[0].pos);
         currentKing = king;
         player = gameData.playerData;
@@ -206,25 +231,7 @@ socket.on('deleteAndUpdateMoneyBags', function (bagUpdate) {
     moneyBags[bagUpdate.newBagName].sprite = generateSprite("moneybag");
 })
 
-// Defines some initial global variables that're overwritten when game loads
-var moneyBags = {};
 
-var player = {};
-
-var otherPlayers = {};
-
-var buildMode = {
-    on: false,
-    type: ""
-}
-
-var currentSelection = [];
-
-var gameTime = 0;
-
-var wealth = 0;
-
-var colorArray = ["mediumspringgreen", "chartreuse", "black", "aqua", "crimson", "deeppink"];
 
 // Update game objects
 function update(dt) {
@@ -271,7 +278,9 @@ function render() {
 
     renderEntities(moneyBags); // moneybags before units so that units show up in front
 
-    renderEntities(player.units, player.id);
+    if (displayCurrentPlayersUnits) {
+        renderEntities(player.units, player.id);
+    }
 
     for (var key in otherPlayers){
         if (otherPlayers.hasOwnProperty(key))
@@ -286,8 +295,10 @@ function render() {
     }
 
     renderSelectionBox();
-    checkIfGameOver();
-    cameraPan(currentMousePosition);
+    //if (gameOver === false) {
+        checkIfGameOver();
+   // }
+    //cameraPan(currentMousePosition);
 };
 
 function renderEntities(list, playerId) {

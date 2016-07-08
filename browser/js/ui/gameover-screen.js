@@ -1,8 +1,12 @@
 function gameOver(){
+	//make the render function stop checking if its game over
+	gameOver = true;
 	//make appropriate changes to GUI
-	$("#gameover-overlay").show();
+	$("#fullscreen-overlay").show();
+	$("#game-over-message-box").show();
 	$("#world-wealth-display").hide();
 	$("#game-controls").hide();
+	$("#login-screen").hide();
 	//canvas should no longer be scrollable
 
 	//destroy the player's representation of its moneybags and its buildings/units
@@ -26,7 +30,7 @@ $("#game-over-message-box button").click(function(){
 
 function restartGame () {
 	socket.emit("respawn", {username: player.username});
-	$("#gameover-overlay").hide();
+	$("#fullscreen-overlay").hide();
 	$("#world-wealth-display").show();
 	$("#game-controls").show();
 }

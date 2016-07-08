@@ -21,7 +21,9 @@ function replaceButtonsOnMenu (newButtons) {
 }
 
 function changeButtonsMessage (message) {
-	if (typeof message === 'string') {
+	if (message === "&nbsp;") {
+		$("#buttons-message-content").html("&nbsp;");
+	} else if (typeof message === 'string') {
 		$("#buttons-message-content").text(message);
 	} else if (message === 1) {
 		$("#buttons-message-content").text("1 unit selected");
@@ -55,7 +57,7 @@ var nonHeroSelectedButtons = [
 function displayRootMenu (){
 	if (currentSelection.length === 0) {
 		//if no units selected
-		changeButtonsMessage("Nothing selected");
+		changeButtonsMessage("&nbsp;");
 		$("#buttons-list").empty();
 	} else if (buildingSelected(currentSelection)) {
 		//if building selected
