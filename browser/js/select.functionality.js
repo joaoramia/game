@@ -126,6 +126,13 @@ function renderIndicator () {
       ctx.closePath();
       ctx.stroke();
       
+      ctx.beginPath();
+      ctx.moveTo(unit.pos[0] + unit.sprite.size[0] / 2, unit.pos[1] + unit.sprite.size[1]);
+      ctx.lineTo(unit.targetpos[0], unit.targetpos[1]);
+      ctx.strokeStyle = (unit.vigilant? 'rgba(255, 0, 0, 1)' : 'rgba(0, 255, 0, 0.4)');
+      ctx.closePath();
+      ctx.stroke();
+
       ctx.fillStyle = ctx.strokeStyle;
       ctx.beginPath();
       ctx.ellipse(unit.targetpos[0], unit.targetpos[1], 2, 1, 0, 0, Math.PI*2);
