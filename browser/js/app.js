@@ -116,7 +116,7 @@ function main() {
 
     update(dt);
     render();
-
+    calculateFPS();
     lastTime = now;
     requestAnimFrame(main);
 };
@@ -202,8 +202,12 @@ socket.on('deleteAndUpdateMoneyBags', function (bagUpdate) {
     var coords = bagUpdate.newBagName.split(",");
     coords[0] = parseInt(coords[0]);
     coords[1] = parseInt(coords[1]);
-    moneyBags[bagUpdate.newBagName].pos = coords;
-    moneyBags[bagUpdate.newBagName].sprite = generateSprite("moneybag");
+    var thisMoneyBag = moneyBags[bagUpdate.newBagName];
+    thisMoneyBag.pos = coords;
+    thisMoneyBag.sprite = generateSprite("moneybag");
+    
+    moneyTree.insert(prepForMoneyTree(thisMoneyBag));
+
 })
 
 // Defines some initial global variables that're overwritten when game loads
