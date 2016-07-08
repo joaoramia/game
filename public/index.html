@@ -15,17 +15,43 @@
   </head>
   <body oncontextmenu="return false;">
 
-    <div id="gameover-overlay">
+    <div id="fullscreen-overlay">
+      <div id="login-screen">
+        <div id="title-box">
+          <h1>Regime Change</h1>
+          <h3>A Real-time Strategy Game</h3>
+        </div>
+        <br>
+        <div>
+          <div id="login-box" class="login-page-elem">
+            <label>Nickname:</label><br>
+            <input id="nick" maxlength="24">
+            <br>
+            <button class="play-button">Play</button>
+          </div>
+
+          <div id="instructions" class="login-page-elem">
+            <h3>Instructions</h3>
+            <ul>
+              <li>Move the camera by using the arrow keys.</li>
+              <li>Select units by holding down left-click and dragging the mouse.</li>
+              <li>Move selected units by right-clicking (Control + Click on Mac) the location where you want them to go.</li>
+              <li>"Hire" new units at Bars.</li>
+              <li>Build houses to increase the maximum number of units you can build.</li>
+              <li>To start, type in a nickname and press play.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
       <div id="game-over-message-box">
         <p>Your hero died! Game over!</p>
-        <button>Play again!</button>
+        <button class="play-button">Play again!</button>
       </div>
+
     </div>
 
     <div id="game-ui">
-
-      <!-- <div id="game-view"></div> -->
-    <!-- <div id="game-ui" class="display-none"> -->
       <div id="display-error-container">
         <p id="display-error-content"><span>ALERT:</span> This is an error.</p>
       </div>
@@ -33,10 +59,10 @@
         <div id="leaderboard">
           <h3>Leaderboard</h3>
           <div id="king-box">
-          <p>THE BOSS:</p>
+          <p>THE CURRENT BOSS:</p>
           <p><span id='kingname'></span>    $<span id='king-wealth-display'><span/></p>
           </div>
-          <!-- <br> -->
+          <br>
           <p><b>Contenders</b></p>
           <p><span id='place2'></span></p>
           <p><span id='place3'></span></p>
@@ -47,7 +73,7 @@
           <p>Your wealth: $<span id="player-wealth-display"></span></p>
         </div>
         <div class="live-stats">
-          <p>Supply: <span id="supply-cap-display">2/10</span></p>
+          <p>Population: <span id="supply-cap-display">2/10</span></p>
         </div>
 
         <div id="chat-client">
@@ -90,7 +116,7 @@
           <fieldset>
             <div id="button-container">
               <div class="a-button" id="buttons-message-box">
-                <p id="buttons-message-content">No units selected</p>
+                <p id="buttons-message-content">&nbsp;</p>
               </div>
               <div id="buttons-list">
                 <!-- contents generated on game start -->
@@ -103,13 +129,6 @@
       </div>
 
     </div>
-
-    <!-- <div id="login-screen">
-      <input class="sumsginp" id="nick" style="width: 220px; height: 24px;" placeholder="Enter your nickname" maxlength="24">
-      <button class="sumsginp" onclick="start()">&nbsp;Play&nbsp;</button>
-    </div> -->
-
-
 
     <script src="rbush/rbush.min.js"></script>
 

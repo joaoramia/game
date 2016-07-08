@@ -189,7 +189,6 @@ io.on('connection', function (socket) {
     });
 
     socket.on('finalBuildRequest', function (data) {
-        console.log("DOES IT RUN?");
         if (data.request === 2 && data.type === "bar") {
             if (players[data.id].wealth < 2000) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
@@ -276,7 +275,9 @@ io.on('connection', function (socket) {
                         hireUnit();
                     } else {
                         //remove the mercenary from the production queue
-                        var newUnitForClient = players[data.playerId].buildings[data.buildingId].productionQueue.shift();
+                        if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 0) {
+                            var newUnitForClient = players[data.playerId].buildings[data.buildingId].productionQueue.shift();
+                        }
                         //add it to player object on server, and send to client
                         io.emit('hireMercenaryResponse', {valid: true, newUnit: newUnitForClient});
                         //if another merc has been added to the queue, do this again

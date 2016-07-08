@@ -69,8 +69,6 @@ socket.on('newKing', function(newKing){
 
 //start page
 function start(){
-    // $( "#game-ui" ).toggleClass( "display-none" );
-    // $( "#login-screen" ).toggleClass( "display-none" );
     $("#building-info-panel").hide();
     socket.emit('respawn', {userName: $( "#nick" ).val()});
 }
@@ -85,7 +83,7 @@ $('form').submit(function(){
 
 socket.on('chat message', function(msgObj){
     //$('#messages').append($('<li>').text(msgObj.username + " says "+ msgObj.text));
-    $('#messages').append('<li>' + '<span style="color: '+ msgObj.msgcolor +'">' + msgObj.username + '</span> says "' + msgObj.text +'" </li>');
+    $('#messages').append('<li>' + '<span style="color: '+ msgObj.msgcolor +'">' + msgObj.username + '</span> says, "' + msgObj.text +'" </li>');
     $('#chat-client').removeClass('display-none');
     $('#chat-client .message-panel')[0].scrollTop = 10000;
 });
