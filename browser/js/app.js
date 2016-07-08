@@ -66,10 +66,8 @@ socket.on('newKing', function(newKing){
     }
 });
 
-
 //start page
-function start(){
-    $("#building-info-panel").hide();
+function startGame(){
     socket.emit('respawn', {userName: $( "#nick" ).val()});
 }
 

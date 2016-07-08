@@ -31,7 +31,7 @@ canvas {
     color: white;
     position: absolute;
     left: 25%;
-    top: 10%;
+    top: 5%;
 }
 
 #title-box {
@@ -50,7 +50,7 @@ canvas {
 
 #login-box {
     display: inline-block;
-    width: 32%;
+    max-width: 100%;
     padding: 12px;
 }
 
@@ -61,11 +61,23 @@ canvas {
 
 #instructions {
     display: inline-block;
-    width: 59%;
-    padding: 30px 15px 30px 15px;
-    
+    max-width: 59%;
+    padding: 10px 15px 10px 15px;
 }
 
+#right-login {
+    display: inline-block;
+    max-width: 39%;
+}
+
+#instructions h3 {
+    margin: 5px;
+}
+
+#boss-box {
+    margin-bottom: 5px;
+    padding: 5px;
+}
 .login-page-elem {
     border-radius: 5px;
     background-color: rgba(0, 0, 0, 0.5);
@@ -76,7 +88,7 @@ canvas {
     top: 0;
     min-height: 100vh;
     min-width: 100vw;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(0, 0, 0, 0.6);
 }
 
 #game-over-message-box {
@@ -192,6 +204,7 @@ canvas {
     background-color: rgba(23, 23, 23, 0.5);
     margin-bottom: 5px;
     min-width: 100%;
+    display: none;
 }
 
 #building-panel-content {
