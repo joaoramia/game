@@ -286,12 +286,9 @@ function update(dt) {
     removeDeadUnits();
 
     socket.emit("playerMoves", player);
-    //socket.emit("playerMoves", {id: player.id, unitsPos: getUnitPosByPlayer(player)});
 
     socket.on("otherPlayerMoves", function(playerData) {
-        // otherPlayers[playerData.id] = Object.assign(otherPlayers[playerData.id], playerData);
         otherPlayers[playerData.id] = playerData;
-        //setUnitPosByPlayer(otherPlayers[playerData.id], playerData.units);
     });
 
     drawViewport();
@@ -379,19 +376,3 @@ function renderSelectionBox(){
     ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
     ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
 }
-
-// function getUnitPosByPlayer(player){ 
-//     var posObj = {}; 
-//     for (var key in player.units){ 
-//         posObj[key] = player.units[key].pos; 
-//     } 
-//     return posObj; 
-// }
-
-// function setUnitPosByPlayer(player, posObj){ 
-//     for (var unitId in player.units){ 
-//         if (posObj[unitId])  {
-//             player.units[unitId].pos = posObj[unitId].pos; 
-//         }
-//     }
-//  }
