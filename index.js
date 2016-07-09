@@ -81,7 +81,6 @@ io.on('connection', function (socket) {
         if (Object.keys(players).length < 2) {
             changeKing(currentPlayer.id);
         }
-        console.log("CURRENT PLAYER", currentPlayer);
         socket.emit('gameReady', {playerData: currentPlayer, moneyBags: moneyBags}, currentKing);
         socket.broadcast.emit('otherPlayerJoin', currentPlayer);
         io.emit('leaderboardUpdate', players);
@@ -136,7 +135,7 @@ io.on('connection', function (socket) {
     })
 
     socket.on('playerDied', function (data) {
-        socket.broadcast.emit("notificationPlayerDied", {username: data.username});
+        socket.broadcast.emit("notificationPlayerDied", {username: data.username, playerId: data.playerId});
         io.emit('leaderboardUpdate', players);
     });
 
