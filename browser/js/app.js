@@ -64,6 +64,38 @@ function setupSocket (socket) {
             otherPlayers[victim.socketId].units[victim.id].currentHealth -= damage;
         }
     });
+
+    socket.on("leaderboardUpdate", function(playersData){
+        var leaders = [];
+        for (var id in playersData) {
+            leaders.push([id, playersData[id].wealth, playersData[id].username]);
+        }
+        leaders.sort(function(a, b) { return  b[1] - a[1]; });
+
+        if (playersData){
+            player.wealth = playersData[player.id].wealth;
+            if (Object.keys(otherPlayers)){
+                for (var id in otherPlayers){
+                    if (otherPlayers[id] && otherPlayers[id].wealth) otherPlayers[id].wealth = playersData[id].wealth;
+                }
+            }
+            if(player.id === currentKing){
+                $("#kingname").text(player.username);
+                $("#king-wealth-display").text(commaSeparator(player.wealth));
+            }
+            else {
+                $("#kingname").text(otherPlayers[currentKing].username);
+                $("#king-wealth-display").text(commaSeparator(otherPlayers[currentKing].wealth));
+            }
+        }
+
+        for (var i = 1; i < leaders.length; i++){
+            if (leaders[i] && i > 0) {
+                $("#place" + (i + 1)).text(leaders[i][2] + " " + commaSeparator(leaders[i][1]));
+            }
+        }
+        $("#player-wealth-display").text(commaSeparator(player.wealth));
+    })
 }
 
 socket.on('newKing', function(newKing){
@@ -114,7 +146,6 @@ socket.on('chat message', function(msgObj){
     $('#chat-client .message-panel')[0].scrollTop = 10000;
 });
 
-socket.emit('respawn', {userName: player.username});
 
 resources.load([
     'img/hero.png',
@@ -130,6 +161,7 @@ resources.load([
 
 
 resources.onReady(init);
+
 
 // The main game loop
 var lastTime;
@@ -147,6 +179,7 @@ function main() {
 
 function init() {
 
+    socket.emit('respawn', {userName: player.username});
 
     lastTime = Date.now();
 
