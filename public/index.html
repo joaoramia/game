@@ -68,24 +68,26 @@
         <p id="display-error-content"><span>ALERT:</span> This is an error.</p>
       </div>
       <div id="world-wealth-display">
+        <div id="score-container">
+          <p>Score: $<span id="player-score">2,000</span></p>
+        </div>
+        <div class="live-stats">
+          <p>Available cash: $<span id="player-wealth-display"></span></p>
+        </div>
+        <div class="live-stats">
+          <p>Population: <span id="supply-cap-display">2</span> Maximum: <span id="maximum-supply-display">10</span></p>
+        </div>
         <div id="leaderboard">
           <h3>Leaderboard</h3>
           <div id="king-box">
           <p>THE CURRENT BOSS:</p>
           <p><span id='kingname'></span>    $<span id='king-wealth-display'><span/></p>
           </div>
-          <br>
-          <p><b>Contenders</b></p>
+          <h3>Contenders</h3>
           <p><span id='place2'></span></p>
           <p><span id='place3'></span></p>
           <p><span id='place4'></span></p>
           <p><span id='place5'></span></p>
-        </div>
-        <div class="live-stats">
-          <p>Your wealth: $<span id="player-wealth-display"></span></p>
-        </div>
-        <div class="live-stats">
-          <p>Population: <span id="supply-cap-display">2/10</span></p>
         </div>
 
         <div id="chat-client">
@@ -93,7 +95,7 @@
             <ul id="messages"></ul>
           </div>
           <div class="input-panel">
-            <form action="">
+            <form id="chat-form" action="">
               <input id="m" autocomplete="off" />
             </form>
           </div>
@@ -150,6 +152,7 @@
     <script type="text/javascript" src="js/resources.js"></script>
     <script type="text/javascript" src="js/input.js"></script>
     <script type="text/javascript" src="js/functionalInput.js"></script>
+    <script type="text/javascript" src="js/chat/chat.functionality.js"></script>
     <script type="text/javascript" src="js/combat/combat.functionality.js"></script>
     <script src="js/rbush/rbush.functionality.js"></script>
     <script type="text/javascript" src="js/collisions.js"></script>
@@ -158,6 +161,7 @@
     <script type="text/javascript" src="js/toolkit.js"></script>
     <script type="text/javascript" src="js/viewport.js"></script>
     <script type="text/javascript" src="js/walk.functionality.js"></script>
+    <script type="text/javascript" src="js/socket/socketsetup.js"></script>
     <script type="text/javascript" src="js/select.functionality.js"></script>
     <script type="text/javascript" src="js/audio.js"></script>
     <script type="text/javascript" src="js/moneybag.functionality.js"></script>

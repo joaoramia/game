@@ -21,7 +21,7 @@ document.addEventListener('keypress', function (e) {
     } else if (key === 'QUIT') {
     	if (attackPending) attackModeOff();
     }else if ( key === 'CHAT'){
-        $('#chat-client').toggleClass('display-none');
+        $('#chat-client').toggle();
     }
 
 });

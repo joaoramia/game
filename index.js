@@ -9,19 +9,13 @@ var Hero = require('./server/unit.constructor').Hero;
 var Soldier = require('./server/unit.constructor').Soldier;
 var Bar = require('./server/building.constructor').Bar;
 var House = require('./server/building.constructor').House;
+var inRange = utils.inRange;
 
 app.use(express.static(__dirname + '/public/'));
 app.use(express.static(__dirname + '/browser/'));
 app.use(express.static(__dirname + '/node_modules/'));
 
 var gameConfig = require('./config.json');
-
-// currently not used
-// var quadtree = require('simple-quadtree');
-// var tree = quadtree(0, 0, gameConfig.width, gameConfig.height);
-
-// rBush
-var tree = require('rbush')();
 
 var spriteSizes = {
     "hero": [34, 50],
@@ -54,10 +48,14 @@ var server = app.listen(3030, function () {
 io = io.listen(server);
 
 io.on('connection', function (socket) {
-    console.log("New user has joined. ID: ", socket.id)
+    console.log("New connection. ID: ", socket.id)
     var currentPlayer = new Player(socket.id);
 
     sockets[socket.id] = socket;
+
+    socket.on('giveExistingInfo', function () {
+        socket.emit('existingInfo', players, moneyBags);
+    });
 
     // when the new user joins!
     socket.on('respawn', function (newPlayerData) {
@@ -72,31 +70,27 @@ io.on('connection', function (socket) {
         currentPlayer.units[1] = new Soldier(soldierLocation, socket.id, 1);
         currentPlayer.unitNumber = 2;
 
-        // emit the current object of players then add your player no the array
-        socket.emit('playersArray', players); //to see everyone else
-
         addPlayer(currentPlayer);
 
         //assign current player as king if he is the first one to join
         if (Object.keys(players).length < 2) {
             changeKing(currentPlayer.id);
         }
-        console.log("CURRENT PLAYER", currentPlayer);
-        socket.emit('gameReady', {playerData: currentPlayer, moneyBags: moneyBags}, currentKing);
+        socket.emit('gameReady', {playerData: currentPlayer}, currentKing);
         socket.broadcast.emit('otherPlayerJoin', currentPlayer);
         io.emit('leaderboardUpdate', players);
     });
 
-    socket.on('renameUser', function(data) {
-        players[data.id].username = data.username;
-    })
+    // socket.on('renameUser', function(data) {
+    //     players[data.id].username = data.username;
+    // })
 
     socket.on('chat message', function(msg){
         io.emit('chat message', msg);
     });
 
     socket.on('disconnect', function () {
-        console.log("User with ID", socket.id, "has disconnected.")
+        console.log("Disconnected. ID: ", socket.id)
         removePlayer(socket); // removes them from players AND sockets collections
 
         //if a king disconnects, search again for the new king
@@ -136,13 +130,18 @@ io.on('connection', function (socket) {
     })
 
     socket.on('playerDied', function (data) {
-        socket.broadcast.emit("notificationPlayerDied", {username: data.username});
+        socket.broadcast.emit("notificationPlayerDied", {username: data.username, playerId: data.playerId});
         io.emit('leaderboardUpdate', players);
     });
 
     socket.on('moneyDiscovered', function (moneyBagData) {
+        var currentPlayer = players[moneyBagData.playerId];
         //increase the wealth of the player
-        players[moneyBagData.playerId].wealth += moneyBagData.value;
+        currentPlayer.wealth += moneyBagData.value;
+        //and their score
+        currentPlayer.score += moneyBagData.value;
+        var responseObj =   {wealth: currentPlayer.wealth, score: currentPlayer.score}
+        socket.emit('updateScoreAndWealth', responseObj);
 
         //check if this player's wealth becomes higher than the king's
         if (players[moneyBagData.playerId].wealth > players[currentKing].wealth){
@@ -159,7 +158,6 @@ io.on('connection', function (socket) {
             newBagName: newBagKeyName.join(","),
             newBagValue: moneyBags[newBagKeyName]
         }
-        // console.log(bagUpdate);
         io.emit('deleteAndUpdateMoneyBags', bagUpdate);
         delete moneyBags[moneyBagData.name];
         //replenish the moneyBags object
@@ -241,7 +239,6 @@ io.on('connection', function (socket) {
 
     socket.on('hireMercenaryRequest', function (data) {
         //checks to see if player has enough money to buy a merc
-        console.log("request received");
         if (players[data.playerId].wealth < 400) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "lacking resources"});
         //checks to see that current max supply would not be surpassed by building another unit
@@ -263,6 +260,10 @@ io.on('connection', function (socket) {
             //add to this building's queue
             var newUnit = new Soldier(spawnLocation, data.playerId, players[data.playerId].unitNumber, rendezvousPoint); 
 
+            //update player's available cash on server to reflect purchase of units
+            players[data.playerId].wealth = players[data.playerId].wealth - 400;
+            socket.emit('updateScoreAndWealth', {wealth: players[data.playerId].wealth});
+
             socket.emit('addToQueue', {buildingId: data.buildingId, type: "soldier"});
             players[data.playerId].buildings[data.buildingId].productionQueue.push(newUnit);
             //increment the unit number to generate the id for the player's next unit
@@ -279,6 +280,8 @@ io.on('connection', function (socket) {
                         //remove the mercenary from the production queue
                         if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 0) {
                             var newUnitForClient = players[data.playerId].buildings[data.buildingId].productionQueue.shift();
+                            //add it to the player's unit object
+                            players[data.playerId].units[newUnitForClient.id] = newUnitForClient;
                         }
                         //add it to player object on server, and send to client
                         io.emit('hireMercenaryResponse', {valid: true, newUnit: newUnitForClient});
@@ -331,10 +334,6 @@ function addPlayer (playerData) {
 
 }
 
-function addEntities () {
-    tree.add()
-}
-
 function removePlayer (socket) {
     delete sockets[socket.id];
     delete players[socket.id];
@@ -344,21 +343,6 @@ function changeKing (newKing, previousKing){
     if(previousKing) players[previousKing].isKing = false;
     players[newKing].isKing = true;
     currentKing = newKing;
-}
-
-function inRange (num1, num2, num3, num4){
-    var temp = num3;
-    if (num3 > num4) {
-      num3 = num4;
-      num4 = temp;
-    }
-
-    for (var i = num1; i <= num2; i++){
-      if (i >= num3 && i <= num4){
-        return true;
-      }
-    }
-    return false;
 }
 
 function checkCollisions (position, type){

@@ -89,7 +89,7 @@ function renderHpBar (currentHealth, maxHealth) {
 }
 
 function renderName (userName) {
-
+    if (this.url === 'img/moneybag.png') return;
     var textMeasure = ctx.measureText(userName);
     var xLocation;
 
@@ -114,7 +114,7 @@ function generateSprite(type, selectable, playerId){
     if (type === 'hero') {
        return new Sprite('img/hero/hero-1.png', [32, 0], [32, 55], 16, [0, 1, 2], 'horizontal', selectable);
     } else if (type === 'soldier') {
-        return new Sprite('img/soldier-asset.png', [0, 0], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
+        return new Sprite('img/assault-asset.png', [0, 0], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
     } else if (type === 'moneybag') {
         return new Sprite('img/moneybag.png', [0,0], [33,36], 1, [0], false);
     } else if (type === 'bar') {
