@@ -15,7 +15,7 @@ function gameOver(){
 	player.building = {};
 	moneyBags = {};
 	//announce to the world that someone died
-	socket.emit("playerDied", {username: player.username});
+	socket.emit("playerDied", {username: player.username, playerId: player.id});
 }
 
 function checkIfGameOver() {
@@ -33,8 +33,11 @@ function restartGame () {
 	$("#fullscreen-overlay").hide();
 	$("#world-wealth-display").show();
 	$("#game-controls").show();
+	gameOver = false;
 }
 
 socket.on("notificationPlayerDied", function(data){
  	displayNotificationPlayerDied(data.username);
+ 	otherPlayers[data.playerId].units = {};
+ 	otherPlayers[data.playerId].buildings = {};
 })
