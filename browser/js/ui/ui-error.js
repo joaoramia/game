@@ -78,8 +78,8 @@ function currentMaxSupply() {
 };
 
 function updateSupplyDisplay(){
-	var updatedSupplyText = "" + currentSupply() + "/" + currentMaxSupply();
-	$("#supply-cap-display").text(updatedSupplyText);
+	$("#supply-cap-display").text(currentSupply());
+	$("#maximum-supply-display").text(currentMaxSupply());
 }
 
 socket.on('updateScoreAndWealth', function (data) {
