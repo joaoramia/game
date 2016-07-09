@@ -197,7 +197,7 @@ io.on('connection', function (socket) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
             //temporarily set to false because we don't have collision set up
             } else {
-                var newBuildingNumber = players[data.id].buildingNumber;
+                var newBuildingNumber = players[data.id].buildingNumber.toString();
                 var newBar = new Bar(data.pos, data.id, newBuildingNumber);
                 players[data.id].buildings[newBuildingNumber] = newBar;
                 players[data.id].buildingNumber++;
@@ -269,9 +269,10 @@ io.on('connection', function (socket) {
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;
             var progress = 0;
-            //uses setTimeout and sends progress to the client 
+            //this should be cleaned up. Hire unit depends on variables/values above -- bad! 
             function hireUnit(){
-                socket.emit('hireMercenaryResponse', {valid: true, progress: progress});
+                socket.emit('hireMercenaryResponse', {valid: true, progress: progress, buildingId: data.buildingId});
+                console.log({valid: true, progress: progress, building: data.buildingId});
                 var hireUnitProgress = setTimeout(function(){
                     if (progress < 20) {
                         progress++;
@@ -284,7 +285,8 @@ io.on('connection', function (socket) {
                             players[data.playerId].units[newUnitForClient.id] = newUnitForClient;
                         }
                         //add it to player object on server, and send to client
-                        io.emit('hireMercenaryResponse', {valid: true, newUnit: newUnitForClient});
+                        io.emit('mercenaryComplete', {valid: true, newUnit: newUnitForClient, buildingId: data.buildingId});
+                        console.log("BUILDING ID", data.buildingId);
                         //if another merc has been added to the queue, do this again
                         if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 0) {
                             progress = 0;
