@@ -17,104 +17,8 @@ var wealth = 0;
 var gameOver = false;
 var colorArray = ["mediumspringgreen", "chartreuse", "black", "aqua", "crimson", "deeppink"];
 
-function setupSocket (socket) {
-
-    socket.on('otherPlayerJoin', function (otherPlayerData) {
-        console.log(otherPlayerData.id + ' has joined!');
-
-        var toBeAddedToTree = [];
-
-        newPlayerJoinsAlert(otherPlayerData.username);
-
-        // generate the new players sprites
-        for (var unitId in otherPlayerData.units) {
-            var unit = otherPlayerData.units[unitId];
-            unit.sprite = generateSprite(unit.type, false, otherPlayerData.id);
-
-            toBeAddedToTree.push(prepForUnitTree(unit));
-        }
-        for (var id in otherPlayerData.buildings) {
-            var building = otherPlayerData.building[id];
-            building.sprite = generateSprite(building.type, false, otherPlayerData.id);
-        }
-        otherPlayers[otherPlayerData.id] = otherPlayerData;
-
-        tree.load(toBeAddedToTree);
-    });
-
-    socket.on('otherPlayerDC', function (socketId) {
-        console.log(socketId + ' left!');
-
-
-        removeFromTreeOnDisconnect(socketId);
-
-        var departingUserUsername = otherPlayers[socketId].username;
-        newPlayerLeavesAlert(departingUserUsername);
-
-        delete otherPlayers[socketId];
-    });
-
-
-    socket.on('takeThat', function (victim, damage) {
-        console.log(victim, damage);
-        if (player.id === victim.socketId) {
-            player.units[victim.id].currentHealth -= damage;
-            player.units[victim.id].hit = true;
-        } else {
-            otherPlayers[victim.socketId].units[victim.id].currentHealth -= damage;
-        }
-    });
-
-    socket.on("leaderboardUpdate", function(playersData){
-        var leaders = [];
-        for (var id in playersData) {
-            leaders.push([id, playersData[id].wealth, playersData[id].username]);
-        }
-        leaders.sort(function(a, b) { return  b[1] - a[1]; });
-
-        if (playersData){
-            player.wealth = playersData[player.id].wealth;
-            if (Object.keys(otherPlayers)){
-                for (var id in otherPlayers){
-                    if (otherPlayers[id] && otherPlayers[id].wealth) otherPlayers[id].wealth = playersData[id].wealth;
-                }
-            }
-            if(player.id === currentKing){
-                $("#kingname").text(player.username);
-                $("#king-wealth-display").text(commaSeparator(player.wealth));
-            }
-            else {
-                $("#kingname").text(otherPlayers[currentKing].username);
-                $("#king-wealth-display").text(commaSeparator(otherPlayers[currentKing].wealth));
-            }
-        }
-
-        for (var i = 1; i < leaders.length; i++){
-            if (leaders[i] && i > 0) {
-                $("#place" + (i + 1)).text(leaders[i][2] + " " + commaSeparator(leaders[i][1]));
-            }
-        }
-        $("#player-wealth-display").text(commaSeparator(player.wealth));
-    })
-}
-
-socket.on('newKing', function(newKing){
-    var previousKing = currentKing;
-    currentKing = newKing;
-    if (player.id === currentKing) {
-        player.units[0].sprite = generateSprite(player.units[0].type, true, player.id);
-        if(otherPlayers[previousKing]) otherPlayers[previousKing].units[0].sprite = generateSprite(otherPlayers[previousKing].units[0].type, false, previousKing);
-    }
-    else if (otherPlayers[currentKing]){
-        otherPlayers[currentKing].units[0].sprite = generateSprite(otherPlayers[currentKing].units[0].type, false, currentKing);
-        if (otherPlayers[previousKing]) otherPlayers[previousKing].units[0].sprite = generateSprite(otherPlayers[previousKing].units[0].type, false, previousKing);
-        if (player.id === previousKing) player.units[0].sprite = generateSprite(player.units[0].type, true, player.id);
-    }
-});
 
 var displayCurrentPlayersUnits = false;
-
-//get initial background
 
 //start game on user press Play button
 function startGame(){
@@ -122,30 +26,15 @@ function startGame(){
     $("#world-wealth-display").show();
     $("#game-controls").show();
     displayCurrentPlayersUnits = true;
+    socket.emit('respawn', {userName: player.username});
 }
 
 //assigns a click event to the button on the load screen
 $("#login-box button").click(function(){
-    socket.emit('renameUser', {userName: $( "#nick" ).val(), id: player.id});
+    // socket.emit('renameUser', {userName: $( "#nick" ).val(), id: player.id});
     player.username = $( "#nick" ).val();
     startGame();
 });
-
-
-//chat-client
-$('form').submit(function(){
-    socket.emit('chat message', { username: player.username, text: $('#m').val(), msgcolor: player.color});
-    $('#m').val('');
-    return false;
-});
-
-socket.on('chat message', function(msgObj){
-    //$('#messages').append($('<li>').text(msgObj.username + " says "+ msgObj.text));
-    $('#messages').append('<li>' + '<span style="color: '+ msgObj.msgcolor +'">' + msgObj.username + '</span> says, "' + msgObj.text +'" </li>');
-    $('#chat-client').removeClass('display-none');
-    $('#chat-client .message-panel')[0].scrollTop = 10000;
-});
-
 
 resources.load([
     'img/hero.png',
@@ -160,7 +49,6 @@ resources.load([
     'img/cop-asset.png',
     'img/assault-asset.png'
 ]);
-
 
 resources.onReady(init);
 
@@ -180,100 +68,24 @@ function main() {
 };
 
 function init() {
-
-    socket.emit('respawn', {userName: player.username});
-
-    lastTime = Date.now();
-
-    socket.on("playersArray", function(playersCollection){
-        
-        otherPlayers = playersCollection;
-
-        /*
-        for each of the other players, assign each unit,
-        its appropriate sprite
-        */
-        
-        var toBeAddedToTree = [];
-
-        for (var otherPlayer in otherPlayers){
-            if (otherPlayers.hasOwnProperty(otherPlayer)){
-                //for each player assign each unit its appropriate sprint
-                for (var unitId in otherPlayers[otherPlayer].units) {
-                    var unit = otherPlayers[otherPlayer].units[unitId];
-                    unit.sprite = generateSprite(unit.type, false, otherPlayer.id);
-
-                    // add unit to an array built to be inserted into r-Tree
-                    // better than adding one by one because bulk insert is way faster
-                    toBeAddedToTree.push(prepForUnitTree(unit));
-                    
-                }
-                for (var id in otherPlayers[otherPlayer].buildings) {
-                    var building = otherPlayers[otherPlayer].buildings[id];
-                    building.sprite = generateSprite(building.type, false, otherPlayer.id);
-                }
-            }
-        }
-        tree.load(toBeAddedToTree);
-    });
-
-    socket.on("gameReady", function(gameData, king) {
-        console.log("GAME READY DATA", gameData);
-        adjustVPOnGameReady(gameData.playerData.units[0].pos);
-        currentKing = king;
-        player = gameData.playerData;
-        wealth = gameData.playerData.wealth;
-
-        // set a color for the chat
-        player.color = colorArray[getRandomNum(colorArray.length - 1)];
-
-        for (var unitId in player.units) {
-            var unit = player.units[unitId];
-            unit.sprite = generateSprite(unit.type, true, player.id);
-        }
-
-        for (var id in player.buildings) {
-            var building = player.buildings[id];
-            building.sprite = generateSprite(building.type, true, player.id);
-        }
-
-
-        setupMoneyBags(gameData.moneyBags);
-        setupSocket(socket);
-        drawViewport();
-        main();
-    })
-
     viewCanvas.addEventListener('mousedown', mouseDown, false);
     viewCanvas.addEventListener('mouseup', mouseUp, false);
     viewCanvas.addEventListener('mousemove', mouseMove, false);
 
-    socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
-        setupMoneyBags(moneyBagsFromServer);
-    })
+    setupSocket(socket);
 
+    fireSocketForInfo(socket);
+
+    lastTime = Date.now();
 }
-
-socket.on('deleteAndUpdateMoneyBags', function (bagUpdate) {
-    delete moneyBags[bagUpdate.deletedBagName];
-    moneyBags[bagUpdate.newBagName] = bagUpdate.newBagValue;
-    //abstract this away
-    var coords = bagUpdate.newBagName.split(",");
-    coords[0] = parseInt(coords[0]);
-    coords[1] = parseInt(coords[1]);
-    var thisMoneyBag = moneyBags[bagUpdate.newBagName];
-    thisMoneyBag.pos = coords;
-    thisMoneyBag.sprite = generateSprite("moneybag");
-    
-    moneyTree.insert(prepForMoneyTree(thisMoneyBag));
-
-})
-
-
 
 // Update game objects
 function update(dt) {
     gameTime += dt;
+
+    if (gameOver === false) {
+        checkIfGameOver();
+    }
 
     walk(dt);
 
@@ -286,18 +98,12 @@ function update(dt) {
     removeDeadUnits();
 
     socket.emit("playerMoves", player);
-    //socket.emit("playerMoves", {id: player.id, unitsPos: getUnitPosByPlayer(player)});
 
     socket.on("otherPlayerMoves", function(playerData) {
-        // otherPlayers[playerData.id] = Object.assign(otherPlayers[playerData.id], playerData);
         otherPlayers[playerData.id] = playerData;
-        //setUnitPosByPlayer(otherPlayers[playerData.id], playerData.units);
     });
 
     drawViewport();
-
-
-
 }
 
 
@@ -341,9 +147,6 @@ function render() {
     renderIndicator();
     
     renderSelectionBox();
-    if (gameOver === false) {
-        checkIfGameOver();
-   }
     //cameraPan(currentMousePosition);
 };
 
@@ -379,19 +182,3 @@ function renderSelectionBox(){
     ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
     ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
 }
-
-// function getUnitPosByPlayer(player){ 
-//     var posObj = {}; 
-//     for (var key in player.units){ 
-//         posObj[key] = player.units[key].pos; 
-//     } 
-//     return posObj; 
-// }
-
-// function setUnitPosByPlayer(player, posObj){ 
-//     for (var unitId in player.units){ 
-//         if (posObj[unitId])  {
-//             player.units[unitId].pos = posObj[unitId].pos; 
-//         }
-//     }
-//  }
