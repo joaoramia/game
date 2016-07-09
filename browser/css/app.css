@@ -159,18 +159,33 @@ canvas {
     top: 5px;
     right: 5px;
     color: white;
-    width: 250px;
+    min-width: 25%;
+    max-width: 30%;
     display: none;
 }
 
+#score-container {
+    background-color: rgba(23, 23, 23, 0.5);
+    padding: 5px;
+    font-size: 48px;
+    text-align: left;
+    display: inline-block;
+    float: right;
+}
+
 #leaderboard {
+    margin-top: 6px;
     background-color: rgba(23, 23, 23, 0.3);
+    float: right;
     padding: 5px;
     text-align: center;
+    width: 250px;
 }
 
 #leaderboard h3 {
     text-align: center;
+    margin-top: 4px;
+    margin-bottom: 4px;
 }
 
 #king-box {
@@ -184,9 +199,11 @@ canvas {
 
 .live-stats {
     background-color: rgba(23, 23, 23, 0.3);
-    margin-top: 10px;
+    margin-top: 6px;
+    float: right;
     padding: 5px;
     text-align: right;
+    width: 250px;
 }
 
 #game-controls {
@@ -317,6 +334,8 @@ canvas {
     color: beige;
     font-size: small;
     text-align: left;
+    float: right;
+    width: 300px;
 }
 
 #chat-client .message-panel{

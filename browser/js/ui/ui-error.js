@@ -78,7 +78,15 @@ function currentMaxSupply() {
 };
 
 function updateSupplyDisplay(){
-	var updatedSupplyText = "" + currentSupply() + "/" + currentMaxSupply();
-	$("#supply-cap-display").text(updatedSupplyText);
+	$("#supply-cap-display").text(currentSupply());
+	$("#maximum-supply-display").text(currentMaxSupply());
 }
+
+socket.on('updateScoreAndWealth', function (data) {
+    wealth += data.wealth;
+    $("#player-wealth-display").text(wealth);
+    if (data.score) {
+    	$("#player-score").text(data.score);
+	}
+})
 

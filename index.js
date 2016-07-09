@@ -135,8 +135,13 @@ io.on('connection', function (socket) {
     });
 
     socket.on('moneyDiscovered', function (moneyBagData) {
+        var currentPlayer = players[moneyBagData.playerId];
         //increase the wealth of the player
-        players[moneyBagData.playerId].wealth += moneyBagData.value;
+        currentPlayer.wealth += moneyBagData.value;
+        //and their score
+        currentPlayer.score += moneyBagData.value;
+        var responseObj =   {wealth: currentPlayer.wealth, score: currentPlayer.score}
+        socket.emit('updateScoreAndWealth', responseObj);
 
         //check if this player's wealth becomes higher than the king's
         if (players[moneyBagData.playerId].wealth > players[currentKing].wealth){
@@ -153,7 +158,6 @@ io.on('connection', function (socket) {
             newBagName: newBagKeyName.join(","),
             newBagValue: moneyBags[newBagKeyName]
         }
-        // console.log(bagUpdate);
         io.emit('deleteAndUpdateMoneyBags', bagUpdate);
         delete moneyBags[moneyBagData.name];
         //replenish the moneyBags object
@@ -235,7 +239,6 @@ io.on('connection', function (socket) {
 
     socket.on('hireMercenaryRequest', function (data) {
         //checks to see if player has enough money to buy a merc
-        console.log("request received");
         if (players[data.playerId].wealth < 400) {
             socket.emit('hireMercenaryResponse', {valid: false, error: "lacking resources"});
         //checks to see that current max supply would not be surpassed by building another unit
@@ -257,6 +260,10 @@ io.on('connection', function (socket) {
             //add to this building's queue
             var newUnit = new Soldier(spawnLocation, data.playerId, players[data.playerId].unitNumber, rendezvousPoint); 
 
+            //update player's available cash on server to reflect purchase of units
+            players[data.playerId].wealth = players[data.playerId].wealth - 400;
+            socket.emit('updateScoreAndWealth', {wealth: players[data.playerId].wealth});
+
             socket.emit('addToQueue', {buildingId: data.buildingId, type: "soldier"});
             players[data.playerId].buildings[data.buildingId].productionQueue.push(newUnit);
             //increment the unit number to generate the id for the player's next unit
@@ -273,6 +280,8 @@ io.on('connection', function (socket) {
                         //remove the mercenary from the production queue
                         if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 0) {
                             var newUnitForClient = players[data.playerId].buildings[data.buildingId].productionQueue.shift();
+                            //add it to the player's unit object
+                            players[data.playerId].units[newUnitForClient.id] = newUnitForClient;
                         }
                         //add it to player object on server, and send to client
                         io.emit('hireMercenaryResponse', {valid: true, newUnit: newUnitForClient});
