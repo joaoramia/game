@@ -133,7 +133,7 @@ $("#login-box button").click(function(){
 
 
 //chat-client
-$('form').submit(function(){
+$('#chat-form').submit(function(){
     socket.emit('chat message', { username: player.username, text: $('#m').val(), msgcolor: player.color});
     $('#m').val('');
     return false;
