@@ -1,4 +1,5 @@
-function gameOver(){
+function gameOverFunc(){
+	console.log('gameoverfunc');
 	//make the render function stop checking if its game over
 	gameOver = true;
 	//make appropriate changes to GUI
@@ -20,20 +21,21 @@ function gameOver(){
 
 function checkIfGameOver() {
 	if (!player.units[0]) {
-		gameOver();
+		gameOverFunc();
 	}
 }
 
 $("#game-over-message-box button").click(function(){
 	restartGame();
+	console.log('asdfads');
 })
 
 function restartGame () {
-	socket.emit("respawn", {username: player.username});
+	console.log('restartgame');
 	$("#fullscreen-overlay").hide();
 	$("#world-wealth-display").show();
 	$("#game-controls").show();
-	gameOver = false;
+	socket.emit("respawn", {username: player.username});
 }
 
 socket.on("notificationPlayerDied", function(data){
