@@ -25,6 +25,8 @@ function mouseDown(e) {
   } else if ( (e.ctrlKey && currentSelection.length) || (e.which === 3 && currentSelection.length) ) {
     rightClick.x = e.layerX + vp.pos[0];
     rightClick.y = e.layerY + vp.pos[1];
+    mouseTargetLocation[0] = Math.floor(rightClick.x/tileWidth); //#a-star algorithm
+    mouseTargetLocation[1] = Math.floor(rightClick.y/tileHeight); //#a-star algorithm
   }
 }
 
