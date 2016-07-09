@@ -37,23 +37,6 @@ $("#login-box button").click(function(){
     startGame();
 });
 
-<<<<<<< HEAD
-
-//chat-client
-$('#chat-form').submit(function(){
-    socket.emit('chat message', { username: player.username, text: $('#m').val(), msgcolor: player.color});
-    $('#m').val('');
-    return false;
-});
-
-socket.on('chat message', function(msgObj){
-    //$('#messages').append($('<li>').text(msgObj.username + " says "+ msgObj.text));
-    $('#messages').append('<li>' + '<span style="color: '+ msgObj.msgcolor +'">' + msgObj.username + '</span> says, "' + msgObj.text +'" </li>');
-    $('#chat-client').show();
-    $('#chat-client .message-panel')[0].scrollTop = 10000;
-});
-
-
 resources.load([
     'img/hero.png',
     'img/hero/hero-0.png', 'img/hero/hero-1.png', 'img/hero/hero-2.png', 'img/hero/hero-3.png', 'img/hero/hero-4.png',
