@@ -19,12 +19,11 @@ function checkCollisionWithMoneyBag() {
             moneyTree.remove(moneyBag);
             playSoundOnEvent(moneyFoundSound);
             socket.emit('moneyDiscovered', moneyBagData);
-            wealth += moneyBagData.value;
-            $("#player-wealth-display").text(wealth);
         }
     }
 }
 
+//socket where GUI is updated is in ui-error.js file
 
 function setupMoneyBags (moneyBagsFromServer) {
     // Adding moneybags to moneyTrees R-tree

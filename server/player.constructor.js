@@ -11,6 +11,7 @@ function Player(id, username) {
 	this.buildingNumber = 1;
 	this.isKing = false;
 	this.absoluteMaxSupply = 50;
+	this.score = 2000; //make this equal to wealth
 }
 
 function randomName(){

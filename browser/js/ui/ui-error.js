@@ -82,3 +82,11 @@ function updateSupplyDisplay(){
 	$("#supply-cap-display").text(updatedSupplyText);
 }
 
+socket.on('updateScoreAndWealth', function (data) {
+    wealth += data.wealth;
+    $("#player-wealth-display").text(wealth);
+    if (data.score) {
+    	$("#player-score").text(data.score);
+	}
+})
+

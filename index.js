@@ -140,8 +140,13 @@ io.on('connection', function (socket) {
     });
 
     socket.on('moneyDiscovered', function (moneyBagData) {
+        var currentPlayer = players[moneyBagData.playerId];
         //increase the wealth of the player
-        players[moneyBagData.playerId].wealth += moneyBagData.value;
+        currentPlayer.wealth += moneyBagData.value;
+        //and their score
+        currentPlayer.score += moneyBagData.value;
+        var responseObj =   {wealth: currentPlayer.wealth, score: currentPlayer.score}
+        socket.emit('updateScoreAndWealth', responseObj);
 
         //check if this player's wealth becomes higher than the king's
         if (players[moneyBagData.playerId].wealth > players[currentKing].wealth){
@@ -158,7 +163,6 @@ io.on('connection', function (socket) {
             newBagName: newBagKeyName.join(","),
             newBagValue: moneyBags[newBagKeyName]
         }
-        // console.log(bagUpdate);
         io.emit('deleteAndUpdateMoneyBags', bagUpdate);
         delete moneyBags[moneyBagData.name];
         //replenish the moneyBags object
@@ -261,6 +265,10 @@ io.on('connection', function (socket) {
             var rendezvousPoint = players[data.playerId].buildings[data.buildingId].rendezvousPoint || undefined;
             //add to this building's queue
             var newUnit = new Soldier(spawnLocation, data.playerId, players[data.playerId].unitNumber, rendezvousPoint); 
+
+            //update player's available cash on server to reflect purchase of units
+            players[data.playerId].wealth = players[data.playerId].wealth - 400;
+            socket.emit('updateScoreAndWealth', {wealth: players[data.playerId].wealth});
 
             socket.emit('addToQueue', {buildingId: data.buildingId, type: "soldier"});
             players[data.playerId].buildings[data.buildingId].productionQueue.push(newUnit);
