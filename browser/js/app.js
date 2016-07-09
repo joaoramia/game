@@ -12,6 +12,7 @@ var buildMode = {
     type: ""
 }
 var currentSelection = [];
+var gameStarted = false;
 var gameTime = 0;
 var wealth = 0;
 var gameOver = false;
@@ -77,13 +78,15 @@ function init() {
     fireSocketForInfo(socket);
 
     lastTime = Date.now();
+    drawViewport();
+    main();
 }
 
 // Update game objects
 function update(dt) {
     gameTime += dt;
 
-    if (gameOver === false) {
+    if (gameOver === false && gameStarted) {
         checkIfGameOver();
     }
 

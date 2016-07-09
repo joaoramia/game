@@ -1,40 +1,14 @@
 function setupSocket (socket) {
-    socket.on("playersArray", function(playersCollection){
-        
-        otherPlayers = playersCollection;
-
-        /*
-        for each of the other players, assign each unit,
-        its appropriate sprite
-        */
-        
-        var toBeAddedToTree = [];
-
-        for (var otherPlayer in otherPlayers){
-            if (otherPlayers.hasOwnProperty(otherPlayer)){
-                //for each player assign each unit its appropriate sprint
-                for (var unitId in otherPlayers[otherPlayer].units) {
-                    var unit = otherPlayers[otherPlayer].units[unitId];
-                    unit.sprite = generateSprite(unit.type, false, otherPlayer.id);
-
-                    // add unit to an array built to be inserted into r-Tree
-                    // better than adding one by one because bulk insert is way faster
-                    toBeAddedToTree.push(prepForUnitTree(unit));
-                    
-                }
-                for (var id in otherPlayers[otherPlayer].buildings) {
-                    var building = otherPlayers[otherPlayer].buildings[id];
-                    building.sprite = generateSprite(building.type, false, otherPlayer.id);
-                }
-            }
-        }
-        tree.load(toBeAddedToTree);
+    socket.on("existingInfo", function(playersColl, moneyBagColl){
+        setupExistingPlayers(socket, playersColl);
+        setupMoneyBags(moneyBagColl);
     });
 
     socket.on("gameReady", function(gameData, king) {
         console.log("GAME READY DATA", gameData);
         adjustVPOnGameReady(gameData.playerData.units[0].pos);
         gameOver = false;
+        gameStarted = true;
         currentKing = king;
         player = gameData.playerData;
         wealth = gameData.playerData.wealth;
@@ -47,15 +21,10 @@ function setupSocket (socket) {
             unit.sprite = generateSprite(unit.type, true, player.id);
         }
 
-        for (var id in player.buildings) {
-            var building = player.buildings[id];
-            building.sprite = generateSprite(building.type, true, player.id);
-        }
-
-
-        setupMoneyBags(gameData.moneyBags);
-        drawViewport();
-        main();
+        // for (var id in player.buildings) {
+        //     var building = player.buildings[id];
+        //     building.sprite = generateSprite(building.type, true, player.id);
+        // }
     });
 
     socket.on('otherPlayerJoin', function (otherPlayerData) {
@@ -136,9 +105,9 @@ function setupSocket (socket) {
 
     setupChatSocket(socket);
 
-    socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
-        setupMoneyBags(moneyBagsFromServer);
-    });
+    // socket.on('moneyBagsUpdate', function (moneyBagsFromServer){
+    //     setupMoneyBags(moneyBagsFromServer);
+    // });
 
     socket.on('deleteAndUpdateMoneyBags', function (bagUpdate) {
         delete moneyBags[bagUpdate.deletedBagName];
@@ -171,5 +140,34 @@ function setupSocket (socket) {
 }
 
 function fireSocketForInfo () {
-    socket.emit('giveExistingPlayers');
+    socket.emit('giveExistingInfo');
+}
+
+function setupExistingPlayers (socket, playersCollection) {
+    otherPlayers = playersCollection;
+    /*
+    for each of the other players, assign each unit,
+    its appropriate sprite
+    */
+    var toBeAddedToTree = [];
+
+    for (var otherPlayer in otherPlayers){
+        if (otherPlayers.hasOwnProperty(otherPlayer)){
+            //for each player assign each unit its appropriate sprint
+            for (var unitId in otherPlayers[otherPlayer].units) {
+                var unit = otherPlayers[otherPlayer].units[unitId];
+                unit.sprite = generateSprite(unit.type, false, otherPlayer.id);
+
+                // add unit to an array built to be inserted into r-Tree
+                // better than adding one by one because bulk insert is way faster
+                toBeAddedToTree.push(prepForUnitTree(unit));
+                
+            }
+            for (var id in otherPlayers[otherPlayer].buildings) {
+                var building = otherPlayers[otherPlayer].buildings[id];
+                building.sprite = generateSprite(building.type, false, otherPlayer.id);
+            }
+        }
+    }
+    tree.load(toBeAddedToTree);
 }

@@ -2,6 +2,7 @@ function gameOverFunc(){
 	console.log('gameoverfunc');
 	//make the render function stop checking if its game over
 	gameOver = true;
+	gameStarted = false;
 	//make appropriate changes to GUI
 	$("#fullscreen-overlay").show();
 	$("#game-over-message-box").show();
@@ -14,7 +15,6 @@ function gameOverFunc(){
 	//but can still see other players moving -- intended
 	player.units = {};
 	player.building = {};
-	moneyBags = {};
 	//announce to the world that someone died
 	socket.emit("playerDied", {username: player.username, playerId: player.id});
 }

@@ -89,7 +89,7 @@ function renderHpBar (currentHealth, maxHealth) {
 }
 
 function renderName (userName) {
-
+    if (this.url === 'img/moneybag.png') return;
     var textMeasure = ctx.measureText(userName);
     var xLocation;
 
