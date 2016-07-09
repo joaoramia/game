@@ -53,8 +53,8 @@ io.on('connection', function (socket) {
 
     sockets[socket.id] = socket;
 
-    socket.on('giveExistingPlayers', function () {
-        socket.emit('playersArray', players);
+    socket.on('giveExistingInfo', function () {
+        socket.emit('existingInfo', players, moneyBags);
     });
 
     // when the new user joins!
@@ -76,7 +76,7 @@ io.on('connection', function (socket) {
         if (Object.keys(players).length < 2) {
             changeKing(currentPlayer.id);
         }
-        socket.emit('gameReady', {playerData: currentPlayer, moneyBags: moneyBags}, currentKing);
+        socket.emit('gameReady', {playerData: currentPlayer}, currentKing);
         socket.broadcast.emit('otherPlayerJoin', currentPlayer);
         io.emit('leaderboardUpdate', players);
     });
