@@ -274,7 +274,7 @@ io.on('connection', function (socket) {
                 socket.emit('hireMercenaryResponse', {valid: true, progress: progress, buildingId: data.buildingId});
                 console.log({valid: true, progress: progress, building: data.buildingId});
                 var hireUnitProgress = setTimeout(function(){
-                    if (progress < 20) {
+                    if (progress < 60) {
                         progress++;
                         hireUnit();
                     } else {
@@ -297,7 +297,7 @@ io.on('connection', function (socket) {
                             progress = 0;
                         }
                     }
-                }, 500);
+                }, 250);
             }
             //check that currentlyBuilding property is false. if currently building, don't need to invoke measure progress again
             if (players[data.playerId].buildings[data.buildingId].currentlyBuilding === false) {

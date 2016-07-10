@@ -66,46 +66,46 @@ socket.on("hireMercenaryResponse", function (data) {
 		}
 	//if valid but receiving progress updates, unit in process of hiring
 	} else if (data.progress) {
-		var currentlySelectedBuilding = currentSelection[0];
-		console.log("CURRENT SELECTION", currentSelection[0]);
-		console.log("THE ID FROM CURRENT SELECTION", currentlySelectedBuilding.id);
-		console.log("BUILDING ID", data.buildingId);
 		var hiringBuilding = player.buildings[data.buildingId];
-		console.log("HIRING BUILDING", hiringBuilding);
 		hiringBuilding.progress = data.progress;
-		//change the text of the info box so it states what's being built
-		if (currentlySelectedBuilding.id === data.buildingId) {
-			//update color
-			if (data.progress < 8) {
-				$("#progress-bar").css("background-color", "red");
-			} else if (data.progress < 17) {
-				$("#progress-bar").css("background-color", "#FFD700");
-			} else {
-				$("#progress-bar").css("background-color", "#00FF00");
-			}
-			//update length
-			var percent = (data.progress * 100) / 20;
-			$("#progress-bar").css("width", "" + percent + "%");
-		} 
 	}		
 })
+
+function updateProgressBar() {
+	if (currentSelection[0]) {
+		if (currentSelection[0].progress) {
+			if (currentSelection[0].progress < 25) {
+    			$("#progress-bar").css("background-color", "red");
+   		 	} else if (currentSelection[0].progress < 40) {
+   		 		$("#progress-bar").css("background-color", "#FFD700");
+   		 	} else {
+    	  		$("#progress-bar").css("background-color", "#00FF00");
+    		}
+    		var percent = (currentSelection[0].progress * 100) / 60;
+    		if (percent === 100) {
+    			$("#progress-bar").css("width", "" + 0 + "%");
+    		} else {
+    			$("#progress-bar").css("width", "" + percent + "%");
+    		}
+  		}
+	}
+}
 
 socket.on('mercenaryComplete', function (data) {
 	var newUnit = data.newUnit;
 	var currentlySelectedBuilding = currentSelection[0];
-	var hiringBuilding = player.buildings[data.buildingId];
 	//only add to player object if id on unit matches id of player 
 	if (player.id === newUnit.socketId) {
-		//update building's queue 
+		//update building's information
+		var hiringBuilding = player.buildings[data.buildingId];
 		hiringBuilding.productionQueue.shift();
-		//if currently selected building
-		if (currentlySelectedBuilding.id === hiringBuilding.id && currentlySelectedBuilding.socketId === player.id) {
-			//update bar to show that unit is complete 
-			$("#progress-bar").css("width", "" + 0 + "%");
-			//update display of production queue
-			updateProductionQueueDisplay(currentlySelectedBuilding);
+		if (currentlySelectedBuilding) {
+			//if currently selected building
+			if (currentlySelectedBuilding.id === hiringBuilding.id && currentlySelectedBuilding.socketId === player.id) {
+				//update display of production queue
+				updateProductionQueueDisplay(currentlySelectedBuilding);
+			}
 		}
-
 		newUnit.sprite = generateSprite("soldier", true, newUnit.socketId);
 		player.units[newUnit.id] = newUnit;
 		updateSupplyDisplay();
