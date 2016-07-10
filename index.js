@@ -286,7 +286,6 @@ io.on('connection', function (socket) {
                         }
                         //add it to player object on server, and send to client
                         io.emit('mercenaryComplete', {valid: true, newUnit: newUnitForClient, buildingId: data.buildingId});
-                        console.log("BUILDING ID", data.buildingId);
                         //if another merc has been added to the queue, do this again
                         if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 0) {
                             progress = 0;
