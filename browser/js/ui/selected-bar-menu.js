@@ -65,7 +65,7 @@ socket.on("hireMercenaryResponse", function (data) {
 			displayErrorToUserTimed("The queue is full! You must wait before you can hire more units at this building.");
 		}
 	//if valid but receiving progress updates, unit in process of hiring
-	} else if (data.progress) {
+	} else if (data.valid && data.progress) {
 		var hiringBuilding = player.buildings[data.buildingId];
 		hiringBuilding.progress = data.progress;
 	}		
