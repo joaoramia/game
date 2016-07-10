@@ -1,5 +1,8 @@
 var attackPending = false;
 document.addEventListener('keypress', function (e) {
+
+
+
     var keyPressed;
 	switch(e.keyCode) {
     case 97:
@@ -10,7 +13,6 @@ document.addEventListener('keypress', function (e) {
         keyPressed = 'QUIT'; break;
       case 96:
           keyPressed = 'CHAT'; break;
-
     }
     if (keyPressed === 'ATTACK') {
     	attackModeOn();
@@ -21,16 +23,6 @@ document.addEventListener('keypress', function (e) {
     }else if ( keyPressed === 'CHAT'){
         $('#chat-client').toggle();
         $('#m').focus();
-      return false;
-        //  .keyup( ()=>{
-        //    $('#m').val('');
-        //})
+       e.preventDefault(); // to prevent typing ` in the input field
     }
-
 });
-
-//document.addEventListener('keyup', function(e){
-//    if(e.keyCode == 96 ){
-//        console.log("aahhaha")
-//    };
-//})
