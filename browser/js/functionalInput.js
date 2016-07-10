@@ -1,27 +1,28 @@
 var attackPending = false;
-
 document.addEventListener('keypress', function (e) {
-	var key;
+
+
+
+    var keyPressed;
 	switch(e.keyCode) {
     case 97:
-        key = 'ATTACK'; break;
+        keyPressed = 'ATTACK'; break;
     case 68:
-        key = 'DEFENSE'; break;
-    case 113: 
-    	key = 'QUIT'; break;
-
+        keyPressed = 'DEFENSE'; break;
+    case 113:
+        keyPressed = 'QUIT'; break;
       case 96:
-      key = 'CHAT'; break;
-
+          keyPressed = 'CHAT'; break;
     }
-    if (key === 'ATTACK') {
+    if (keyPressed === 'ATTACK') {
     	attackModeOn();
-    } else if (key === 'DEFENSE') {
+    } else if (keyPressed === 'DEFENSE') {
         defenseModeOn();
-    } else if (key === 'QUIT') {
+    } else if (keyPressed === 'QUIT') {
     	if (attackPending) attackModeOff();
-    }else if ( key === 'CHAT'){
+    }else if ( keyPressed === 'CHAT'){
         $('#chat-client').toggle();
+        $('#m').focus();
+       e.preventDefault(); // to prevent typing ` in the input field
     }
-
 });
