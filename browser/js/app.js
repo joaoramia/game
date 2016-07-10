@@ -149,6 +149,8 @@ function render() {
     }
     renderIndicator();
     
+    updateProgressBar();
+
     renderSelectionBox();
     //cameraPan(currentMousePosition);
 };
