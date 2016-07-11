@@ -22,9 +22,10 @@ function buildBank () {
 	sendBuildRequest("bank");
 }
 
-function submitBuildingLocation (pos) {
-  var requestObj = {pos: pos, id: player.id, request: 2, type: buildMode.type};
-  socket.emit('finalBuildRequest', requestObj);
+function submitBuildingLocation (pos, type) {
+	var requestObj = {pos: pos, id: player.id, request: 2, type: buildMode.type, world: world};
+	var newBuildingTiles = buildingTiles([pos[0],pos[1]], buildMode.type);
+	socket.emit('finalBuildRequest', requestObj, newBuildingTiles);
 }
 
 
@@ -61,7 +62,7 @@ socket.on('initialBuildResponse', function (data){
 		} else {
 			//if player does, cursor changes to be building
 			//enable build mode: build building where user clicks
-			buildModeOn(data.type); 
+			buildModeOn(data.type);
 		}
 	//send another request to create the building object on the server
 	}
@@ -85,6 +86,7 @@ socket.on('finalBuildResponse', function (data) {
 		} else {
 			// console.log(data);
 			fillTilesOfBuilding(buildingTiles(data.buildingObj.pos, data.buildingObj.type));
+			world = data.world;
 			//check if building is current player's building
 			if (data.socketId === player.id) {
 				player.buildings[data.name] = data.buildingObj;

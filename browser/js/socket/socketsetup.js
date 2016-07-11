@@ -1,11 +1,13 @@
 function setupSocket (socket) {
-    socket.on("existingInfo", function(playersColl, moneyBagColl){
+    socket.on("existingInfo", function(playersColl, moneyBagColl, worldInfo){
         setupExistingPlayers(socket, playersColl);
         setupMoneyBags(moneyBagColl);
+        world = worldInfo;
     });
 
-    socket.on("gameReady", function(gameData, king) {
+    socket.on("gameReady", function(gameData, king, worldInfo) {
         console.log("GAME READY DATA", gameData);
+        world = worldInfo;
         adjustVPOnGameReady(gameData.playerData.units[0].pos);
         gameOver = false;
         gameStarted = true;
@@ -50,9 +52,9 @@ function setupSocket (socket) {
         tree.load(toBeAddedToTree);
     });
 
-    socket.on('otherPlayerDC', function (socketId) {
+    socket.on('otherPlayerDC', function (socketId, worldInfo) {
         console.log(socketId + ' left!');
-
+        world = worldInfo;
         removeFromTreeOnDisconnect(socketId);
 
         var departingUserUsername = otherPlayers[socketId].username;

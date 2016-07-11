@@ -23,9 +23,7 @@ function buildPositioner(e){
 function renderBuildLocation(){
 	if (buildMouseLocation){
 		var imageObj = resources.get('img/' + buildMode.type + '-asset.png');
-		console.log(buildMouseLocation);
 		tileOfNewBuilding = buildingTiles([buildMouseLocation[0],buildMouseLocation[1]], buildMode.type);
-		console.log(tileOfNewBuilding);
 		var pos = getPointFromTile(tileOfNewBuilding[0]);
 		if (buildCollisions(pos, buildMode.type))forbiddenRange(pos[0], pos[1], imageObj.width, imageObj.height);
 		ctx.globalAlpha = 0.3;

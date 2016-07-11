@@ -3,6 +3,7 @@ var app = express();
 var path = require('path');
 var io = require('socket.io');
 var utils = require('./server/utils');
+var World = require('./server/a-star.world');
 var Player = require('./server/player.constructor');
 var Unit = require('./server/unit.constructor').Unit;
 var Hero = require('./server/unit.constructor').Hero;
@@ -35,6 +36,16 @@ var units = {};
 var buildings = {};
 var moneyBags = {count: 0};
 var currentKing;
+
+var world = [[]];
+
+var tileWidth = spriteSizes['soldier'][0];
+var tileHeight = spriteSizes['soldier'][1];
+var worldWidth = Math.floor(CANVAS_SIZE[0]/tileWidth);
+var worldHeight = Math.floor(CANVAS_SIZE[1]/tileHeight);
+
+World.createWorld(world, worldWidth, worldHeight);
+
 generateMoneyBags(450);
 
 app.get('/*', function (req, res) {
@@ -54,7 +65,7 @@ io.on('connection', function (socket) {
     sockets[socket.id] = socket;
 
     socket.on('giveExistingInfo', function () {
-        socket.emit('existingInfo', players, moneyBags);
+        socket.emit('existingInfo', players, moneyBags, world);
     });
 
     // when the new user joins!
@@ -76,7 +87,7 @@ io.on('connection', function (socket) {
         if (Object.keys(players).length < 2) {
             changeKing(currentPlayer.id);
         }
-        socket.emit('gameReady', {playerData: currentPlayer}, currentKing);
+        socket.emit('gameReady', {playerData: currentPlayer}, currentKing, world);
         socket.broadcast.emit('otherPlayerJoin', currentPlayer);
         io.emit('leaderboardUpdate', players);
     });
@@ -90,7 +101,9 @@ io.on('connection', function (socket) {
     });
 
     socket.on('disconnect', function () {
-        console.log("Disconnected. ID: ", socket.id)
+        console.log("Disconnected. ID: ", socket.id);
+        // console.log("PLAYERS: ", players[socket.id].buildings['1'].tiles);
+        World.removeTilesOfBuildings(world, players[socket.id].buildings);
         removePlayer(socket); // removes them from players AND sockets collections
 
         //if a king disconnects, search again for the new king
@@ -112,7 +125,7 @@ io.on('connection', function (socket) {
             }
             socket.broadcast.emit('newKing', currentKing);
         }
-        socket.broadcast.emit('otherPlayerDC', socket.id);
+        socket.broadcast.emit('otherPlayerDC', socket.id, world);
         socket.disconnect();
         io.emit('leaderboardUpdate', players);
     });
@@ -188,7 +201,7 @@ io.on('connection', function (socket) {
         io.emit('leaderboardUpdate', players);
     });
 
-    socket.on('finalBuildRequest', function (data) {
+    socket.on('finalBuildRequest', function (data, newBuildingTiles) {
         if (data.request === 2 && data.type === "bar") {
             if (players[data.id].wealth < 2000) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
@@ -198,16 +211,18 @@ io.on('connection', function (socket) {
             //temporarily set to false because we don't have collision set up
             } else {
                 var newBuildingNumber = players[data.id].buildingNumber;
-                var newBar = new Bar(data.pos, data.id, newBuildingNumber);
+                var newBar = new Bar(data.pos, data.id, newBuildingNumber, newBuildingTiles);
                 players[data.id].buildings[newBuildingNumber] = newBar;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 2000;
+                World.fillTilesOfBuilding(world, newBuildingTiles);
                 io.emit('finalBuildResponse', { valid: true,
                                                     request: 2,
                                                     buildingObj: newBar,
                                                     name: newBuildingNumber,
                                                     currentWealth: players[data.id].wealth,
-                                                    socketId: data.id});
+                                                    socketId: data.id,
+                                                    world: world});
             }
         } else if (data.request === 2 && data.type === "house") {
             if (players[data.id].wealth < 1000) {
@@ -221,11 +236,12 @@ io.on('connection', function (socket) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision with unit"});
             //temporarily set to false because we don't have collision set up
             } else {
-                var newHouse = new House(data.pos, data.id, players[data.id].buildingNumber);
+                var newHouse = new House(data.pos, data.id, players[data.id].buildingNumber, newBuildingTiles);
                 var newBuildingNumber = players[data.id].buildingNumber;
                 players[data.id].buildings[players[data.id].buildingNumber] = newHouse;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 1000;
+                World.fillTilesOfBuilding(world, newBuildingTiles);
                 io.emit('finalBuildResponse', { valid: true,
                                                     request: 2,
                                                     buildingObj: newHouse,
@@ -335,6 +351,8 @@ function addPlayer (playerData) {
 }
 
 function removePlayer (socket) {
+    // console.log("SOCKET: ", socket);
+    // console.log("PLAYER: ", players[socket.id]);
     delete sockets[socket.id];
     delete players[socket.id];
 }

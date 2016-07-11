@@ -33,7 +33,7 @@ function mouseDown(e) {
 
 function mouseUp(e) {
   if (buildMode.on) {
-    submitBuildingLocation(positionOfNewBuilding);
+    submitBuildingLocation(positionOfNewBuilding, buildMode.type);
     buildModeOff();
   } else if (rendezvousMode.on) {
     submitRendezvousPosition(rendezvousMode.mostRecentRendezvous);
@@ -51,10 +51,10 @@ function mouseUp(e) {
         
         unit.vigilant = false;
         unit.hit = false;
-        unit.targetpos = findPath(world, getTileFromPoint(unit.pos), getTileFromPoint([rightClick.x + counter, rightClick.y + counter]));
+        unit.targetpos = findPath(world, getTileFromPoint(unit.pos, unit.sprite.type), getTileFromPoint([rightClick.x + counter, rightClick.y + counter], unit.sprite.type));
         unit.targetpos.shift(); //this is because the first path tile is the current tile the unit is on
         unit.finalpos = [rightClick.x + counter, rightClick.y + counter];
-        counter += tileWidth;
+        counter += tileWidth/2;
       }
     }
   }

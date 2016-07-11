@@ -34,9 +34,9 @@ function getPointFromTile (tile){
 	return [x, y];
 }
 
-function getTileFromPoint (point){
-	var x = Math.floor(point[0]/tileWidth);
-	var y = Math.floor(point[1]/tileHeight);
+function getTileFromPoint (point, type){
+	var x = Math.round(point[0]/tileWidth);
+	var y = Math.round(point[1]/tileHeight);
 	return [x, y];
 }
 
@@ -63,7 +63,7 @@ function createWorld(){
 	}
 }
 
-createWorld();
+// createWorld();
 
 //finally the a-star algorithm
 function findPath(world, start, end){
