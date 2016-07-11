@@ -59,6 +59,7 @@ io.on('connection', function (socket) {
 
     // when the new user joins!
     socket.on('respawn', function (newPlayerData) {
+        currentPlayer.username = newPlayerData.userName;
         currentPlayer.units = {};
         currentPlayer.buildings = {};
         var locations = getRandomLocation();
