@@ -13,16 +13,12 @@
 
     Sprite.prototype = {
  
-        renderEllipse: function(enemy){
+        renderEllipse: function(){
             ctx.beginPath();
 
             ctx.ellipse(this.size[0]/2, this.size[1], this.size[1]/3, this.size[1]/5, 0, 0, Math.PI*2);
 
-            if (enemy) {
-                ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
-            } else {
-                ctx.fillStyle = this.selected ? "rgba(0, 0, 255, 0.3)" : "rgba(0, 0, 0, 0.3)";
-            }
+            ctx.fillStyle = this.selected ? "rgba(0, 0, 255, 0.3)" : "rgba(0, 0, 0, 0.3)";
 
             ctx.fill();
             ctx.closePath();
@@ -121,5 +117,7 @@ function generateSprite(type, selectable, playerId){
         return new Sprite('img/bar-asset.png', [0,0], [320, 288], 1, [0], true);
     } else if (type === 'house') {
         return new Sprite('img/house-asset.png', [0,0], [96, 160], 1, [0], true);
+    } else if (type === 'explosion') {
+        return new Sprite('img/damage.png', [0, 0], [20, 20], 16, [0, 1, 2, 3, 4], 'horizontal', false);
     }
 }

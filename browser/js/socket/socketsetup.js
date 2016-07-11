@@ -80,8 +80,11 @@ function setupSocket (socket) {
         if (player.id === victim.socketId) {
             player.units[victim.id].currentHealth -= damage;
             player.units[victim.id].hit = true;
+            createExplosion(otherPlayers[victim.socketId].units[victim.id]);
         } else {
             otherPlayers[victim.socketId].units[victim.id].currentHealth -= damage;
+            otherPlayers[victim.socketId].units[victim.id].hit = true;
+            createExplosion(otherPlayers[victim.socketId].units[victim.id]);
         }
     });
 
