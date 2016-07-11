@@ -1,9 +1,3 @@
-// "hero": [34, 50],
-// "soldier": [64, 64],
-// "moneybag": [33, 36],
-// "bar": [320, 288],
-// "house": [96, 160],
-// "hero_soldier": [108, 114]
 
 //from the sprites for the units we used, the soldier has the largest size (64x64), so this was the tile size chosen for the world
 var tileWidth = spriteSizes['soldier'][0];
@@ -27,6 +21,24 @@ var mouseTargetLocation = [];
 var walkableTile = 0;
 
 var worldSize = worldWidth * worldHeight;
+
+function getPointFromTile (tile){
+	var x = 0;
+	var y = 0;
+	if (tile[0] > 0) {
+		x = (tile[0]) * tileWidth;
+	}
+	if (tile[1] > 0) {
+		y = (tile[1]) * tileHeight;
+	}
+	return [x, y];
+}
+
+function getTileFromPoint (point){
+	var x = Math.floor(point[0]/tileWidth);
+	var y = Math.floor(point[1]/tileHeight);
+	return [x, y];
+}
 
 //creating an empty world:
 function createWorld(){

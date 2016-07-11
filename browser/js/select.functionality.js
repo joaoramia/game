@@ -2,6 +2,7 @@ var rect = {};
 var drag = false;
 var rightClick = {};
 var positionOfNewBuilding;
+var tileOfNewBuilding;
 var moveIndicator;
 
 var currentMousePosition;
@@ -10,7 +11,7 @@ function mouseDown(e) {
   if ( buildMode.on && (e.which === 1 && !e.ctrlKey) ) {
     var tempX = e.layerX + vp.pos[0];
     var tempY = e.layerY + vp.pos[1];
-    positionOfNewBuilding = [tempX, tempY];
+    positionOfNewBuilding = getPointFromTile(tileOfNewBuilding[0]);
     buildMouseLocation = undefined;
   } else if (rendezvousMode.on && (e.which === 1 && !e.ctrlKey)) {
     var tempX = e.layerX + vp.pos[0];
@@ -50,7 +51,8 @@ function mouseUp(e) {
         
         unit.vigilant = false;
         unit.hit = false;
-        unit.targetpos = [rightClick.x + counter, rightClick.y];
+        unit.targetpos = findPath(world, getTileFromPoint(unit.pos), getTileFromPoint([rightClick.x, rightClick.y]));
+        unit.targetpos.shift();
         counter += 25;
       }
     }
@@ -142,4 +144,17 @@ function renderIndicator () {
       ctx.fill();
     }
   });
+}
+
+function buildingTiles (location, type) {
+  var buildingTilesHorizontal = Math.round(spriteSizes[type][0]/tileWidth);
+  var buildingTilesVertical = Math.round(spriteSizes[type][1]/tileHeight);
+  var result = [[Math.round(location[0]/tileWidth), Math.round(location[1]/tileHeight)]];
+  for (var w = 0; w < buildingTilesHorizontal; w++){
+    for (var h = 0; h < buildingTilesVertical; h++){
+        if (w === 0 && h === 0) continue;
+        result.push([result[0][0] + w, result[0][1] + h]);
+    }
+  }
+  return result;
 }

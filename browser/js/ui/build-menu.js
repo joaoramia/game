@@ -42,6 +42,12 @@ function buildModeOff (){
 	turnOffUntimedMessage();
 }
 
+function fillTilesOfBuilding (building){
+	for (var x = 0; x < building.length; x++){
+		world[building[x][0]][building[x][1]] = 1;
+	}
+}
+
 //building a building requires exchanging information with the server twice
 socket.on('initialBuildResponse', function (data){
 	//check to see if the player has enough money to build a bar
@@ -77,23 +83,24 @@ socket.on('finalBuildResponse', function (data) {
 			displayRootMenu();
 		//if building is valid, update the player's buildings object
 		} else {
-		//check if building is current player's building
-		if (data.socketId === player.id) {
-			player.buildings[data.name] = data.buildingObj;
-			player.buildings[data.name].sprite = generateSprite(data.buildingObj.type, true);
-		} else {
-			otherPlayers[data.socketId].buildings[data.name] = data.buildingObj;
-			otherPlayers[data.socketId].buildings[data.name].sprite = generateSprite(data.buildingObj.type, false);
-		}
-		//update the player's wealth
-		player.wealth = data.currentWealth;
-		$("#player-wealth-display").text(player.wealth);
-		playSoundOnEvent(buildingSound);
-		updateSupplyDisplay();
-		if (currentMaxSupply() >= player.absoluteMaxSupply) {
-			displayErrorToUserTimed("Current maximum supply reached. Building more houses will not increase maximum supply.");
-		}
+			// console.log(data);
+			fillTilesOfBuilding(buildingTiles(data.buildingObj.pos, data.buildingObj.type));
+			//check if building is current player's building
+			if (data.socketId === player.id) {
+				player.buildings[data.name] = data.buildingObj;
+				player.buildings[data.name].sprite = generateSprite(data.buildingObj.type, true);
+			} else {
+				otherPlayers[data.socketId].buildings[data.name] = data.buildingObj;
+				otherPlayers[data.socketId].buildings[data.name].sprite = generateSprite(data.buildingObj.type, false);
+			}
+			//update the player's wealth
+			player.wealth = data.currentWealth;
+			$("#player-wealth-display").text(player.wealth);
+			playSoundOnEvent(buildingSound);
+			updateSupplyDisplay();
+			if (currentMaxSupply() >= player.absoluteMaxSupply) {
+				displayErrorToUserTimed("Current maximum supply reached. Building more houses will not increase maximum supply.");
+			}
 		}
 	}
-	$('canvas').css('cursor', 'auto');
 })
