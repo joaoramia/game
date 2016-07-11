@@ -33,7 +33,7 @@ var players = {};
 var sockets = {};
 var units = {};
 var buildings = {};
-var moneyBags = {count: 0};
+var moneyBags = {};
 var currentKing;
 generateMoneyBags(450);
 
@@ -316,7 +316,6 @@ io.on('connection', function (socket) {
 
 //for generating money bags for the moneyBags object on server start
 function generateMoneyBags(count){
-    moneyBags.count = Object.keys(moneyBags).length - 1 + count;
     if (count === 1) {
         var keyName = [utils.getRandomNum(CANVAS_SIZE[0]), utils.getRandomNum(CANVAS_SIZE[1])]
         moneyBags[keyName] = {value : utils.getRandomNum(25, 75)};
