@@ -126,7 +126,7 @@ io.on('connection', function (socket) {
         var victim = damageData.victim;
         var damage = damageData.damage;
         // console.log(damageData);
-        socket.broadcast.emit('takeThat', victim, damage);
+        io.emit('takeThat', victim, damage);
         io.emit('leaderboardUpdate', players);
     })
 

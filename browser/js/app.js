@@ -99,6 +99,8 @@ function update(dt) {
 
     checkCombat();
 
+    processExplosions();
+
     removeDeadUnits();
 
     socket.emit("playerMoves", player);

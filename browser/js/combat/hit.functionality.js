@@ -18,7 +18,7 @@ function processExplosions () {
 
 function createExplosion (pos) {
 	var newExplosion = {
-		pos: pos,
+		pos: [pos[0] + 10, pos[1] + 25],
 		type: 'explosion'
 	};
 	newExplosion.sprite = generateSprite(newExplosion.type, false);

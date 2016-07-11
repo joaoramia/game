@@ -74,7 +74,7 @@
 })();
 
 function renderHpBar (currentHealth, maxHealth) {
-    if (this.url === 'img/moneybag.png') return;
+    if (this.url === 'img/moneybag.png' || this.url === 'img/damage.png') return;
     ctx.beginPath(); // HP Green for currentHealth
     ctx.strokeStyle = 'black'; // HP Border for maxHealth
     ctx.strokeRect(0, - 10, this.size[0], 5);
