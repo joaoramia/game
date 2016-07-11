@@ -29,7 +29,7 @@ function setupSocket (socket) {
 
     socket.on('otherPlayerJoin', function (otherPlayerData) {
         console.log(otherPlayerData.id + ' has joined!');
-
+        // world = otherPlayerData.world;
         var toBeAddedToTree = [];
 
         newPlayerJoinsAlert(otherPlayerData.username);

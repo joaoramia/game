@@ -40,6 +40,19 @@ function getTileFromPoint (point){
 	return [x, y];
 }
 
+function buildingTiles (location, type) {
+  var buildingTilesHorizontal = Math.round(spriteSizes[type][0]/tileWidth);
+  var buildingTilesVertical = Math.round(spriteSizes[type][1]/tileHeight);
+  var result = [[Math.round(location[0]/tileWidth), Math.round(location[1]/tileHeight)]];
+  for (var w = 0; w < buildingTilesHorizontal; w++){
+    for (var h = 0; h < buildingTilesVertical; h++){
+        if (w === 0 && h === 0) continue;
+        result.push([result[0][0] + w, result[0][1] + h]);
+    }
+  }
+  return result;
+}
+
 //creating an empty world:
 function createWorld(){
 	for (var w = 0; w < worldWidth; w++){

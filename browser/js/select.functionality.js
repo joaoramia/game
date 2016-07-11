@@ -51,9 +51,10 @@ function mouseUp(e) {
         
         unit.vigilant = false;
         unit.hit = false;
-        unit.targetpos = findPath(world, getTileFromPoint(unit.pos), getTileFromPoint([rightClick.x, rightClick.y]));
-        unit.targetpos.shift();
-        counter += 25;
+        unit.targetpos = findPath(world, getTileFromPoint(unit.pos), getTileFromPoint([rightClick.x + counter, rightClick.y + counter]));
+        unit.targetpos.shift(); //this is because the first path tile is the current tile the unit is on
+        unit.finalpos = [rightClick.x + counter, rightClick.y + counter];
+        counter += tileWidth;
       }
     }
   }
@@ -144,17 +145,4 @@ function renderIndicator () {
       ctx.fill();
     }
   });
-}
-
-function buildingTiles (location, type) {
-  var buildingTilesHorizontal = Math.round(spriteSizes[type][0]/tileWidth);
-  var buildingTilesVertical = Math.round(spriteSizes[type][1]/tileHeight);
-  var result = [[Math.round(location[0]/tileWidth), Math.round(location[1]/tileHeight)]];
-  for (var w = 0; w < buildingTilesHorizontal; w++){
-    for (var h = 0; h < buildingTilesVertical; h++){
-        if (w === 0 && h === 0) continue;
-        result.push([result[0][0] + w, result[0][1] + h]);
-    }
-  }
-  return result;
 }
