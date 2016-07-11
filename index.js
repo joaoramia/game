@@ -33,7 +33,7 @@ var players = {};
 var sockets = {};
 var units = {};
 var buildings = {};
-var moneyBags = {count: 0};
+var moneyBags = {};
 var currentKing;
 generateMoneyBags(450);
 
