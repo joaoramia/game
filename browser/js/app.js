@@ -102,9 +102,7 @@ function update(dt) {
 
     socket.emit("playerMoves", player);
 
-    socket.on("otherPlayerMoves", function(playerData) {
-        otherPlayers[playerData.id] = playerData;
-    });
+    
 
     drawViewport();
 }

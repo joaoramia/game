@@ -2,6 +2,20 @@ function setupSocket (socket) {
     socket.on("existingInfo", function(playersColl, moneyBagColl){
         setupExistingPlayers(socket, playersColl);
         setupMoneyBags(moneyBagColl);
+
+        socket.on("otherPlayerMoves", function(playerData) {
+            for (var unitId in otherPlayers[playerData.id].units) {
+                var unit = otherPlayers[playerData.id].units[unitId];
+                tree.remove(unit);
+            }
+            var toBeAddedToTree = [];
+            otherPlayers[playerData.id] = playerData;
+            for (var unitId in otherPlayers[playerData.id].units) {
+                var unit = otherPlayers[playerData.id].units[unitId];
+                toBeAddedToTree.push(prepForUnitTree(unit));
+            }
+            tree.load(toBeAddedToTree);
+        });
     });
 
     socket.on("gameReady", function(gameData, king) {
