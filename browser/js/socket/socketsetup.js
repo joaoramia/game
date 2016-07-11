@@ -141,14 +141,45 @@ function setupSocket (socket) {
     socket.on('newKing', function(newKing){
         var previousKing = currentKing;
         currentKing = newKing;
+        //if current player becomes king, change their sprites
         if (player.id === currentKing) {
-            player.units[0].sprite = generateSprite(player.units[0].type, true, player.id);
-            if(otherPlayers[previousKing]) otherPlayers[previousKing].units[0].sprite = generateSprite(otherPlayers[previousKing].units[0].type, false, previousKing);
-        }
-        else if (otherPlayers[currentKing]){
-            otherPlayers[currentKing].units[0].sprite = generateSprite(otherPlayers[currentKing].units[0].type, false, currentKing);
-            if (otherPlayers[previousKing]) otherPlayers[previousKing].units[0].sprite = generateSprite(otherPlayers[previousKing].units[0].type, false, previousKing);
-            if (player.id === previousKing) player.units[0].sprite = generateSprite(player.units[0].type, true, player.id);
+            for (var unit in player.units) {
+                if (player.units.hasOwnProperty(unit)) {
+                    player.units[unit].sprite = generateSprite(player.units[unit].type, true, player.id);
+                }
+            }
+            //then change previous king's sprites to regular sprites on the current player's machine
+            if (otherPlayers[previousKing]) {
+                for (var unit in otherPlayers[previousKing].units) {
+                    if (otherPlayers[previousKing].units.hasOwnProperty(unit)){
+                        otherPlayers[previousKing].units[unit].sprite = generateSprite(otherPlayers[previousKing].units[unit].type, false, previousKing);
+                    }
+                }
+            }
+        //if another player becomes king
+        } else if (otherPlayers[currentKing]){
+            //change player's sprites so they look so regal :)
+            for (var unit in otherPlayers[currentKing].units) {
+                if (otherPlayers[currentKing].units.hasOwnProperty(unit)) {
+                    otherPlayers[currentKing].units[unit].sprite = generateSprite(otherPlayers[currentKing].units[unit].type, false, currentKing);
+                }
+            }
+            //change the previous king's sprites so they look less regal :(
+            if (otherPlayers[previousKing]) {
+                for (var unit in otherPlayers[previousKing].units) {
+                    if (otherPlayers[previousKing].units.hasOwnProperty(unit)) {
+                        otherPlayers[previousKing].units[unit].sprite = generateSprite(otherPlayers[previousKing].units[unit].type, false, previousKing);
+                    }
+                }
+            } 
+            //change current player's sprites if he was the king and no longer is
+            if (player.id === previousKing) {
+                for (var unit in player.units) {
+                    if (player.units.hasOwnProperty(unit)) {
+                        player.units[unit].sprite = generateSprite(player.units[unit].type, true, player.id);
+                    }
+                }
+            } 
         }
     });
 }
