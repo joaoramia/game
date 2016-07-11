@@ -3,7 +3,7 @@ function walk(dt){
         var unit = player.units[unitId];
         if (unit.targetpos && unit.targetpos.length){
             var nextPoint = getPointFromTile(unit.targetpos[0]);
-            if (unit.targetpos.length === 1 && unit.sprite.size[0] < tileWidth) nextPoint = unit.finalpos;
+            if (unit.targetpos.length === 1) nextPoint = unit.finalpos;
             prepForCombat(unit); // for changing their range radius on R tree
 
             if (Math.abs(unit.pos[0] - nextPoint[0]) >= 5 || Math.abs(unit.pos[1] - nextPoint[1]) >= 5){
@@ -91,6 +91,9 @@ function walk(dt){
             else {
                 unit.targetpos.shift();
             }
+        }
+        else {
+            unit.finalpos = undefined;
         }
 	}
 }

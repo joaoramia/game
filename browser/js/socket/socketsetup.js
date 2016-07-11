@@ -2,7 +2,23 @@ function setupSocket (socket) {
     socket.on("existingInfo", function(playersColl, moneyBagColl, worldInfo){
         setupExistingPlayers(socket, playersColl);
         setupMoneyBags(moneyBagColl);
+
         world = worldInfo;
+
+        socket.on("otherPlayerMoves", function(playerData) {
+            otherPlayers[playerData.id] = otherPlayers[playerData.id] || {units: {}};
+            for (var unitId in otherPlayers[playerData.id].units) {
+                var unit = otherPlayers[playerData.id].units[unitId];
+                tree.remove(unit);
+            }
+            var toBeAddedToTree = [];
+            otherPlayers[playerData.id] = playerData;
+            for (var unitId in otherPlayers[playerData.id].units) {
+                var unit = otherPlayers[playerData.id].units[unitId];
+                toBeAddedToTree.push(prepForUnitTree(unit));
+            }
+            tree.load(toBeAddedToTree);
+        });
     });
 
     socket.on("gameReady", function(gameData, king, worldInfo) {
@@ -68,8 +84,11 @@ function setupSocket (socket) {
         if (player.id === victim.socketId) {
             player.units[victim.id].currentHealth -= damage;
             player.units[victim.id].hit = true;
+            createExplosion(player.units[victim.id].pos);
         } else {
             otherPlayers[victim.socketId].units[victim.id].currentHealth -= damage;
+            otherPlayers[victim.socketId].units[victim.id].hit = true;
+            createExplosion(otherPlayers[victim.socketId].units[victim.id].pos);
         }
     });
 

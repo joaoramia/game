@@ -335,7 +335,7 @@ canvas {
     font-size: small;
     text-align: left;
     float: right;
-    width: 300px;
+    width: 250px;
 }
 
 #chat-client .message-panel{

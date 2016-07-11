@@ -13,16 +13,12 @@
 
     Sprite.prototype = {
  
-        renderEllipse: function(enemy){
+        renderEllipse: function(){
             ctx.beginPath();
 
             ctx.ellipse(this.size[0]/2, this.size[1], this.size[1]/3, this.size[1]/5, 0, 0, Math.PI*2);
 
-            if (enemy) {
-                ctx.fillStyle = "rgba(255, 0, 0, 0.3)";
-            } else {
-                ctx.fillStyle = this.selected ? "rgba(0, 0, 255, 0.3)" : "rgba(0, 0, 0, 0.3)";
-            }
+            ctx.fillStyle = this.selected ? "rgba(0, 0, 255, 0.3)" : "rgba(0, 0, 0, 0.3)";
 
             ctx.fill();
             ctx.closePath();
@@ -78,7 +74,7 @@
 })();
 
 function renderHpBar (currentHealth, maxHealth) {
-    if (this.url === 'img/moneybag.png') return;
+    if (this.url === 'img/moneybag.png' || this.url === 'img/damage.png') return;
     ctx.beginPath(); // HP Green for currentHealth
     ctx.strokeStyle = 'black'; // HP Border for maxHealth
     ctx.strokeRect(0, - 10, this.size[0], 5);
@@ -114,12 +110,14 @@ function generateSprite(type, selectable, playerId){
     if (type === 'hero') {
        return new Sprite('img/hero/hero-1.png', [32, 0], [32, 55], 16, [0, 1, 2], 'horizontal', selectable);
     } else if (type === 'soldier') {
-        return new Sprite('img/assault-asset.png', [0, 0], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
+        return new Sprite('img/soldier-asset.png', [0, 0], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
     } else if (type === 'moneybag') {
         return new Sprite('img/moneybag.png', [0,0], [33,36], 1, [0], false);
     } else if (type === 'bar') {
         return new Sprite('img/bar-asset.png', [0,0], [320, 288], 1, [0], true);
     } else if (type === 'house') {
         return new Sprite('img/house-asset.png', [0,0], [96, 160], 1, [0], true);
+    } else if (type === 'explosion') {
+        return new Sprite('img/damage.png', [0, 0], [20, 20], 16, [0, 1, 2, 3, 4], 'horizontal', false);
     }
 }

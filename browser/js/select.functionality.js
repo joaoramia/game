@@ -79,7 +79,6 @@ function mouseMove(e) {
   // diagonal movement check
 }
 
-//May still require adjustments, but seems to be able to accomodate multi-unit selection
 function select(){
   $("#building-info-panel").hide();
   currentSelection = [];
@@ -117,6 +116,7 @@ function select(){
     }
   }
 
+
   rightClick = {};
   drag = false;
 
@@ -124,23 +124,23 @@ function select(){
 
 function renderIndicator () {
   currentSelection.forEach(function (unit) {
-    if (unit.targetpos) {
+    if (unit.finalpos) {
       ctx.beginPath();
-      ctx.ellipse(unit.targetpos[0], unit.targetpos[1], 20, 10, 0, 0, Math.PI*2);
+      ctx.ellipse(unit.finalpos[0], unit.finalpos[1], 20, 10, 0, 0, Math.PI*2);
       ctx.strokeStyle = (unit.vigilant? 'rgba(255, 0, 0, 1)' : 'rgba(0, 255, 0, 0.7)');
       ctx.closePath();
       ctx.stroke();
       
       ctx.beginPath();
       ctx.moveTo(unit.pos[0] + unit.sprite.size[0] / 2, unit.pos[1] + unit.sprite.size[1]);
-      ctx.lineTo(unit.targetpos[0], unit.targetpos[1]);
+      ctx.lineTo(unit.finalpos[0], unit.finalpos[1]);
       ctx.strokeStyle = (unit.vigilant? 'rgba(255, 0, 0, 1)' : 'rgba(0, 255, 0, 0.4)');
       ctx.closePath();
       ctx.stroke();
 
       ctx.fillStyle = ctx.strokeStyle;
       ctx.beginPath();
-      ctx.ellipse(unit.targetpos[0], unit.targetpos[1], 2, 1, 0, 0, Math.PI*2);
+      ctx.ellipse(unit.finalpos[0], unit.finalpos[1], 2, 1, 0, 0, Math.PI*2);
       ctx.closePath();
       ctx.fill();
     }

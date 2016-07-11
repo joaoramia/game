@@ -34,7 +34,7 @@ var players = {};
 var sockets = {};
 var units = {};
 var buildings = {};
-var moneyBags = {count: 0};
+var moneyBags = {};
 var currentKing;
 
 var world = [[]];
@@ -46,7 +46,7 @@ var worldHeight = Math.floor(CANVAS_SIZE[1]/tileHeight);
 
 World.createWorld(world, worldWidth, worldHeight);
 
-generateMoneyBags(450);
+generateMoneyBags(550);
 
 app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));
@@ -70,6 +70,7 @@ io.on('connection', function (socket) {
 
     // when the new user joins!
     socket.on('respawn', function (newPlayerData) {
+        currentPlayer.username = newPlayerData.userName;
         currentPlayer.units = {};
         currentPlayer.buildings = {};
         var locations = getRandomLocation();
@@ -103,7 +104,9 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function () {
         console.log("Disconnected. ID: ", socket.id);
         // console.log("PLAYERS: ", players[socket.id].buildings['1'].tiles);
-        World.removeTilesOfBuildings(world, players[socket.id].buildings);
+        if (players[socket.id] && players[socket.id].buildings) {
+            World.removeTilesOfBuildings(world, players[socket.id].buildings);
+        }
         removePlayer(socket); // removes them from players AND sockets collections
 
         //if a king disconnects, search again for the new king
@@ -138,7 +141,7 @@ io.on('connection', function (socket) {
         var victim = damageData.victim;
         var damage = damageData.damage;
         // console.log(damageData);
-        socket.broadcast.emit('takeThat', victim, damage);
+        io.emit('takeThat', victim, damage);
         io.emit('leaderboardUpdate', players);
     })
 
@@ -210,8 +213,9 @@ io.on('connection', function (socket) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
             //temporarily set to false because we don't have collision set up
             } else {
-                var newBuildingNumber = players[data.id].buildingNumber;
+                var newBuildingNumber = players[data.id].buildingNumber.toString();
                 var newBar = new Bar(data.pos, data.id, newBuildingNumber, newBuildingTiles);
+
                 players[data.id].buildings[newBuildingNumber] = newBar;
                 players[data.id].buildingNumber++;
                 players[data.id].wealth = players[data.id].wealth - 2000;
@@ -285,11 +289,12 @@ io.on('connection', function (socket) {
             //increment the unit number to generate the id for the player's next unit
             players[data.playerId].unitNumber++;
             var progress = 0;
-            //uses setTimeout and sends progress to the client 
+            //this should be cleaned up. Hire unit depends on variables/values above -- bad! 
             function hireUnit(){
-                socket.emit('hireMercenaryResponse', {valid: true, progress: progress});
+                socket.emit('hireMercenaryResponse', {valid: true, progress: progress, buildingId: data.buildingId});
+                console.log({valid: true, progress: progress, building: data.buildingId});
                 var hireUnitProgress = setTimeout(function(){
-                    if (progress < 20) {
+                    if (progress < 60) {
                         progress++;
                         hireUnit();
                     } else {
@@ -300,7 +305,7 @@ io.on('connection', function (socket) {
                             players[data.playerId].units[newUnitForClient.id] = newUnitForClient;
                         }
                         //add it to player object on server, and send to client
-                        io.emit('hireMercenaryResponse', {valid: true, newUnit: newUnitForClient});
+                        io.emit('mercenaryComplete', {valid: true, newUnit: newUnitForClient, buildingId: data.buildingId});
                         //if another merc has been added to the queue, do this again
                         if (players[data.playerId].buildings[data.buildingId].productionQueue.length > 0) {
                             progress = 0;
@@ -311,7 +316,7 @@ io.on('connection', function (socket) {
                             progress = 0;
                         }
                     }
-                }, 500);
+                }, 250);
             }
             //check that currentlyBuilding property is false. if currently building, don't need to invoke measure progress again
             if (players[data.playerId].buildings[data.buildingId].currentlyBuilding === false) {
@@ -331,16 +336,15 @@ io.on('connection', function (socket) {
 
 //for generating money bags for the moneyBags object on server start
 function generateMoneyBags(count){
-    moneyBags.count = Object.keys(moneyBags).length - 1 + count;
     if (count === 1) {
         var keyName = [utils.getRandomNum(CANVAS_SIZE[0]), utils.getRandomNum(CANVAS_SIZE[1])]
-        moneyBags[keyName] = {value : utils.getRandomNum(25, 75)};
+        moneyBags[keyName] = {value : utils.getRandomNum(50, 100)};
         return keyName;
 
     } else {
         for (var i = 0; i < count; i++) {
             //values of array represent x and y. later, change this so that x = max x of canvas and y is max y of canvas
-            moneyBags[[utils.getRandomNum(CANVAS_SIZE[0]), utils.getRandomNum(CANVAS_SIZE[1])]] = {value : utils.getRandomNum(25, 75)};
+            moneyBags[[utils.getRandomNum(CANVAS_SIZE[0]), utils.getRandomNum(CANVAS_SIZE[1])]] = {value : utils.getRandomNum(50, 100)};
         }
     }
 }

@@ -1,7 +1,7 @@
 var buildMenuButtons = [
-	{text: "Bar (K)", tagName: "build-bar", clickFunction: buildBar},
-	{text: "Bank (H)", tagName: "build-bank", clickFunction: buildBank},
-	{text: "House (L)", tagName: "build-house", clickFunction: buildHouse}
+	{text: "Bar", tagName: "build-bar", clickFunction: buildBar}, //(K)
+	//{text: "Bank (H)", tagName: "build-bank", clickFunction: buildBank},
+	{text: "House", tagName: "build-house", clickFunction: buildHouse} //(L)
 ];
 
 function sendBuildRequest (type){

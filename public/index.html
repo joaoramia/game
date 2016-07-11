@@ -69,7 +69,7 @@
       </div>
       <div id="world-wealth-display">
         <div id="score-container">
-          <p>Score: $<span id="player-score">2,000</span></p>
+          <p>Score: $<span id="player-score">200</span></p>
         </div>
         <div class="live-stats">
           <p>Available cash: $<span id="player-wealth-display"></span></p>
@@ -96,7 +96,7 @@
           </div>
           <div class="input-panel">
             <form id="chat-form" action="">
-              <input id="m" autocomplete="off" />
+              <input id="m" autocomplete="off" type="text" onfocus='clear(this);'/>
             </form>
           </div>
         </div>
@@ -157,6 +157,7 @@
     <script src="js/rbush/rbush.functionality.js"></script>
     <script type="text/javascript" src="js/collisions.js"></script>
     <script src="js/FPS/fps.js"></script>
+    <script src="js/combat/hit.functionality.js"></script>
     <script type="text/javascript" src="js/sprite.js"></script>
     <script type="text/javascript" src="js/toolkit.js"></script>
     <script type="text/javascript" src="js/viewport.js"></script>

@@ -1,27 +1,33 @@
 var attackPending = false;
 
 document.addEventListener('keypress', function (e) {
-	var key;
-	switch(e.keyCode) {
-    case 97:
-        key = 'ATTACK'; break;
-    case 68:
-        key = 'DEFENSE'; break;
-    case 113: 
-    	key = 'QUIT'; break;
+  var keyPressed;
 
-      case 96:
-      key = 'CHAT'; break;
+  switch(e.keyCode) {
+  case 97:
+    keyPressed = 'ATTACK'; break;
+  case 68:
+    keyPressed = 'DEFENSE'; break;
+  case 113:
+    keyPressed = 'QUIT'; break;
+  case 96:
+    keyPressed = 'CHAT'; break;
+  }
 
+  // ignore the hot keys if focused on input field
+  if (!$(e.target).is('input, textarea, select') || keyPressed ==='CHAT' ) {
+    if (keyPressed === 'ATTACK') {
+      attackModeOn();
+    } else if (keyPressed === 'DEFENSE') {
+      defenseModeOn();
+    } else if (keyPressed === 'QUIT') {
+      if (attackPending) attackModeOff();
+    }else if ( keyPressed === 'CHAT'){
+      $('#chat-client').toggle();
+      $('#m').focus();
+      e.preventDefault(); // to prevent typing ` in the input field
     }
-    if (key === 'ATTACK') {
-    	attackModeOn();
-    } else if (key === 'DEFENSE') {
-        defenseModeOn();
-    } else if (key === 'QUIT') {
-    	if (attackPending) attackModeOff();
-    }else if ( key === 'CHAT'){
-        $('#chat-client').toggle();
-    }
+  }
+
 
 });
