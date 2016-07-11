@@ -30,7 +30,6 @@ function setupMoneyBags (moneyBagsFromServer) {
     var toBeAddedToMoneyTree = [];
 
     moneyBags = moneyBagsFromServer;
-    delete moneyBags.count;
     for (var moneyBag in moneyBags) {
         if (moneyBags.hasOwnProperty(moneyBag)) {
             //abstract THIS
