@@ -86,7 +86,7 @@ socket.on('finalBuildResponse', function (data) {
 		} else {
 			// console.log(data);
 			fillTilesOfBuilding(buildingTiles(data.buildingObj.pos, data.buildingObj.type));
-			world = data.world;
+			if (data.world) world = data.world;
 			//check if building is current player's building
 			if (data.socketId === player.id) {
 				player.buildings[data.name] = data.buildingObj;

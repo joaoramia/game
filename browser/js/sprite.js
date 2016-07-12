@@ -104,6 +104,8 @@ function generateSprite(type, selectable, playerId){
     if (currentKing){
         if (type === 'hero' && playerId === currentKing){
             return new Sprite('img/hero/king.png', [0, 105], [34, 50], 10, [0, 1, 2, 3], 'horizontal', selectable);
+        } else if (type === 'soldier' && playerId === currentKing) {
+            return new Sprite('img/cop-asset.png', [0, 0], [64, 64], 1, [0, 1, 2, 3, 4, 5, 6, 7], 'horizontal', selectable);
         }
     }
 

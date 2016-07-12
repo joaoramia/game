@@ -157,7 +157,8 @@ function renderEntities(list, playerId) {
         for(var i=0; i<list.length; i++) {
             renderEntity(list[i], playerId);
         }
-    } else if (typeof list === "object") {
+    } 
+    else if (typeof list === "object") {
         for (var item in list) {
             renderEntity(list[item], playerId);
         }
@@ -171,7 +172,6 @@ function renderEntity(entity, playerId) {
         entity.sprite.selectable = false;
 
         Sprite.prototype.render.apply(entity.sprite, [ctx, playerId, entity.type, entity.currentHealth, entity.maxHealth]);
-        // entity.sprite.render(ctx);
     }
     else if (entity.sprite){
         entity.sprite.render(ctx, playerId, entity.type, entity.currentHealth, entity.maxHealth);
