@@ -65,7 +65,6 @@ function currentMaxSupply() {
 	var count = 10;
 	for (building in player.buildings) {
 		if (player.buildings.hasOwnProperty(building)) {
-			console.log("player.buildings[building].type", player.buildings[building].type)
 			if (player.buildings[building].type === "house") {
 				count += 10;
 				if (count >= player.absoluteMaxSupply) {

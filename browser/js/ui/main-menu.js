@@ -86,7 +86,6 @@ function updateForSelectedBuilding (type) {
 	if (type === "bar") {
 		$("#building-info-panel").show();
 		var currentBuilding = currentSelection[0];
-		console.log("CURRENT BUILDING", currentBuilding);
 		updateProductionQueueDisplay(currentBuilding);
 		changeButtonsMessage("Bar selected");
 		replaceButtonsOnMenu(selectedBarMenuButtons);

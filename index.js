@@ -102,17 +102,12 @@ io.on('connection', function (socket) {
         io.emit('leaderboardUpdate', players);
     });
 
-    // socket.on('renameUser', function(data) {
-    //     players[data.id].username = data.username;
-    // })
-
     socket.on('chat message', function(msg){
         io.emit('chat message', msg);
     });
 
     socket.on('disconnect', function () {
         console.log("Disconnected. ID: ", socket.id);
-        // console.log("PLAYERS: ", players[socket.id].buildings['1'].tiles);
         if (players[socket.id] && players[socket.id].buildings) {
             World.removeTilesOfBuildings(world, players[socket.id].buildings);
         }
@@ -149,7 +144,6 @@ io.on('connection', function (socket) {
     socket.on('damageDone', function (damageData) {
         var victim = damageData.victim;
         var damage = damageData.damage;
-        // console.log(damageData);
         io.emit('takeThat', victim, damage);
         io.emit('leaderboardUpdate', players);
     })
@@ -364,8 +358,6 @@ function addPlayer (playerData) {
 }
 
 function removePlayer (socket) {
-    // console.log("SOCKET: ", socket);
-    // console.log("PLAYER: ", players[socket.id]);
     delete sockets[socket.id];
     delete players[socket.id];
 }

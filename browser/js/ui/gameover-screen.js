@@ -1,5 +1,4 @@
 function gameOverFunc(){
-	console.log('gameoverfunc');
 	//make the render function stop checking if its game over
 	gameOver = true;
 	gameStarted = false;
@@ -27,11 +26,9 @@ function checkIfGameOver() {
 
 $("#game-over-message-box button").click(function(){
 	restartGame();
-	console.log('asdfads');
 })
 
 function restartGame () {
-	console.log('restartgame');
 	$("#fullscreen-overlay").hide();
 	$("#world-wealth-display").show();
 	$("#game-controls").show();

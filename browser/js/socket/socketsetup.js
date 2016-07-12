@@ -22,7 +22,6 @@ function setupSocket (socket) {
     });
 
     socket.on("gameReady", function(gameData, king, worldInfo) {
-        console.log("GAME READY DATA", gameData);
         if (worldInfo) world = worldInfo;
         adjustVPOnGameReady(gameData.playerData.units[0].pos);
         gameOver = false;
@@ -46,7 +45,6 @@ function setupSocket (socket) {
     });
 
     socket.on('otherPlayerJoin', function (otherPlayerData) {
-        console.log(otherPlayerData.id + ' has joined!');
         // world = otherPlayerData.world;
         var toBeAddedToTree = [];
 
@@ -69,7 +67,6 @@ function setupSocket (socket) {
     });
 
     socket.on('otherPlayerDC', function (socketId, worldInfo) {
-        console.log(socketId + ' left!');
         if (worldInfo) world = worldInfo;
         removeFromTreeOnDisconnect(socketId);
 
@@ -93,7 +90,6 @@ function setupSocket (socket) {
     });
 
     socket.on("leaderboardUpdate", function(playersData){
-        console.log(playersData);
         var leaders = [];
         for (var id in playersData) {
             leaders.push([id, playersData[id].score, playersData[id].username]);

@@ -84,7 +84,6 @@ socket.on('finalBuildResponse', function (data) {
 			displayRootMenu();
 		//if building is valid, update the player's buildings object
 		} else {
-			// console.log(data);
 			fillTilesOfBuilding(buildingTiles(data.buildingObj.pos, data.buildingObj.type));
 			if (data.world) world = data.world;
 			//check if building is current player's building
