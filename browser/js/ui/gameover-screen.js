@@ -35,7 +35,7 @@ function restartGame () {
 	$("#fullscreen-overlay").hide();
 	$("#world-wealth-display").show();
 	$("#game-controls").show();
-	socket.emit("respawn", {username: player.username});
+	socket.emit("respawn", {userName: player.username});
 }
 
 socket.on("notificationPlayerDied", function(data){
