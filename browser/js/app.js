@@ -48,7 +48,8 @@ resources.load([
     'img/background/cactus.png',
     'img/house-asset.png',
     'img/cop-asset.png',
-    'img/assault-asset.png'
+    'img/assault-asset.png',
+    'img/damage.png'
 ]);
 
 resources.onReady(init);
@@ -98,16 +99,14 @@ function update(dt) {
 
     checkCombat();
 
+    processExplosions();
+
     removeDeadUnits();
 
     socket.emit("playerMoves", player);
 
-    
-
     drawViewport();
 }
-
-
 
 function render() {
 
@@ -119,7 +118,6 @@ function render() {
         renderTerrain();
     }
     
-
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     generateCactuses();
@@ -135,7 +133,8 @@ function render() {
             renderEntities(otherPlayers[key].units, key);
     }
 
-    renderEntities(player.buildings);
+    renderEntities(player.buildings, player.id);
+    renderEntities(explosions);
 
     for (var key in otherPlayers){
         if (otherPlayers.hasOwnProperty(key))
@@ -154,8 +153,15 @@ function render() {
 };
 
 function renderEntities(list, playerId) {
-    for (var item in list) {
-        renderEntity(list[item], playerId);
+    if (Array.isArray(list)){
+        for(var i=0; i<list.length; i++) {
+            renderEntity(list[i], playerId);
+        }
+    } 
+    else if (typeof list === "object") {
+        for (var item in list) {
+            renderEntity(list[item], playerId);
+        }
     }
 }
 
@@ -164,10 +170,11 @@ function renderEntity(entity, playerId) {
     ctx.translate(entity.pos[0], entity.pos[1]);
     if (!(entity.sprite instanceof Sprite) && entity.sprite){
         entity.sprite.selectable = false;
-
+        if (entity.type === 'bar') console.log("PLAYERID: ", playerId);
         Sprite.prototype.render.apply(entity.sprite, [ctx, playerId, entity.type, entity.currentHealth, entity.maxHealth]);
     }
     else if (entity.sprite){
+        if (entity.type === 'bar') console.log("PLAYERID: ", playerId);
         entity.sprite.render(ctx, playerId, entity.type, entity.currentHealth, entity.maxHealth);
 
     }

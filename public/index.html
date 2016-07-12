@@ -69,7 +69,7 @@
       </div>
       <div id="world-wealth-display">
         <div id="score-container">
-          <p>Score: $<span id="player-score">200</span></p>
+          <p>Score: $<span id="player-score"></span></p>
         </div>
         <div class="live-stats">
           <p>Available cash: $<span id="player-wealth-display"></span></p>
@@ -81,7 +81,7 @@
           <h3>Leaderboard</h3>
           <div id="king-box">
           <p>THE CURRENT BOSS:</p>
-          <p><span id='kingname'></span>    $<span id='king-wealth-display'><span/></p>
+          <p><span id='kingname'></span>    $<span id='king-score-display'><span/></p>
           </div>
           <h3>Contenders</h3>
           <p><span id='place2'></span></p>
@@ -157,6 +157,7 @@
     <script src="js/rbush/rbush.functionality.js"></script>
     <script type="text/javascript" src="js/collisions.js"></script>
     <script src="js/FPS/fps.js"></script>
+    <script src="js/combat/hit.functionality.js"></script>
     <script type="text/javascript" src="js/sprite.js"></script>
     <script type="text/javascript" src="js/toolkit.js"></script>
     <script type="text/javascript" src="js/viewport.js"></script>
@@ -169,6 +170,8 @@
     <script type="text/javascript" src="js/king.functionality.js"></script>
     <script type="text/javascript" src="js/build.functionality.js"></script>
     <script type="text/javascript" src="js/background.functionality.js"></script>
+    <script type="text/javascript" src="js/a-star.js"></script>
+    <script type="text/javascript" src="js/a-star.walk.js"></script>
     <script type="text/javascript" src="js/ui/main-menu.js"></script>
     <script type="text/javascript" src="js/ui/build-menu.js"></script>
     <script type="text/javascript" src="js/ui/ui-error.js"></script>

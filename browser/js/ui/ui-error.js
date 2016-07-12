@@ -83,10 +83,10 @@ function updateSupplyDisplay(){
 }
 
 socket.on('updateScoreAndWealth', function (data) {
-    wealth += data.wealth;
+    wealth = data.wealth;
     $("#player-wealth-display").text(wealth);
-    if (data.score) {
-    	$("#player-score").text(data.score);
-	}
+ //    if (data.score) {
+ //    	$("#player-score").text(data.score);
+	// }
 })
 

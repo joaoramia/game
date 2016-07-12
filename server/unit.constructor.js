@@ -9,6 +9,7 @@ function Unit (pos, type, maxHealth, attack, defense, speed, socketId, unitId, t
   this.defense = defense; // integer
   this.sprite = null; // a value for this property is set on the front-end
   this.targetpos = targetpos || undefined;
+  this.finalpos;
   this.vigilant = false;
   this.socketId = socketId;
   this.lastMovement = {dir1: undefined, dir2: undefined}; // helps with the building collision algorithm

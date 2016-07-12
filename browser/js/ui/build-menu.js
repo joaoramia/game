@@ -22,9 +22,10 @@ function buildBank () {
 	sendBuildRequest("bank");
 }
 
-function submitBuildingLocation (pos) {
-  var requestObj = {pos: pos, id: player.id, request: 2, type: buildMode.type};
-  socket.emit('finalBuildRequest', requestObj);
+function submitBuildingLocation (pos, type) {
+	var requestObj = {pos: pos, id: player.id, request: 2, type: buildMode.type, world: world};
+	var newBuildingTiles = buildingTiles([pos[0],pos[1]], buildMode.type);
+	socket.emit('finalBuildRequest', requestObj, newBuildingTiles);
 }
 
 
@@ -42,6 +43,12 @@ function buildModeOff (){
 	turnOffUntimedMessage();
 }
 
+function fillTilesOfBuilding (building){
+	for (var x = 0; x < building.length; x++){
+		world[building[x][0]][building[x][1]] = 1;
+	}
+}
+
 //building a building requires exchanging information with the server twice
 socket.on('initialBuildResponse', function (data){
 	//check to see if the player has enough money to build a bar
@@ -55,7 +62,7 @@ socket.on('initialBuildResponse', function (data){
 		} else {
 			//if player does, cursor changes to be building
 			//enable build mode: build building where user clicks
-			buildModeOn(data.type); 
+			buildModeOn(data.type);
 		}
 	//send another request to create the building object on the server
 	}
@@ -77,23 +84,25 @@ socket.on('finalBuildResponse', function (data) {
 			displayRootMenu();
 		//if building is valid, update the player's buildings object
 		} else {
-		//check if building is current player's building
-		if (data.socketId === player.id) {
-			player.buildings[data.name] = data.buildingObj;
-			player.buildings[data.name].sprite = generateSprite(data.buildingObj.type, true);
-		} else {
-			otherPlayers[data.socketId].buildings[data.name] = data.buildingObj;
-			otherPlayers[data.socketId].buildings[data.name].sprite = generateSprite(data.buildingObj.type, false);
-		}
-		//update the player's wealth
-		player.wealth = data.currentWealth;
-		$("#player-wealth-display").text(player.wealth);
-		playSoundOnEvent(buildingSound);
-		updateSupplyDisplay();
-		if (currentMaxSupply() >= player.absoluteMaxSupply) {
-			displayErrorToUserTimed("Current maximum supply reached. Building more houses will not increase maximum supply.");
-		}
+			// console.log(data);
+			fillTilesOfBuilding(buildingTiles(data.buildingObj.pos, data.buildingObj.type));
+			if (data.world) world = data.world;
+			//check if building is current player's building
+			if (data.socketId === player.id) {
+				player.buildings[data.name] = data.buildingObj;
+				player.buildings[data.name].sprite = generateSprite(data.buildingObj.type, true);
+			} else {
+				otherPlayers[data.socketId].buildings[data.name] = data.buildingObj;
+				otherPlayers[data.socketId].buildings[data.name].sprite = generateSprite(data.buildingObj.type, false);
+			}
+			//update the player's wealth
+			player.wealth = data.currentWealth;
+			$("#player-wealth-display").text(player.wealth);
+			playSoundOnEvent(buildingSound);
+			updateSupplyDisplay();
+			if (currentMaxSupply() >= player.absoluteMaxSupply) {
+				displayErrorToUserTimed("Current maximum supply reached. Building more houses will not increase maximum supply.");
+			}
 		}
 	}
-	$('canvas').css('cursor', 'auto');
 })

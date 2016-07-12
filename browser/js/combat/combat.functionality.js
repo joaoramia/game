@@ -21,7 +21,8 @@ function attackModeOff (){
 function defenseModeOn () {
 	displayErrorToUserUntimed("DEFENSE MODE", "Your selected units are now vigilant for attackers");
 	currentSelection.forEach(function (elem) {
-		elem.targetpos = null;
+		elem.targetpos = [];
+		elem.finalpos = undefined;
 		elem.vigilant = true;
 	});
 }
@@ -57,10 +58,13 @@ function setSingleTargetForCurrentSelection (target) {
   });
 }
 // targetpos is an array with an x and y coordinate 
-function setVigilantAttackMove (targetpos) {
+function setVigilantAttackMove (pos) {
   currentSelection.forEach(function (elem) {
     elem.vigilant = true;
-    elem.targetpos = targetpos;
+    // elem.targetpos = targetpos;
+    elem.finalpos = pos;
+    elem.targetpos = findPath(world, getTileFromPoint(elem.pos, elem.sprite.type), getTileFromPoint([pos[0], pos[1]], elem.sprite.type));
+    elem.targetpos.shift();
   });
 }
 
@@ -92,8 +96,10 @@ function checkCombat () {
 	checkIfBeingHit(); 
 
 	attackingUnits.forEach(function (unit) {
+		unit.previousFinalPos = unit.finalpos;
 		unit.queuedpos = unit.queuedpos || unit.targetpos;
-		unit.targetpos = unit.pos;
+		unit.targetpos = [];
+		unit.finalpos = undefined;
 
 		if (!unit.lastAttackTaken || Date.now() - unit.lastAttackTaken >= unit.rateOfAttack) {
 			unit.lastAttackTaken = Date.now();
@@ -109,7 +115,7 @@ function checkCombat () {
 
 		if (unit.attackTarget.currentHealth <= 0) {
 			unit.targetpos = unit.queuedpos;
-			unit.queuedpos = null;
+			unit.finalpos = unit.previousFinalPos;
 			tree.remove(unit.attackTarget);
 		}
 	})
