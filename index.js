@@ -64,8 +64,8 @@ io.on('connection', function (socket) {
 
     // give a lot of money if the first player. less if they are not.
     if (!Object.keys(players).length) {
-        currentPlayer.wealth = 2341234;
-        currentPlayer.score = 2341234;
+        currentPlayer.wealth = 53568;
+        currentPlayer.score = 53568;
     } else {
         currentPlayer.wealth = 23412;
         currentPlayer.score = 23412;
