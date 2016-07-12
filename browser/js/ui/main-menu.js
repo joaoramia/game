@@ -42,7 +42,7 @@ function placeholderFunction(){
 
 //buttons must be formatted in this way in order for replaceButtonsOnMenu to work
 var heroSelectedButtons = [
-	{text: "Build", tagName: "build-button", clickFunction: updateForBuildMenu}, //B
+	{text: "Build", tagName: "build-button", clickFunction: updateForBuildMenu},
 	{text: "Attack (A)", tagName: "attack-button", clickFunction: attackModeOn},
 	{text: "Defend (D)", tagName: "defend-button", clickFunction: defenseModeOn},
 	//{text: "Move (M)", tagName: "move-button", clickFunction: placeholderFunction}
@@ -50,7 +50,7 @@ var heroSelectedButtons = [
 
 var nonHeroSelectedButtons = [
 	{text: "Attack (A)", clickFunction: attackModeOn},
-	{text: "Defend (D)", clickFunction: defenseModeOn}, /
+	{text: "Defend (D)", clickFunction: defenseModeOn},
 	//{text: "Move (M)", clickFunction: placeholderFunction}
 ];
 
