@@ -1,5 +1,5 @@
 var selectedBarMenuButtons = [
-	{text: "Hire Mercenary", tagName: "hire-mercenary", clickFunction: hireMercenary}, //(M)
+	{text: "Hire Mercenary - $400", tagName: "hire-mercenary", clickFunction: hireMercenary}, //(M)
 	//{text: "Hire Assault (L)", tagName: "hire-assault", clickFunction: hireAssault},
 	{text: "Set Rally Point", tagName: "set-rendezvous", clickFunction: setRendezvous} //(O)
 ];
