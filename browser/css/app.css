@@ -159,8 +159,9 @@ canvas {
     top: 5px;
     right: 5px;
     color: white;
-    min-width: 25%;
-    max-width: 30%;
+    /*min-width: 25%;
+    max-width: 30%;*/
+    width: 400px;
     display: none;
 }
 
