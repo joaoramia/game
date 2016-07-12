@@ -133,7 +133,7 @@ function render() {
             renderEntities(otherPlayers[key].units, key);
     }
 
-    renderEntities(player.buildings);
+    renderEntities(player.buildings, player.id);
     renderEntities(explosions);
 
     for (var key in otherPlayers){
@@ -170,10 +170,11 @@ function renderEntity(entity, playerId) {
     ctx.translate(entity.pos[0], entity.pos[1]);
     if (!(entity.sprite instanceof Sprite) && entity.sprite){
         entity.sprite.selectable = false;
-
+        if (entity.type === 'bar') console.log("PLAYERID: ", playerId);
         Sprite.prototype.render.apply(entity.sprite, [ctx, playerId, entity.type, entity.currentHealth, entity.maxHealth]);
     }
     else if (entity.sprite){
+        if (entity.type === 'bar') console.log("PLAYERID: ", playerId);
         entity.sprite.render(ctx, playerId, entity.type, entity.currentHealth, entity.maxHealth);
 
     }

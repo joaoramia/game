@@ -93,26 +93,27 @@ function setupSocket (socket) {
     });
 
     socket.on("leaderboardUpdate", function(playersData){
+        console.log(playersData);
         var leaders = [];
         for (var id in playersData) {
-            leaders.push([id, playersData[id].wealth, playersData[id].username]);
+            leaders.push([id, playersData[id].score, playersData[id].username]);
         }
         leaders.sort(function(a, b) { return  b[1] - a[1]; });
 
         if (playersData){
-            player.wealth = playersData[player.id].wealth;
+            player.score = playersData[player.id].score;
             if (Object.keys(otherPlayers)){
                 for (var id in otherPlayers){
-                    if (otherPlayers[id] && otherPlayers[id].wealth) otherPlayers[id].wealth = playersData[id].wealth;
+                    if (otherPlayers[id] && otherPlayers[id].score) otherPlayers[id].score = playersData[id].score;
                 }
             }
             if(player.id === currentKing){
                 $("#kingname").text(player.username);
-                $("#king-wealth-display").text(commaSeparator(player.wealth));
+                $("#king-score-display").text(commaSeparator(player.score));
             }
             else {
                 $("#kingname").text(otherPlayers[currentKing].username);
-                $("#king-wealth-display").text(commaSeparator(otherPlayers[currentKing].wealth));
+                $("#king-score-display").text(commaSeparator(otherPlayers[currentKing].score));
             }
         }
 
@@ -121,7 +122,8 @@ function setupSocket (socket) {
                 $("#place" + (i + 1)).text(leaders[i][2] + " " + commaSeparator(leaders[i][1]));
             }
         }
-        $("#player-wealth-display").text(commaSeparator(player.wealth));
+        // $("#player-wealth-display").text(commaSeparator(otherPlayers[player.id].wealth));
+        $("#player-score").text(commaSeparator(player.score));
     });
 
     setupChatSocket(socket);
