@@ -62,6 +62,15 @@ io.on('connection', function (socket) {
     console.log("New connection. ID: ", socket.id)
     var currentPlayer = new Player(socket.id);
 
+    // give a lot of money if the first player. less if they are not.
+    if (!Object.keys(players).length) {
+        currentPlayer.wealth = 2341234;
+        currentPlayer.score = 2341234;
+    } else {
+        currentPlayer.wealth = 23412;
+        currentPlayer.score = 23412;
+    }
+
     sockets[socket.id] = socket;
 
     socket.on('giveExistingInfo', function () {
