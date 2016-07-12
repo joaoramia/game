@@ -1,9 +1,12 @@
 function setupSocket (socket) {
-    socket.on("existingInfo", function(playersColl, moneyBagColl){
+    socket.on("existingInfo", function(playersColl, moneyBagColl, worldInfo){
         setupExistingPlayers(socket, playersColl);
         setupMoneyBags(moneyBagColl);
 
+        world = worldInfo;
+
         socket.on("otherPlayerMoves", function(playerData) {
+            otherPlayers[playerData.id] = otherPlayers[playerData.id] || {units: {}};
             for (var unitId in otherPlayers[playerData.id].units) {
                 var unit = otherPlayers[playerData.id].units[unitId];
                 tree.remove(unit);
@@ -18,8 +21,9 @@ function setupSocket (socket) {
         });
     });
 
-    socket.on("gameReady", function(gameData, king) {
+    socket.on("gameReady", function(gameData, king, worldInfo) {
         console.log("GAME READY DATA", gameData);
+        if (worldInfo) world = worldInfo;
         adjustVPOnGameReady(gameData.playerData.units[0].pos);
         gameOver = false;
         gameStarted = true;
@@ -43,7 +47,7 @@ function setupSocket (socket) {
 
     socket.on('otherPlayerJoin', function (otherPlayerData) {
         console.log(otherPlayerData.id + ' has joined!');
-
+        // world = otherPlayerData.world;
         var toBeAddedToTree = [];
 
         newPlayerJoinsAlert(otherPlayerData.username);
@@ -64,9 +68,9 @@ function setupSocket (socket) {
         tree.load(toBeAddedToTree);
     });
 
-    socket.on('otherPlayerDC', function (socketId) {
+    socket.on('otherPlayerDC', function (socketId, worldInfo) {
         console.log(socketId + ' left!');
-
+        if (worldInfo) world = worldInfo;
         removeFromTreeOnDisconnect(socketId);
 
         var departingUserUsername = otherPlayers[socketId].username;
@@ -80,8 +84,11 @@ function setupSocket (socket) {
         if (player.id === victim.socketId) {
             player.units[victim.id].currentHealth -= damage;
             player.units[victim.id].hit = true;
+            createExplosion(player.units[victim.id].pos);
         } else {
             otherPlayers[victim.socketId].units[victim.id].currentHealth -= damage;
+            otherPlayers[victim.socketId].units[victim.id].hit = true;
+            createExplosion(otherPlayers[victim.socketId].units[victim.id].pos);
         }
     });
 

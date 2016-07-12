@@ -2,6 +2,7 @@ var rect = {};
 var drag = false;
 var rightClick = {};
 var positionOfNewBuilding;
+var tileOfNewBuilding;
 var moveIndicator;
 
 var currentMousePosition;
@@ -10,7 +11,7 @@ function mouseDown(e) {
   if ( buildMode.on && (e.which === 1 && !e.ctrlKey) ) {
     var tempX = e.layerX + vp.pos[0];
     var tempY = e.layerY + vp.pos[1];
-    positionOfNewBuilding = [tempX, tempY];
+    positionOfNewBuilding = getPointFromTile(tileOfNewBuilding[0]);
     buildMouseLocation = undefined;
   } else if (rendezvousMode.on && (e.which === 1 && !e.ctrlKey)) {
     var tempX = e.layerX + vp.pos[0];
@@ -25,12 +26,14 @@ function mouseDown(e) {
   } else if ( (e.ctrlKey && currentSelection.length) || (e.which === 3 && currentSelection.length) ) {
     rightClick.x = e.layerX + vp.pos[0];
     rightClick.y = e.layerY + vp.pos[1];
+    mouseTargetLocation[0] = Math.floor(rightClick.x/tileWidth); //#a-star algorithm
+    mouseTargetLocation[1] = Math.floor(rightClick.y/tileHeight); //#a-star algorithm
   }
 }
 
 function mouseUp(e) {
   if (buildMode.on) {
-    submitBuildingLocation(positionOfNewBuilding);
+    submitBuildingLocation(positionOfNewBuilding, buildMode.type);
     buildModeOff();
   } else if (rendezvousMode.on) {
     submitRendezvousPosition(rendezvousMode.mostRecentRendezvous);
@@ -48,8 +51,10 @@ function mouseUp(e) {
         
         unit.vigilant = false;
         unit.hit = false;
-        unit.targetpos = [rightClick.x + counter, rightClick.y];
-        counter += 25;
+        unit.targetpos = findPath(world, getTileFromPoint(unit.pos, unit.sprite.type), getTileFromPoint([rightClick.x + counter, rightClick.y + counter], unit.sprite.type));
+        unit.targetpos.shift(); //this is because the first path tile is the current tile the unit is on
+        unit.finalpos = [rightClick.x + counter, rightClick.y + counter];
+        counter += tileWidth/2;
       }
     }
   }
@@ -119,23 +124,23 @@ function select(){
 
 function renderIndicator () {
   currentSelection.forEach(function (unit) {
-    if (unit.targetpos) {
+    if (unit.finalpos) {
       ctx.beginPath();
-      ctx.ellipse(unit.targetpos[0], unit.targetpos[1], 20, 10, 0, 0, Math.PI*2);
+      ctx.ellipse(unit.finalpos[0], unit.finalpos[1], 20, 10, 0, 0, Math.PI*2);
       ctx.strokeStyle = (unit.vigilant? 'rgba(255, 0, 0, 1)' : 'rgba(0, 255, 0, 0.7)');
       ctx.closePath();
       ctx.stroke();
       
       ctx.beginPath();
       ctx.moveTo(unit.pos[0] + unit.sprite.size[0] / 2, unit.pos[1] + unit.sprite.size[1]);
-      ctx.lineTo(unit.targetpos[0], unit.targetpos[1]);
+      ctx.lineTo(unit.finalpos[0], unit.finalpos[1]);
       ctx.strokeStyle = (unit.vigilant? 'rgba(255, 0, 0, 1)' : 'rgba(0, 255, 0, 0.4)');
       ctx.closePath();
       ctx.stroke();
 
       ctx.fillStyle = ctx.strokeStyle;
       ctx.beginPath();
-      ctx.ellipse(unit.targetpos[0], unit.targetpos[1], 2, 1, 0, 0, Math.PI*2);
+      ctx.ellipse(unit.finalpos[0], unit.finalpos[1], 2, 1, 0, 0, Math.PI*2);
       ctx.closePath();
       ctx.fill();
     }

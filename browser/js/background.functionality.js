@@ -21,6 +21,8 @@ function renderTerrain () {
             ctx.drawImage(resources.get('img/background/cactus.png'), i, j);
             tempCtx.drawImage(resources.get('img/background/cactus.png'), i, j);
           }
+          // ctx.strokeText([Math.round(i/tileWidth), Math.round(j/tileHeight)], i, j);
+          // tempCtx.strokeText([Math.round(i/tileWidth), Math.round(j/tileHeight)], i, j);
       }
     }
 

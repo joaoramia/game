@@ -48,7 +48,8 @@ resources.load([
     'img/background/cactus.png',
     'img/house-asset.png',
     'img/cop-asset.png',
-    'img/assault-asset.png'
+    'img/assault-asset.png',
+    'img/damage.png'
 ]);
 
 resources.onReady(init);
@@ -98,16 +99,14 @@ function update(dt) {
 
     checkCombat();
 
+    processExplosions();
+
     removeDeadUnits();
 
     socket.emit("playerMoves", player);
 
-    
-
     drawViewport();
 }
-
-
 
 function render() {
 
@@ -119,7 +118,6 @@ function render() {
         renderTerrain();
     }
     
-
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     generateCactuses();
@@ -136,6 +134,7 @@ function render() {
     }
 
     renderEntities(player.buildings);
+    renderEntities(explosions);
 
     for (var key in otherPlayers){
         if (otherPlayers.hasOwnProperty(key))
@@ -154,8 +153,15 @@ function render() {
 };
 
 function renderEntities(list, playerId) {
-    for (var item in list) {
-        renderEntity(list[item], playerId);
+    if (Array.isArray(list)){
+        for(var i=0; i<list.length; i++) {
+            renderEntity(list[i], playerId);
+        }
+    } 
+    else if (typeof list === "object") {
+        for (var item in list) {
+            renderEntity(list[item], playerId);
+        }
     }
 }
 
