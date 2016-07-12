@@ -54,7 +54,6 @@ function buildCollisions (position, type){
             }
         }
     }
- //    console.log(player);
     if (player.units){
 	    for (var unit in player.units){
 	        if (inRange(player.units[unit].pos[0], player.units[unit].pos[0] + spriteSizes[player.units[unit].type][0], position[0], position[0] + spriteSizes[type][0])
