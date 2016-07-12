@@ -28,7 +28,6 @@ function submitBuildingLocation (pos, type) {
 	socket.emit('finalBuildRequest', requestObj, newBuildingTiles);
 }
 
-
 function buildModeOn (type) {
 	//run submitBuildingLocation on click when in buildMode
 	buildMode.on = true;
