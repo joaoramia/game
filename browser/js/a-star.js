@@ -1,3 +1,4 @@
+//guided by Christer Kaitila aka McFunkypants (http://buildnewgames.com/astar/)
 
 //from the sprites for the units we used, the soldier has the largest size (64x64), so this was the tile size chosen for the world
 var tileWidth = spriteSizes['soldier'][0];

@@ -61,8 +61,9 @@ canvas {
 
 #instructions {
     display: inline-block;
-    max-width: 59%;
-    padding: 10px 15px 10px 15px;
+    max-width: 400px;
+    float: left;
+    /*padding: 10px 15px 10px 15px;*/
 }
 
 #right-login {
