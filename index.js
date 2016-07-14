@@ -16,8 +16,6 @@ app.use(express.static(__dirname + '/public/'));
 app.use(express.static(__dirname + '/browser/'));
 app.use(express.static(__dirname + '/node_modules/'));
 
-// var gameConfig = require('./config.json');
-
 var spriteSizes = {
     "hero": [34, 50],
     "soldier": [64, 64],
