@@ -207,6 +207,7 @@ io.on('connection', function (socket) {
 
     socket.on('finalBuildRequest', function (data, newBuildingTiles) {
         if (data.request === 2 && data.type === "bar") {
+            console.log("Collisions: ", checkCollisions(data.pos, data.type));
             if (players[data.id].wealth < 2000) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
             } else if (checkCollisions(data.pos, data.type)) {
