@@ -207,10 +207,12 @@ io.on('connection', function (socket) {
 
     socket.on('finalBuildRequest', function (data, newBuildingTiles) {
         if (data.request === 2 && data.type === "bar") {
-            console.log("Collisions: ", checkCollisions(data.pos, data.type));
+            // var collided = checkCollisions(data.pos, data.type);
+            // console.log("Collisions: ", collided, data.pos, data.type);
             if (players[data.id].wealth < 2000) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
             } else if (checkCollisions(data.pos, data.type)) {
+                console.log("COLLIDED!!!");
             //make sure the building doesn't collide with another building
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
             //temporarily set to false because we don't have collision set up
@@ -233,13 +235,9 @@ io.on('connection', function (socket) {
         } else if (data.request === 2 && data.type === "house") {
             if (players[data.id].wealth < 1000) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
-            } else if (false) {
+            } else if (checkCollisions(data.pos, data.type)) {
             //make sure the new building doesn't collide with another building
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision with building"});
-            //temporarily set to false because we don't have collision set up
-            } else if (false) {
-            //make sure the new building doesn't collide with a unit
-                socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision with unit"});
             //temporarily set to false because we don't have collision set up
             } else {
                 var newHouse = new House(data.pos, data.id, players[data.id].buildingNumber, newBuildingTiles);
@@ -294,7 +292,6 @@ io.on('connection', function (socket) {
             //this should be cleaned up. Hire unit depends on variables/values above -- bad! 
             function hireUnit(){
                 socket.emit('hireMercenaryResponse', {valid: true, progress: progress, buildingId: data.buildingId});
-                console.log({valid: true, progress: progress, building: data.buildingId});
                 var hireUnitProgress = setTimeout(function(){
                     if (progress < 60) {
                         progress++;
