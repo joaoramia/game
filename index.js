@@ -25,7 +25,7 @@ var spriteSizes = {
     "hero_soldier": [108, 114] //this is for the random location function to put soldiers 10 pixels next to heros
 }
 
-var CANVAS_SIZE = [3000, 3000]; //Remember to adjust the front end size any time this changes
+var CANVAS_SIZE = [1500, 1000]; //Remember to adjust the front end size any time this changes
 
 // all the objects on the canvas
 var players = {};
@@ -44,7 +44,7 @@ var worldHeight = Math.floor(CANVAS_SIZE[1]/tileHeight);
 
 World.createWorld(world, worldWidth, worldHeight);
 
-generateMoneyBags(550);
+generateMoneyBags(100);
 
 app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));

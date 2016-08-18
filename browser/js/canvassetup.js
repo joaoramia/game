@@ -14,8 +14,8 @@ var requestAnimFrame = (function(){
 // Create the canvas
 var canvas = document.createElement("canvas");
 var ctx = canvas.getContext("2d");
-canvas.width = 3000; //Remember to adjust the back end size any time this changes
-canvas.height = 3000; //Remember to adjust the back end size any time this changes
+canvas.width = 1500; //Remember to adjust the back end size any time this changes
+canvas.height = 1000; //Remember to adjust the back end size any time this changes
 
 var viewCanvas = document.createElement('canvas');
 var ctxV = viewCanvas.getContext('2d');
