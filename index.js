@@ -25,7 +25,6 @@ var spriteSizes = {
     "hero_soldier": [108, 114] //this is for the random location function to put soldiers 10 pixels next to heros
 }
 
-
 var CANVAS_SIZE = [1500, 1000]; //Remember to adjust the front end size any time this changes
 
 // all the objects on the canvas
