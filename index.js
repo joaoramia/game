@@ -12,9 +12,13 @@ var Bar = require('./server/building.constructor').Bar;
 var House = require('./server/building.constructor').House;
 var inRange = utils.inRange;
 
-app.use(express.static(__dirname + '/public/'));
-app.use(express.static(__dirname + '/browser/'));
-app.use(express.static(__dirname + '/node_modules/'));
+// app.use(express.static(__dirname + '/public/'));
+// app.use(express.static(__dirname + '/browser/'));
+// app.use(express.static(__dirname + '/node_modules/'));
+
+app.use(express.static('/public/'));
+app.use(express.static('/browser/'));
+app.use(express.static('/node_modules/'));
 
 var spriteSizes = {
     "hero": [34, 50],
@@ -51,7 +55,7 @@ app.get('/*', function (req, res) {
 });
 
 var server = app.listen(Number(process.env.PORT) || 3030, function () {
-  console.log('App listening on port!' + 3030);
+  console.log('App listening on port ' + 3030);
 });
 
 io = io.listen(server);
