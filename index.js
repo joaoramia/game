@@ -16,9 +16,9 @@ var inRange = utils.inRange;
 // app.use(express.static(__dirname + '/browser/'));
 // app.use(express.static(__dirname + '/node_modules/'));
 
-app.use(express.static('/public/'));
-app.use(express.static('/browser/'));
-app.use(express.static('/node_modules/'));
+app.use(express.static('/public'));
+app.use(express.static('/browser'));
+app.use(express.static('/node_modules'));
 
 var spriteSizes = {
     "hero": [34, 50],
