@@ -1,4 +1,6 @@
-var socket = io.connect('http://' + ip + ':3030');
+
+// var socket = io.connect('http://' + ip + (Number(process.env.PORT) || '3030'));
+var socket = io.connect(document.location.protocol+'//'+document.location.host);
 var currentKing;
 var tree = rbush();
 var moneyTree = rbush();
