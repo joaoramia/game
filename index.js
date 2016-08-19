@@ -50,8 +50,8 @@ app.get('/*', function (req, res) {
     res.sendFile(path.join(__dirname + '/public/index.html'));
 });
 
-var server = app.listen(3030, function () {
-  console.log('App listening on port 3030!');
+var server = app.listen(process.env.PORT, function () {
+  console.log('App listening on port!');
 });
 
 io = io.listen(server);
