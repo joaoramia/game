@@ -1,1 +1,0 @@
-var ip = "192.168.1.123"; //ip of Heroku app (security issues here if game becomes popular)
