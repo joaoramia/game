@@ -187,9 +187,11 @@ io.on('connection', function (socket) {
         if (data.request === 1 && data.type === "bar") {
             if (players[data.id].wealth < 2000) {
                 //denied
+                console.log("initialBuildRequest denied");
                 socket.emit('initialBuildResponse', {valid: false, request: 1, type: "bar"});
             } else {
                 //approved
+                console.log("initialBuildRequest approved");
                 socket.emit('initialBuildResponse', {valid: true, request: 1, type: "bar"});
             }
         //if house
@@ -210,6 +212,7 @@ io.on('connection', function (socket) {
             // var collided = checkCollisions(data.pos, data.type);
             // console.log("Collisions: ", collided, data.pos, data.type);
             if (players[data.id].wealth < 2000) {
+                console.log("finalalBuildRequest denied, lacking resources");
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "lacking resources"});
             } else if (checkCollisions(data.pos, data.type)) {
                 console.log("COLLIDED!!!");
@@ -217,6 +220,7 @@ io.on('connection', function (socket) {
                 socket.emit('finalBuildResponse', {valid: false, request: 2, error: "collision"});
             //temporarily set to false because we don't have collision set up
             } else {
+                console.log("finalalBuildRequest approved! finally");
                 var newBuildingNumber = players[data.id].buildingNumber.toString();
                 var newBar = new Bar(data.pos, data.id, newBuildingNumber, newBuildingTiles);
 
