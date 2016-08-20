@@ -1,4 +1,4 @@
-An HTML5 Canvas game developed by Joao Ramia (joaoramia), Ben Manson (bmmanson), John Chen (coldshower) and Ani Agajanyan (aganita).
+An HTML5 Canvas game developed by me, Ben Manson (bmmanson), John Chen (coldshower) and Ani Agajanyan (aganita).
 
 A simple starting point for writing 2d games. See tutorial.md for more information.
 
