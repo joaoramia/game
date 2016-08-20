@@ -34,7 +34,7 @@ function mouseDown(e) {
 function mouseUp(e) {
   if (buildMode.on) {
     submitBuildingLocation(positionOfNewBuilding, buildMode.type);
-    buildModeOff();
+    // buildModeOff();
   } else if (rendezvousMode.on) {
     submitRendezvousPosition(rendezvousMode.mostRecentRendezvous);
   } else if (attackPending && e.which === 1) { // Attack functionality ('on a-click')
