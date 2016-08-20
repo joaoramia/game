@@ -7,7 +7,6 @@ var buildMenuButtons = [
 function sendBuildRequest (type){
 	//initiate the request to build a bar
 	var requestObj = {id: player.id, request:1, type: type};
-	console.log("InitialBuildRequest: ",requestObj);
 	socket.emit('initialBuildRequest', requestObj);
 }
 
@@ -26,7 +25,6 @@ function buildBank () {
 function submitBuildingLocation (pos, type) {
 	var requestObj = {pos: pos, id: player.id, request: 2, type: buildMode.type, world: world};
 	var newBuildingTiles = buildingTiles([pos[0],pos[1]], buildMode.type);
-	console.log("finalBuildRequest: ",requestObj);
 	socket.emit('finalBuildRequest', requestObj, newBuildingTiles);
 }
 
@@ -52,7 +50,6 @@ function fillTilesOfBuilding (building){
 
 //building a building requires exchanging information with the server twice
 socket.on('initialBuildResponse', function (data){
-	console.log("data of initial build response: ", data);
 	//check to see if the player has enough money to build a bar
 	if (data.request === 1) {
 	//if player doesn't have money...
@@ -72,7 +69,7 @@ socket.on('initialBuildResponse', function (data){
 
 //after second response from the server
 socket.on('finalBuildResponse', function (data) {
-	console.log("data of final build response: ", data);
+
 	if (data.request === 2 && data.socketId) {
 		//if player ran out of money since placing building, can't build
 		if (data.valid === false && data.error === "lacking resources") {
